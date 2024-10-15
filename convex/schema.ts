@@ -165,6 +165,15 @@ export const Documents = Table('documents', {
   teamId: v.id('teams'),
 });
 
+export const Resources = Table('resources', {
+  title: v.string(),
+  type: v.union(v.literal('link'), v.literal('file')),
+  category: v.string(),
+  isPinned: v.boolean(),
+  teamId: v.id('teams'),
+  createdBy: v.id('users'),
+});
+
 export default defineSchema({
   users: Users.table
     .index('by_clerkId', ['clerkIdentifier'])
@@ -197,4 +206,5 @@ export default defineSchema({
     .index('by_userId', ['createdBy'])
     .index('by_userId_parentId', ['createdBy', 'parentDocument'])
     .index('by_teamId', ['teamId']),
+  resources: Resources.table.index('by_teamId', ['teamId']),
 });
