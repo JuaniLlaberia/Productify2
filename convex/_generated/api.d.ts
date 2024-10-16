@@ -19,6 +19,7 @@ import type * as auth from "../auth.js";
 import type * as channels from "../channels.js";
 import type * as documents from "../documents.js";
 import type * as http from "../http.js";
+import type * as labels from "../labels.js";
 import type * as messages from "../messages.js";
 import type * as projects from "../projects.js";
 import type * as reports from "../reports.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   channels: typeof channels;
   documents: typeof documents;
   http: typeof http;
+  labels: typeof labels;
   messages: typeof messages;
   projects: typeof projects;
   reports: typeof reports;
