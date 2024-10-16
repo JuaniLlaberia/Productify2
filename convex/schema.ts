@@ -82,11 +82,19 @@ export const Tasks = Table('taks', {
   priority: prioritySchema,
   label: v.id('label'),
   dueDate: v.number(),
-  parentTask: v.id('taks'),
+  parentTask: v.id('tasks'),
   isSubTask: v.boolean(),
   assignee: v.id('users'),
   projectId: v.id('projects'),
   teamId: v.id('teams'),
+});
+
+export const Labels = Table('labels', {
+  title: v.string(),
+  color: v.string(),
+  teamId: v.id('teams'),
+  projectId: v.id('projects'),
+  createdBy: v.id('users'),
 });
 
 export const Templates = Table('templates', {
@@ -96,6 +104,7 @@ export const Templates = Table('templates', {
   priority: prioritySchema,
   label: v.id('label'),
   teamId: v.id('teams'),
+  projectId: v.id('projects'),
 });
 
 export const Channels = Table('channels', {
@@ -168,8 +177,11 @@ export const Documents = Table('documents', {
 export const Resources = Table('resources', {
   title: v.string(),
   type: v.union(v.literal('link'), v.literal('file')),
-  category: v.string(),
-  isPinned: v.boolean(),
+  category: v.union(
+    v.literal('documentation'),
+    v.literal('reference'),
+    v.literal('article')
+  ),
   teamId: v.id('teams'),
   createdBy: v.id('users'),
 });
@@ -188,15 +200,20 @@ export default defineSchema({
   projects: Projects.table.index('by_teamId', ['teamId']),
   projectMembers: ProjectMembers.table
     .index('by_projectId', ['projectId'])
-    .index('by_userId', ['userId']),
+    .index('by_teamId_userId', ['teamId', 'userId']),
   tasks: Tasks.table
     .index('by_teamId_projectId', ['teamId', 'projectId'])
-    .index('by_teamId_assignee', ['teamId', 'assignee']),
-  templates: Templates.table.index('by_teamId', ['teamId']),
+    .index('by_teamId_assignee', ['teamId', 'assignee'])
+    .index('by_teamId_parentId', ['teamId', 'parentTask']),
+  labels: Labels.table.index('by_teamId_projectId', ['teamId', 'projectId']),
+  templates: Templates.table.index('by_teamId_projectId', [
+    'teamId',
+    'projectId',
+  ]),
   channels: Channels.table.index('by_teamId', ['teamId']),
   channelMembers: ChannelMembers.table
     .index('by_channelId', ['channelId'])
-    .index('by_userId', ['userId']),
+    .index('by_teamId_userId', ['teamId', 'userId']),
   messages: Messages.table
     .index('by_teamId_channelId', ['teamId', 'channelId'])
     .index('by_teamId_userId', ['teamId', 'userId'])
@@ -205,6 +222,7 @@ export default defineSchema({
   documents: Documents.table
     .index('by_userId', ['createdBy'])
     .index('by_userId_parentId', ['createdBy', 'parentDocument'])
-    .index('by_teamId', ['teamId']),
+    .index('by_teamId', ['teamId'])
+    .index('by_teamId_parentId', ['teamId', 'parentDocument']),
   resources: Resources.table.index('by_teamId', ['teamId']),
 });
