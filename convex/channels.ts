@@ -1,7 +1,25 @@
 import { ConvexError, v } from 'convex/values';
 
-import { mutation } from './_generated/server';
-import { isAdmin } from './auth';
+import { mutation, query } from './_generated/server';
+import { isAdmin, isMember } from './auth';
+
+export const getChannels = query({
+  args: { teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    const member = await isMember(ctx, args.teamId);
+
+    const channelMembers = await ctx.db
+      .query('channelMembers')
+      .withIndex('by_teamId_userId', q =>
+        q.eq('teamId', args.teamId).eq('userId', member._id)
+      )
+      .collect();
+    const channelIds = channelMembers.map(channelMember => channelMember._id);
+    const channels = await Promise.all(channelIds.map(id => ctx.db.get(id)));
+
+    return channels;
+  },
+});
 
 export const createChannel = mutation({
   args: {

@@ -1,8 +1,40 @@
 import { ConvexError, v } from 'convex/values';
 
-import { mutation } from './_generated/server';
-import { isAdmin } from './auth';
+import { mutation, query } from './_generated/server';
+import { isAdmin, isMember } from './auth';
 import { Projects } from './schema';
+
+export const getProjects = query({
+  args: { teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    const member = await isMember(ctx, args.teamId);
+
+    const projectMembers = await ctx.db
+      .query('projectMembers')
+      .withIndex('by_teamId_userId', q =>
+        q.eq('teamId', args.teamId).eq('userId', member._id)
+      )
+      .collect();
+    const projectIds = projectMembers.map(projectMember => projectMember._id);
+    const projects = await Promise.all(projectIds.map(id => ctx.db.get(id)));
+
+    return projects;
+  },
+});
+
+export const getAllTeamProjects = query({
+  args: { teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const projects = await ctx.db
+      .query('projects')
+      .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
+      .order('desc')
+      .collect();
+    return projects;
+  },
+});
 
 export const createProject = mutation({
   args: {

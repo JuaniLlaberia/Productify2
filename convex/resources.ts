@@ -1,9 +1,34 @@
 import { omit } from 'convex-helpers';
 import { v } from 'convex/values';
 
-import { mutation } from './_generated/server';
+import { mutation, query } from './_generated/server';
 import { Resources } from './schema';
 import { isMember } from './auth';
+
+export const getResources = query({
+  args: {
+    teamId: v.id('teams'),
+    filters: v.object({
+      category: Resources.withoutSystemFields.category,
+    }),
+  },
+  handler: async (ctx, args) => {
+    const {
+      teamId,
+      filters: { category },
+    } = args;
+    await isMember(ctx, teamId);
+
+    let query = ctx.db
+      .query('resources')
+      .withIndex('by_teamId', q => q.eq('teamId', teamId));
+    if (category)
+      query = query.filter(q => q.eq(q.field('category'), category));
+
+    const resources = await query.collect();
+    return resources;
+  },
+});
 
 export const createResource = mutation({
   args: Resources.withoutSystemFields,

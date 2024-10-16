@@ -1,8 +1,50 @@
 import { ConvexError, v } from 'convex/values';
 
-import { mutation } from './_generated/server';
-import { isAdmin, isAuth } from './auth';
+import { mutation, query } from './_generated/server';
+import { isAdmin, isAuth, isMember } from './auth';
 import { Members, Teams } from './schema';
+
+export const getUserTeams = query({
+  handler: async ctx => {
+    const user = await isAuth(ctx);
+    if (!user) throw new ConvexError('Must be logged in.');
+
+    const teams = await ctx.db
+      .query('members')
+      .withIndex('by_userId', q => q.eq('userId', user._id))
+      .collect();
+    const teamsIds = teams.map(team => team._id);
+    const teamsData = await Promise.all(teamsIds.map(id => ctx.db.get(id)));
+
+    return teamsData;
+  },
+});
+
+export const getTeam = query({
+  args: { teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const team = await ctx.db.get(args.teamId);
+    return team;
+  },
+});
+
+export const getTeamMembers = query({
+  args: { teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const members = await ctx.db
+      .query('members')
+      .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
+      .collect();
+    const membersIds = members.map(member => member.userId);
+    const membersData = await Promise.all(membersIds.map(id => ctx.db.get(id)));
+
+    return membersData;
+  },
+});
 
 export const createTeam = mutation({
   args: { name: v.string() },

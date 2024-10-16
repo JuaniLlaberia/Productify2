@@ -1,6 +1,6 @@
 import { ConvexError, v } from 'convex/values';
 
-import { mutation, MutationCtx, QueryCtx } from './_generated/server';
+import { mutation, MutationCtx, query, QueryCtx } from './_generated/server';
 import { isAuth, isMember } from './auth';
 import { Doc, Id } from './_generated/dataModel';
 
@@ -20,6 +20,41 @@ const documentBelongsToMember = async (
     throw new ConvexError('This document does not belong to this user.');
   else return true;
 };
+
+export const getTeamDocuments = query({
+  args: {
+    teamId: v.id('teams'),
+    parentDocument: v.optional(v.id('documents')),
+  },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const documents = await ctx.db
+      .query('documents')
+      .withIndex('by_teamId_parentId', q =>
+        q.eq('teamId', args.teamId).eq('parentDocument', args.parentDocument)
+      )
+      .filter(q => q.eq(q.field('isArchived'), false))
+      .order('desc')
+      .collect();
+
+    return documents;
+  },
+});
+
+export const getDocument = query({
+  args: { teamId: v.id('teams'), documentId: v.id('documents') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const document = await ctx.db
+      .query('documents')
+      .withIndex('by_id', q => q.eq('_id', args.documentId))
+      .first();
+
+    return document;
+  },
+});
 
 export const createDocument = mutation({
   args: {
