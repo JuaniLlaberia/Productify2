@@ -1,8 +1,11 @@
-import { ClerkProvider } from '@clerk/nextjs';
 import localFont from 'next/font/local';
+import NextTopLoader from 'nextjs-toploader';
+import { ClerkProvider } from '@clerk/nextjs';
+import { ThemeProvider } from 'next-themes';
 import type { Metadata } from 'next';
 
 import { ConvexClientProvider } from '@/components/ConvexClientProvider';
+import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
 
 const geistSans = localFont({
@@ -34,7 +37,18 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <NextTopLoader showSpinner={false} />
+          <Toaster richColors />
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main className='h-screen bg-background text-primary'>
+              <ConvexClientProvider>{children}</ConvexClientProvider>
+            </main>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
