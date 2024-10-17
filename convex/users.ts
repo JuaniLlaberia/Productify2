@@ -1,4 +1,5 @@
 import { ConvexError, v } from 'convex/values';
+import { omit } from 'convex-helpers';
 
 import { internalMutation, query } from './_generated/server';
 import { Users } from './schema';
@@ -32,13 +33,20 @@ export const getUserByClerkId = query({
 export const createUser = internalMutation({
   args: Users.withoutSystemFields,
   handler: async (ctx, args) => {
-    const { fullName, email, profileImage, clerkIdentifier } = args;
+    const {
+      fullName,
+      email,
+      profileImage,
+      clerkIdentifier,
+      onBoardingCompleted,
+    } = args;
 
     const newUserId = await ctx.db.insert('users', {
       fullName,
       email,
       profileImage,
       clerkIdentifier,
+      onBoardingCompleted,
     });
 
     if (!newUserId) throw new ConvexError('Failed to create user');
@@ -48,7 +56,7 @@ export const createUser = internalMutation({
 });
 
 export const updateUser = internalMutation({
-  args: Users.withoutSystemFields,
+  args: omit(Users.withoutSystemFields, ['onBoardingCompleted']),
   handler: async (ctx, args) => {
     const { fullName, email, profileImage, clerkIdentifier } = args;
 

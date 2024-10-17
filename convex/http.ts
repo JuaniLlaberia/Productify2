@@ -54,6 +54,7 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
             fullName: `${first_name} ${last_name}`,
             email: email_addresses[0].email_address,
             profileImage: image_url,
+            onBoardingCompleted: false,
           });
         }
         break;
