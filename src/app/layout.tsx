@@ -1,23 +1,12 @@
-import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeProvider } from 'next-themes';
+import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
 
 import { ConvexClientProvider } from '@/components/ConvexClientProvider';
 import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
-
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-});
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -34,9 +23,7 @@ export default function RootLayout({
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
     >
       <html lang='en'>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        <body className={GeistSans.className}>
           <NextTopLoader showSpinner={false} />
           <Toaster richColors />
           <ThemeProvider
