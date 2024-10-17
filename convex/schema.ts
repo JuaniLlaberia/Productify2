@@ -36,6 +36,7 @@ export const Users = Table('users', {
   email: v.string(),
   profileImage: v.optional(v.string()),
   clerkIdentifier: v.string(),
+  onBoardingCompleted: v.boolean(),
 });
 
 export const Teams = Table('teams', {
