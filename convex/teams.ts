@@ -59,12 +59,16 @@ export const createTeam = mutation({
       createdBy: user._id,
     });
 
-    //Create member with owner permissions
-    await ctx.db.insert('members', {
-      teamId,
-      userId: user._id,
-      role: 'owner',
-    });
+    await Promise.all([
+      //Create member with owner permissions
+      ctx.db.insert('members', {
+        teamId,
+        userId: user._id,
+        role: 'owner',
+      }),
+      //Update user onBoardingCompleted to TRUE
+      ctx.db.patch(user._id, { onBoardingCompleted: true }),
+    ]);
 
     return teamId;
   },
