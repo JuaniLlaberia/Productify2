@@ -11,18 +11,18 @@ export default clerkMiddleware((auth, req) => {
   // Landing page is always accessible
   if (pathname === '/') return NextResponse.next();
 
+  // If user is auth, has completed onboarding and tries to access it => Redirect to dashboard
+  if (userId && onBoardingCompleted && pathname === '/onboarding') {
+    const onboardingUrl = new URL('/team', req.url);
+    return NextResponse.redirect(onboardingUrl);
+  }
+
   // If user is auth, hasn't completed onboarding and tries to access it => Allow it
   if (userId && pathname === '/onboarding') return NextResponse.next();
 
   // If user is auth and doesn't have onboarding set to true => Redirect to onboarding
   if (userId && !onBoardingCompleted) {
     const onboardingUrl = new URL('/onboarding', req.url);
-    return NextResponse.redirect(onboardingUrl);
-  }
-
-  // If user is auth, has completed onboarding and tries to access it => Redirect to dashboard
-  if (userId && onBoardingCompleted && pathname === '/onboarding') {
-    const onboardingUrl = new URL('/dashboard', req.url);
     return NextResponse.redirect(onboardingUrl);
   }
 
