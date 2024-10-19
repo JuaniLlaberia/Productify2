@@ -1,10 +1,16 @@
 import type { ReactNode } from 'react';
 import Sidebar from './(components)/Sidebar';
 
-const TeamLayout = ({ children }: { children: ReactNode }) => {
+const TeamLayout = ({
+  children,
+  params: { teamId },
+}: {
+  children: ReactNode;
+  params: { teamId: string };
+}) => {
   return (
     <div className='flex'>
-      <Sidebar />
+      <Sidebar teamId={teamId} />
       <section className='w-full'>{children}</section>
     </div>
   );
