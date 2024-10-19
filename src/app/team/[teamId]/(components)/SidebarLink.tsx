@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import type { ReactElement } from 'react';
 
 import {
@@ -8,7 +9,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 type SidebarLinkProps = {
@@ -20,7 +20,7 @@ type SidebarLinkProps = {
 
 const SidebarLink = ({ link, label, tooltip, icon }: SidebarLinkProps) => {
   const pathname = usePathname();
-  const isActive = `${pathname.split('/').at(-1)}` === `${link}`;
+  const isActive = pathname.includes(link);
 
   return (
     <Tooltip key={link}>
