@@ -59,11 +59,12 @@ export const Members = Table('members', {
 
 export const Projects = Table('projects', {
   name: v.string(),
-  description: v.string(),
-  icons: v.object({
-    type: v.string(),
-    color: v.string(),
-  }),
+  icons: v.optional(
+    v.object({
+      type: v.string(),
+      color: v.string(),
+    })
+  ),
   public: v.boolean(),
   autojoin: v.boolean(),
   createdBy: v.id('users'),

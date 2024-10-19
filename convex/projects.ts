@@ -43,7 +43,6 @@ export const createProject = mutation({
     teamId: v.id('teams'),
     projectData: v.object({
       name: v.string(),
-      description: v.string(),
       public: v.boolean(),
       autojoin: v.boolean(),
       icons: Projects.withoutSystemFields.icons,
@@ -73,6 +72,8 @@ export const createProject = mutation({
         projectId,
       });
     }
+
+    return projectId;
   },
 });
 
