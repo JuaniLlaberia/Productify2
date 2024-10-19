@@ -12,37 +12,18 @@ import {
 import { usePathname } from 'next/navigation';
 
 import SidebarExpandItem from '../../(components)/SidebarExpandItem';
+import ProjectForm from './ProjectForm';
+import SidebarLoader from '../../(components)/SidebarLoader';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import ProjectForm from './ProjectForm';
 import { cn } from '@/lib/utils';
 
 const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
   const pathname = usePathname();
   const projects = useQuery(api.projects.getProjects, { teamId });
-  if (!projects)
-    return (
-      <ul className='flex flex-col gap-2'>
-        <li>
-          <Skeleton className='w-full h-6' />
-        </li>
-        <li>
-          <Skeleton className='w-full h-6' />
-        </li>
-        <li>
-          <Skeleton className='w-full h-6' />
-        </li>
-        <li>
-          <Skeleton className='w-full h-6' />
-        </li>
-        <li>
-          <Skeleton className='w-full h-6' />
-        </li>
-      </ul>
-    );
+  if (!projects) return <SidebarLoader />;
 
   const reUsableUrl = `/team/${teamId}/projects`;
 
