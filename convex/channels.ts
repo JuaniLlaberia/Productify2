@@ -14,7 +14,9 @@ export const getChannels = query({
         q.eq('teamId', args.teamId).eq('userId', member._id)
       )
       .collect();
-    const channelIds = channelMembers.map(channelMember => channelMember._id);
+    const channelIds = channelMembers.map(
+      channelMember => channelMember.channelId
+    );
     const channels = await Promise.all(channelIds.map(id => ctx.db.get(id)));
 
     return channels;

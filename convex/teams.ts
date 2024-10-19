@@ -13,7 +13,7 @@ export const getUserTeams = query({
       .query('members')
       .withIndex('by_userId', q => q.eq('userId', user._id))
       .collect();
-    const teamsIds = teams.map(team => team._id);
+    const teamsIds = teams.map(team => team.teamId);
     const teamsData = await Promise.all(teamsIds.map(id => ctx.db.get(id)));
 
     return teamsData;

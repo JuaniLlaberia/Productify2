@@ -15,7 +15,9 @@ export const getProjects = query({
         q.eq('teamId', args.teamId).eq('userId', member._id)
       )
       .collect();
-    const projectIds = projectMembers.map(projectMember => projectMember._id);
+    const projectIds = projectMembers.map(
+      projectMember => projectMember.projectId
+    );
     const projects = await Promise.all(projectIds.map(id => ctx.db.get(id)));
 
     return projects;
