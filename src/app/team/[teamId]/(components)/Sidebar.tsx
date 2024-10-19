@@ -17,7 +17,7 @@ const SIDEBAR_LINKS = [
   {
     label: 'Projects',
     tooltip: 'Projects',
-    link: 'projects',
+    link: 'projects/my-tasks',
     icon: <Folder className='size-5' strokeWidth={1.5} />,
   },
   {
@@ -52,16 +52,20 @@ const SIDEBAR_LINKS = [
   },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ teamId }: { teamId: string }) => {
   return (
     <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-gray-100 border-r border-border'>
       <TooltipProvider delayDuration={150}>
         <div className='flex flex-1 flex-col gap-3 items-center'>
-          <TeamsDropdown currentTeamId='j97382md96gk6p2zhj1rbhpxp172xrkp' />
+          <TeamsDropdown currentTeamId={teamId} />
 
           <ul className='flex flex-col gap-3'>
             {SIDEBAR_LINKS.map(link => (
-              <SidebarLink key={link.link} {...link} />
+              <SidebarLink
+                key={link.link}
+                {...link}
+                link={`/team/${teamId}/${link.link}`}
+              />
             ))}
           </ul>
         </div>
