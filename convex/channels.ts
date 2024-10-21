@@ -28,8 +28,8 @@ export const createChannel = mutation({
     teamId: v.id('teams'),
     channelData: v.object({
       name: v.string(),
-      icon: v.string(),
-      allowsWritting: v.boolean(),
+      icon: v.optional(v.string()),
+      public: v.boolean(),
     }),
   },
   handler: async (ctx, args) => {
