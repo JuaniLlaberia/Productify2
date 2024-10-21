@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronDown, ChevronRight, Plus } from 'lucide-react';
+import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { useMutation } from 'convex/react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -36,6 +36,7 @@ const DocumentItem = ({
 }: DocumentItemProps) => {
   const router = useRouter();
   const createDocument = useMutation(api.documents.createDocument);
+  const deleteDocument = useMutation(api.documents.deleteDocument);
   const { teamId } = useParams();
 
   const handleExpand = (event: MouseEvent<HTMLDivElement>) => {
@@ -64,6 +65,28 @@ const DocumentItem = ({
       loading: 'Creating new document',
       success: 'Document created successfully',
       error: 'Failed to create document',
+    });
+  };
+
+  const onDelete = (
+    event: MouseEvent<HTMLDivElement>,
+    documentId: Id<'documents'>
+  ) => {
+    event.stopPropagation();
+
+    if (!id) return;
+
+    const promise = deleteDocument({
+      documentId,
+      teamId: teamId as Id<'teams'>,
+    }).then(() => {
+      router.push(`documents`);
+    });
+
+    toast.promise(promise, {
+      loading: 'Deleting document and related ones',
+      success: 'Document deleted successfully',
+      error: 'Failed to delete document',
     });
   };
 
@@ -98,6 +121,13 @@ const DocumentItem = ({
             className='opacity-0 group-hover:opacity-100 h-full rounded-sm ml-auto hover:bg-white'
           >
             <Plus className='size-4 text-muted-foreground' />
+          </div>
+          <div
+            role='button'
+            onClick={e => onDelete(e, id)}
+            className='opacity-0 group-hover:opacity-100 h-full rounded-sm ml-auto hover:bg-white'
+          >
+            <Trash2 className='size-4 text-muted-foreground' />
           </div>
         </div>
       ) : null}
