@@ -161,6 +161,7 @@ export const Reports = Table('reports', {
   ),
   priority: prioritySchema,
   teamId: v.id('teams'),
+  projectId: v.id('projects'),
   createdBy: v.id('users'),
 });
 
