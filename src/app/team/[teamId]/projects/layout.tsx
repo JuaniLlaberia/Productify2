@@ -2,19 +2,12 @@ import type { ReactNode } from 'react';
 
 import ProjectsLinks from './(components)/ProjectsLinks';
 import InnerSidebar from '../(components)/InnerSidebar';
-import { Id } from '../../../../../convex/_generated/dataModel';
 
-const ProjectsLayout = ({
-  children,
-  params: { teamId },
-}: {
-  children: ReactNode;
-  params: { teamId: Id<'teams'> };
-}) => {
+const ProjectsLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className='flex'>
       <InnerSidebar title='Projects'>
-        <ProjectsLinks teamId={teamId} />
+        <ProjectsLinks />
       </InnerSidebar>
       <section className='p-4'>{children}</section>
     </div>

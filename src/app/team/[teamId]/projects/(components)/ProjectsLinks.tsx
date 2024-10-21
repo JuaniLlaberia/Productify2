@@ -10,7 +10,7 @@ import {
   SquareCheckBig,
   Tags,
 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 import SidebarExpandItem from '../../(components)/SidebarExpandItem';
 import ProjectForm from './ProjectForm';
@@ -21,9 +21,12 @@ import { Id } from '../../../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
-const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
+const ProjectsLinks = () => {
   const pathname = usePathname();
-  const projects = useQuery(api.projects.getProjects, { teamId });
+  const { teamId } = useParams();
+  const projects = useQuery(api.projects.getProjects, {
+    teamId: teamId as Id<'teams'>,
+  });
   if (!projects) return <SidebarLoader />;
 
   const reUsableUrl = `/team/${teamId}/projects`;
@@ -119,7 +122,7 @@ const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
         )}
       </ul>
       <DialogContent>
-        <ProjectForm teamId={teamId} />
+        <ProjectForm teamId={teamId as Id<'teams'>} />
       </DialogContent>
     </Dialog>
   );

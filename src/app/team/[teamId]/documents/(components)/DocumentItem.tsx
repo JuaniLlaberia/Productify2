@@ -44,7 +44,7 @@ const DocumentItem = ({
     onExpand?.();
   };
 
-  const onCreate = (event: MouseEvent<HTMLDivElement>) => {
+  const onCreate = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
     if (!id) return;
@@ -69,7 +69,7 @@ const DocumentItem = ({
   };
 
   const onDelete = (
-    event: MouseEvent<HTMLDivElement>,
+    event: MouseEvent<HTMLButtonElement>,
     documentId: Id<'documents'>
   ) => {
     event.stopPropagation();
@@ -97,12 +97,11 @@ const DocumentItem = ({
   );
 
   return (
-    <div
+    <button
       onClick={onClick}
-      role='button'
       style={{ paddingLeft: level ? `${level * 12 + 12}px` : '12px' }}
       className={cn(
-        'group flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
+        'group w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
         active ? 'bg-gray-200 text-primary' : null
       )}
     >
@@ -115,23 +114,21 @@ const DocumentItem = ({
       <p>{label}</p>
       {!!id ? (
         <div className='ml-auto flex items-center gap-x-2'>
-          <div
-            role='button'
+          <button
             onClick={onCreate}
             className='opacity-0 group-hover:opacity-100 h-full rounded-sm ml-auto hover:bg-white'
           >
             <Plus className='size-4 text-muted-foreground' />
-          </div>
-          <div
-            role='button'
+          </button>
+          <button
             onClick={e => onDelete(e, id)}
             className='opacity-0 group-hover:opacity-100 h-full rounded-sm ml-auto hover:bg-white'
           >
             <Trash2 className='size-4 text-muted-foreground' />
-          </div>
+          </button>
         </div>
       ) : null}
-    </div>
+    </button>
   );
 };
 
