@@ -25,7 +25,7 @@ export default function RootLayout({
       <html lang='en'>
         <body className={GeistSans.className}>
           <NextTopLoader showSpinner={false} />
-          <Toaster richColors />
+          <Toaster />
           <ThemeProvider
             attribute='class'
             defaultTheme='system'
