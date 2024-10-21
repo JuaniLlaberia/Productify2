@@ -39,22 +39,22 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
   const createProject = useMutation(api.projects.createProject);
 
   const submitHandler = handleSubmit(async data => {
-    try {
-      const projectId = await createProject({
-        teamId,
-        projectData: {
-          name: data.name,
-          public: data.public,
-          autojoin: data.autojoin,
-        },
-      });
-
+    const promise = createProject({
+      teamId,
+      projectData: {
+        name: data.name,
+        public: data.public,
+        autojoin: data.autojoin,
+      },
+    }).then(projectId => {
       router.push(`${projectId}/tasks`);
-      toast.success('Project created successfully');
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      toast.error('Failed to create project');
-    }
+    });
+
+    toast.promise(promise, {
+      loading: 'Creating new document',
+      success: 'Document created successfully',
+      error: 'Failed to create document',
+    });
   });
 
   return (
