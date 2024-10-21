@@ -1,10 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { Folder, Folders } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 
-import { cn } from '@/lib/utils';
+import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
 
 const AssetsLinks = () => {
   const pathname = usePathname();
@@ -16,30 +15,18 @@ const AssetsLinks = () => {
         <span className='py-0.5'>General</span>
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
-        <li>
-          <Link
-            href={`/team/${teamId}/my-assets`}
-            className={cn(
-              'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
-              pathname.includes('my-assets') ? 'bg-gray-200' : null
-            )}
-          >
-            <Folder className='size-4 mr-1.5' strokeWidth={1.5} />
-            My assets
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={`/team/${teamId}/assets`}
-            className={cn(
-              'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
-              pathname.includes('all-tasks') ? 'bg-gray-200' : null
-            )}
-          >
-            <Folders className='size-4 mr-1.5' strokeWidth={1.5} />
-            Team assets
-          </Link>
-        </li>
+        <InnerSidebarLink
+          label='My assets'
+          icon={<Folder className='size-4 mr-1.5' strokeWidth={1.5} />}
+          link={`/team/${teamId}/my-assets`}
+          isActive={pathname.includes('my-assets')}
+        />
+        <InnerSidebarLink
+          label='Team assets'
+          icon={<Folders className='size-4 mr-1.5' strokeWidth={1.5} />}
+          link={`/team/${teamId}/assets`}
+          isActive={pathname.includes('assets')}
+        />
       </ul>
     </>
   );

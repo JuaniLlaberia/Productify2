@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useQuery } from 'convex/react';
 import {
   Bug,
@@ -15,12 +14,12 @@ import { usePathname } from 'next/navigation';
 
 import SidebarExpandItem from '../../(components)/SidebarExpandItem';
 import ProjectForm from './ProjectForm';
+import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
 import SidebarLoader from '../../(components)/SidebarLoader';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { cn } from '@/lib/utils';
 
 const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
   const pathname = usePathname();
@@ -41,30 +40,18 @@ const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
             New project
           </button>
         </DialogTrigger>
-        <li>
-          <Link
-            href={`/team/${teamId}/projects/my-tasks`}
-            className={cn(
-              'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
-              pathname.includes('my-tasks') ? 'bg-gray-200' : null
-            )}
-          >
-            <SquareCheckBig className='size-4 mr-1.5' strokeWidth={1.5} />
-            My tasks
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={`/team/${teamId}/projects/all-tasks`}
-            className={cn(
-              'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
-              pathname.includes('all-tasks') ? 'bg-gray-200' : null
-            )}
-          >
-            <ListChecks className='size-4 mr-1.5' strokeWidth={1.5} />
-            All tasks
-          </Link>
-        </li>
+        <InnerSidebarLink
+          label='My taks'
+          icon={<SquareCheckBig className='size-4 mr-1.5' strokeWidth={1.5} />}
+          link={`/team/${teamId}/projects/my-tasks`}
+          isActive={pathname.includes('my-tasks')}
+        />
+        <InnerSidebarLink
+          label='All tasks'
+          icon={<ListChecks className='size-4 mr-1.5' strokeWidth={1.5} />}
+          link={`/team/${teamId}/projects/all-tasks`}
+          isActive={pathname.includes('all-tasks')}
+        />
       </ul>
 
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>

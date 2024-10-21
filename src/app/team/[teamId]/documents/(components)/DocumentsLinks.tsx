@@ -3,7 +3,7 @@
 import { useMutation } from 'convex/react';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
-import { Files, Plus, PlusCircle } from 'lucide-react';
+import { Plus, PlusCircle } from 'lucide-react';
 
 import DocumentsList from './DocumentsList';
 import DocumentItem from './DocumentItem';
@@ -37,13 +37,8 @@ const DocumentsLinks = () => {
         icon={<PlusCircle className='size-4' strokeWidth={1.5} />}
         onClick={handleDocCreate}
       />
-      <DocumentItem
-        label='My documents'
-        icon={<Files className='size-4' strokeWidth={1.5} />}
-        onClick={() => {}}
-      />
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mt-4 mb-2 group'>
-        <span className='py-0.5'>Your documents</span>
+        <span className='py-0.5'>Team documents</span>
         <span
           onClick={handleDocCreate}
           className='hover:bg-gray-200 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'

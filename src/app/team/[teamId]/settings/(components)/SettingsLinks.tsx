@@ -1,7 +1,5 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Blocks,
@@ -12,6 +10,7 @@ import {
   Workflow,
 } from 'lucide-react';
 
+import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 
 const TEAM_SETTINGS_LINKS = [
@@ -57,18 +56,13 @@ const SettingsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
         {TEAM_SETTINGS_LINKS.map(link => (
-          <li key={link.link}>
-            <Link
-              href={`/team/${teamId}/settings/${link.link}`}
-              className={cn(
-                'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
-                pathname.includes(link.link) ? 'bg-gray-200' : null
-              )}
-            >
-              {link.icon}
-              {link.label}
-            </Link>
-          </li>
+          <InnerSidebarLink
+            key={link.link}
+            label={link.label}
+            icon={link.icon}
+            link={`/team/${teamId}/settings/${link.link}`}
+            isActive={pathname.includes(link.link)}
+          />
         ))}
       </ul>
     </>
