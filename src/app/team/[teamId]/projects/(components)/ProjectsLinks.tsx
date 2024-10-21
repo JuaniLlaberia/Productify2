@@ -6,6 +6,7 @@ import {
   LayoutPanelTop,
   ListChecks,
   Plus,
+  PlusCircle,
   SquareCheckBig,
   Tags,
 } from 'lucide-react';
@@ -28,11 +29,17 @@ const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
   const reUsableUrl = `/team/${teamId}/projects`;
 
   return (
-    <>
+    <Dialog>
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2'>
         <span className='py-0.5'>General</span>
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
+        <DialogTrigger asChild>
+          <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200'>
+            <PlusCircle className='size-4 mr-1.5' strokeWidth={1.5} />
+            New project
+          </button>
+        </DialogTrigger>
         <li>
           <Link
             href={`/team/${teamId}/projects/my-tasks`}
@@ -59,71 +66,69 @@ const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
         </li>
       </ul>
 
-      <Dialog>
-        <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
-          <span className='py-0.5'>Your projects</span>
-          <DialogTrigger asChild>
-            <span className='hover:bg-gray-200 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
-              <Plus className='size-4' />
-            </span>
-          </DialogTrigger>
-        </h3>
-        <ul className='space-y-2.5'>
-          {projects.length > 0 ? (
-            projects.map(project => (
-              <SidebarExpandItem
-                key={project?._id}
-                title={project?.name as string}
-                itemId={project?._id as string}
-                icon='😎'
-                links={[
-                  {
-                    label: 'Tasks',
-                    icon: (
-                      <SquareCheckBig
-                        className='size-4 mr-1.5'
-                        strokeWidth={1.5}
-                      />
-                    ),
-                    link: `${reUsableUrl}/${project?._id}/tasks`,
-                  },
-                  {
-                    label: 'Templates',
-                    icon: (
-                      <LayoutPanelTop
-                        className='size-4 mr-1.5'
-                        strokeWidth={1.5}
-                      />
-                    ),
-                    link: `${reUsableUrl}/${project?._id}/templates`,
-                  },
-                  {
-                    label: 'Labels',
-                    icon: <Tags className='size-4 mr-1.5' strokeWidth={1.5} />,
-                    link: `${reUsableUrl}/${project?._id}/labels`,
-                  },
-                ]}
-              />
-            ))
-          ) : (
-            <div className='flex flex-col items-center'>
-              <p className='text-muted-foreground text-sm text-center py-1'>
-                No projects found
-              </p>
-              <DialogTrigger asChild>
-                <Button variant='outline' size='sm' className='mt-1'>
-                  <Plus className='size-3 mr-1.5' strokeWidth={2} />
-                  Create project
-                </Button>
-              </DialogTrigger>
-            </div>
-          )}
-        </ul>
-        <DialogContent>
-          <ProjectForm teamId={teamId} />
-        </DialogContent>
-      </Dialog>
-    </>
+      <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
+        <span className='py-0.5'>Your projects</span>
+        <DialogTrigger asChild>
+          <span className='hover:bg-gray-200 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
+            <Plus className='size-4' />
+          </span>
+        </DialogTrigger>
+      </h3>
+      <ul className='space-y-2.5'>
+        {projects.length > 0 ? (
+          projects.map(project => (
+            <SidebarExpandItem
+              key={project?._id}
+              title={project?.name as string}
+              itemId={project?._id as string}
+              icon='😎'
+              links={[
+                {
+                  label: 'Tasks',
+                  icon: (
+                    <SquareCheckBig
+                      className='size-4 mr-1.5'
+                      strokeWidth={1.5}
+                    />
+                  ),
+                  link: `${reUsableUrl}/${project?._id}/tasks`,
+                },
+                {
+                  label: 'Templates',
+                  icon: (
+                    <LayoutPanelTop
+                      className='size-4 mr-1.5'
+                      strokeWidth={1.5}
+                    />
+                  ),
+                  link: `${reUsableUrl}/${project?._id}/templates`,
+                },
+                {
+                  label: 'Labels',
+                  icon: <Tags className='size-4 mr-1.5' strokeWidth={1.5} />,
+                  link: `${reUsableUrl}/${project?._id}/labels`,
+                },
+              ]}
+            />
+          ))
+        ) : (
+          <div className='flex flex-col items-center'>
+            <p className='text-muted-foreground text-sm text-center py-1'>
+              No projects found
+            </p>
+            <DialogTrigger asChild>
+              <Button variant='outline' size='sm' className='mt-1'>
+                <Plus className='size-3 mr-1.5' strokeWidth={2} />
+                Create project
+              </Button>
+            </DialogTrigger>
+          </div>
+        )}
+      </ul>
+      <DialogContent>
+        <ProjectForm teamId={teamId} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

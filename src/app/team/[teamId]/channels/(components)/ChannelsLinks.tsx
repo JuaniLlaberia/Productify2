@@ -1,16 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { Bookmark, PlusCircle, Hash } from 'lucide-react';
+import { Bookmark, PlusCircle, Hash, Plus } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { useQuery } from 'convex/react';
 
 import SidebarLoader from '../../(components)/SidebarLoader';
+import ChannelForm from './ChannelForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
-import ChannelForm from './ChannelForm';
 
 const ChannelsLinks = () => {
   const pathname = usePathname();
@@ -22,21 +22,19 @@ const ChannelsLinks = () => {
   if (!channels) return <SidebarLoader />;
 
   return (
-    <>
+    <Dialog>
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2'>
         <span className='py-0.5'>General</span>
       </h3>
-      <Dialog>
-        <DialogTrigger asChild>
-          <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200'>
-            <PlusCircle className='size-4 mr-1.5' strokeWidth={1.5} />
-            New channel
-          </button>
-        </DialogTrigger>
-        <DialogContent>
-          <ChannelForm />
-        </DialogContent>
-      </Dialog>
+      <DialogTrigger asChild>
+        <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200'>
+          <PlusCircle className='size-4 mr-1.5' strokeWidth={1.5} />
+          New channel
+        </button>
+      </DialogTrigger>
+      <DialogContent>
+        <ChannelForm />
+      </DialogContent>
       <Link
         href={`/team/${teamId}/channels/saved`}
         className={cn(
@@ -48,8 +46,13 @@ const ChannelsLinks = () => {
         Saved chats
       </Link>
 
-      <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground my-2'>
+      <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mt-4 mb-2 group'>
         <span className='py-0.5'>Your channels</span>
+        <DialogTrigger asChild>
+          <span className='hover:bg-gray-200 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
+            <Plus className='size-4' />
+          </span>
+        </DialogTrigger>
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
         <li>
@@ -83,7 +86,7 @@ const ChannelsLinks = () => {
           </li>
         ))}
       </ul>
-    </>
+    </Dialog>
   );
 };
 
