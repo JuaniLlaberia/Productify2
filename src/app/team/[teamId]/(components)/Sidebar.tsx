@@ -50,7 +50,7 @@ const Sidebar = ({ teamId }: { teamId: string }) => {
     <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-gray-100 border-r border-border'>
       <TooltipProvider delayDuration={150}>
         <div className='flex flex-1 flex-col gap-3 items-center'>
-          <TeamsDropdown currentTeamId={teamId} />
+          <TeamsDropdown />
 
           <ul className='flex flex-col gap-3'>
             {SIDEBAR_LINKS.map(link => (
