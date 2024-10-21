@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useQuery } from 'convex/react';
 import {
+  Bug,
   LayoutPanelTop,
   ListChecks,
   Plus,
@@ -92,6 +93,11 @@ const ProjectsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
                     />
                   ),
                   link: `${reUsableUrl}/${project?._id}/tasks`,
+                },
+                {
+                  label: 'Reports',
+                  icon: <Bug className='size-4 mr-1.5' strokeWidth={1.5} />,
+                  link: `${reUsableUrl}/${project?._id}/bug-reports`,
                 },
                 {
                   label: 'Templates',

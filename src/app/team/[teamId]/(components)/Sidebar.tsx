@@ -1,5 +1,4 @@
 import {
-  Bug,
   FileText,
   Folder,
   Link as LinkIcon,
@@ -17,7 +16,7 @@ const SIDEBAR_LINKS = [
   {
     label: 'Projects',
     tooltip: 'Projects',
-    link: 'projects/my-tasks',
+    link: 'projects',
     icon: <Folder className='size-5' strokeWidth={1.5} />,
   },
   {
@@ -37,12 +36,6 @@ const SIDEBAR_LINKS = [
     tooltip: 'Assents & Links',
     link: 'assets',
     icon: <LinkIcon className='size-5' strokeWidth={1.5} />,
-  },
-  {
-    label: 'Reports',
-    tooltip: 'Bug reports',
-    link: 'bug-reports',
-    icon: <Bug className='size-5' strokeWidth={1.5} />,
   },
   {
     label: 'Settings',
