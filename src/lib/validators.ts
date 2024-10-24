@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { PriorityEnum, ReportTypeEnum } from './enums';
 
 export const newTeamSchema = z.object({
   name: z
@@ -33,4 +34,17 @@ export const LabelSchema = z.object({
     label: z.string(),
     value: z.string(),
   }),
+});
+
+export const ReportSchema = z.object({
+  title: z
+    .string()
+    .min(1, { message: 'Must be at least 1 character.' })
+    .max(25, 'Must be less than 25 characters'),
+  description: z
+    .string()
+    .min(1, { message: 'Must be at least 1 character.' })
+    .max(250, 'Must be less than 250 characters'),
+  priority: z.nativeEnum(PriorityEnum).optional(),
+  type: z.nativeEnum(ReportTypeEnum).optional(),
 });
