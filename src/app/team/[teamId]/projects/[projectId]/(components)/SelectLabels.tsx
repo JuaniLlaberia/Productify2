@@ -36,10 +36,13 @@ const SelectLabel = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
 
-  const { teamId, projectId } = useParams();
+  const { teamId, projectId } = useParams<{
+    teamId: Id<'teams'>;
+    projectId: Id<'projects'>;
+  }>();
   const labels = useQuery(api.labels.getLabels, {
-    teamId: teamId as Id<'teams'>,
-    projectId: projectId as Id<'projects'>,
+    teamId,
+    projectId,
   });
 
   return (

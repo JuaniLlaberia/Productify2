@@ -23,9 +23,11 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 const ProjectsLinks = () => {
   const pathname = usePathname();
-  const { teamId } = useParams();
+  const { teamId } = useParams<{
+    teamId: Id<'teams'>;
+  }>();
   const projects = useQuery(api.projects.getProjects, {
-    teamId: teamId as Id<'teams'>,
+    teamId,
   });
   if (!projects) return <SidebarLoader />;
 

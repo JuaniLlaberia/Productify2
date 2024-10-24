@@ -44,10 +44,13 @@ const SelectMembers = ({
     | undefined
   >(undefined);
 
-  const { teamId, projectId } = useParams();
+  const { teamId, projectId } = useParams<{
+    teamId: Id<'teams'>;
+    projectId: Id<'projects'>;
+  }>();
   const members = useQuery(api.projects.getProjectMembers, {
-    teamId: teamId as Id<'teams'>,
-    projectId: projectId as Id<'projects'>,
+    teamId,
+    projectId,
   });
 
   return (

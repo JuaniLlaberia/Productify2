@@ -11,13 +11,15 @@ import { Id } from '../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../convex/_generated/api';
 
 const DocumentsLinks = () => {
-  const { teamId } = useParams();
+  const { teamId } = useParams<{
+    teamId: Id<'teams'>;
+  }>();
   const createDocument = useMutation(api.documents.createDocument);
 
   const handleDocCreate = async () => {
     const promise = createDocument({
       title: 'Untitled',
-      teamId: teamId as Id<'teams'>,
+      teamId,
     });
 
     toast.promise(promise, {
@@ -46,7 +48,7 @@ const DocumentsLinks = () => {
           <Plus className='size-4' />
         </span>
       </h3>
-      <DocumentsList teamId={teamId as Id<'teams'>} />
+      <DocumentsList teamId={teamId} />
     </>
   );
 };

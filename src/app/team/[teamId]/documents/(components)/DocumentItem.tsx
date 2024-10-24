@@ -37,7 +37,9 @@ const DocumentItem = ({
   const router = useRouter();
   const createDocument = useMutation(api.documents.createDocument);
   const deleteDocument = useMutation(api.documents.deleteDocument);
-  const { teamId } = useParams();
+  const { teamId } = useParams<{
+    teamId: Id<'teams'>;
+  }>();
 
   const handleExpand = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -78,7 +80,7 @@ const DocumentItem = ({
 
     const promise = deleteDocument({
       documentId,
-      teamId: teamId as Id<'teams'>,
+      teamId,
     }).then(() => {
       router.push(`documents`);
     });

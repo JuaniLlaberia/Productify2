@@ -37,7 +37,10 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { TaskSchema } from '@/lib/validators';
 
 const TaskForm = () => {
-  const { teamId, projectId } = useParams();
+  const { teamId, projectId } = useParams<{
+    teamId: Id<'teams'>;
+    projectId: Id<'projects'>;
+  }>();
   const {
     register,
     setValue,
@@ -55,8 +58,8 @@ const TaskForm = () => {
       assignee: data.assignee,
       dueDate: data.date?.getTime(),
       label: data.label as Id<'labels'>,
-      teamId: teamId as Id<'teams'>,
-      projectId: projectId as Id<'projects'>,
+      teamId,
+      projectId,
       isSubTask: false,
     });
 

@@ -35,7 +35,10 @@ import { ReportSchema } from '@/lib/validators';
 import { PriorityEnum, ReportTypeEnum } from '@/lib/enums';
 
 const ReportsForm = () => {
-  const { teamId, projectId } = useParams();
+  const { teamId, projectId } = useParams<{
+    teamId: Id<'teams'>;
+    projectId: Id<'projects'>;
+  }>();
   const {
     register,
     handleSubmit,
@@ -53,8 +56,8 @@ const ReportsForm = () => {
       description: data.description,
       type: data.type,
       priority: data.priority,
-      teamId: teamId as Id<'teams'>,
-      projectId: projectId as Id<'projects'>,
+      teamId,
+      projectId,
     });
 
     toast.promise(promise, {

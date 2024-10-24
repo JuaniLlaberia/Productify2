@@ -45,7 +45,10 @@ const LabelsForm = () => {
     resolver: zodResolver(LabelSchema),
     defaultValues: { title: '', color: COLORS[0] },
   });
-  const { teamId, projectId } = useParams();
+  const { teamId, projectId } = useParams<{
+    teamId: Id<'teams'>;
+    projectId: Id<'projects'>;
+  }>();
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   const createLabel = useMutation(api.labels.createLabel);
@@ -54,8 +57,8 @@ const LabelsForm = () => {
     const promise = createLabel({
       title: data.title,
       color: data.color.label ?? 'red',
-      teamId: teamId as Id<'teams'>,
-      projectId: projectId as Id<'projects'>,
+      teamId,
+      projectId,
     });
 
     toast.promise(promise, {

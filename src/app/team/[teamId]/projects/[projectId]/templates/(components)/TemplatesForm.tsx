@@ -36,7 +36,10 @@ import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { TemplatesSchema } from '@/lib/validators';
 
 const TemplatesForm = () => {
-  const { teamId, projectId } = useParams();
+  const { teamId, projectId } = useParams<{
+    teamId: Id<'teams'>;
+    projectId: Id<'projects'>;
+  }>();
   const {
     register,
     setValue,
@@ -53,8 +56,8 @@ const TemplatesForm = () => {
       priority: data.priority,
       assignee: data.assignee,
       label: data.label as Id<'labels'>,
-      teamId: teamId as Id<'teams'>,
-      projectId: projectId as Id<'projects'>,
+      teamId,
+      projectId,
     });
 
     toast.promise(promise, {

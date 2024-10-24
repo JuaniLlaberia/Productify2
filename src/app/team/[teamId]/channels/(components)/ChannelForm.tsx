@@ -25,7 +25,9 @@ import { Button } from '@/components/ui/button';
 
 const ChannelForm = () => {
   const router = useRouter();
-  const { teamId } = useParams();
+  const { teamId } = useParams<{
+    teamId: Id<'teams'>;
+  }>();
   const {
     register,
     handleSubmit,
@@ -42,7 +44,7 @@ const ChannelForm = () => {
 
   const submitHandler = handleSubmit(async data => {
     const promise = createChannel({
-      teamId: teamId as Id<'teams'>,
+      teamId,
       channelData: {
         name: data.name,
         public: data.public,
