@@ -9,7 +9,7 @@ const ProjectsLayout = ({ children }: { children: ReactNode }) => {
       <InnerSidebar title='Projects'>
         <ProjectsLinks />
       </InnerSidebar>
-      <section className='p-4'>{children}</section>
+      {children}
     </div>
   );
 };
