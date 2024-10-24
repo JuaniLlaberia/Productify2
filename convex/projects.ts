@@ -38,6 +38,38 @@ export const getAllTeamProjects = query({
   },
 });
 
+export const getProjectById = query({
+  args: { teamId: v.id('teams'), projectId: v.id('projects') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const project = await ctx.db
+      .query('projects')
+      .withIndex('by_id', q => q.eq('_id', args.projectId))
+      .first();
+
+    return project;
+  },
+});
+
+export const getProjectMembers = query({
+  args: { teamId: v.id('teams'), projectId: v.id('projects') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const projectMembers = await ctx.db
+      .query('projectMembers')
+      .withIndex('by_projectId', q => q.eq('projectId', args.projectId))
+      .collect();
+    const projectMembersIds = projectMembers.map(member => member.userId);
+    const membersData = await Promise.all(
+      projectMembersIds.map(member => ctx.db.get(member))
+    );
+
+    return membersData;
+  },
+});
+
 export const createProject = mutation({
   args: {
     teamId: v.id('teams'),
