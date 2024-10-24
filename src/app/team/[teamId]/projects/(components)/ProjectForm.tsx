@@ -80,7 +80,7 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
               {...register('name')}
             />
           </InputWrapper>
-          <button className='flex items-center justify-center text-muted-foreground size-10 rounded-lg border border-input bg-transparent cursor-pointer hover:text-primary transition-all'>
+          <button className='flex items-center justify-center text-muted-foreground size-10 shrink-0 rounded-lg border border-input bg-transparent cursor-pointer hover:text-primary transition-all'>
             <span className='sr-only'>Select icon</span>
             <Plus className='size-4' />
           </button>
