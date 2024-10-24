@@ -79,16 +79,17 @@ export const ProjectMembers = Table('projectMembers', {
 
 export const Tasks = Table('taks', {
   title: v.string(),
-  description: v.string(),
   status: taskStatusSchema,
   priority: prioritySchema,
-  label: v.id('label'),
-  dueDate: v.number(),
-  parentTask: v.id('tasks'),
   isSubTask: v.boolean(),
-  assignee: v.id('users'),
   projectId: v.id('projects'),
   teamId: v.id('teams'),
+
+  description: v.optional(v.string()),
+  label: v.optional(v.id('labels')),
+  dueDate: v.optional(v.number()),
+  parentTask: v.optional(v.id('tasks')),
+  assignee: v.optional(v.id('users')),
 });
 
 export const Labels = Table('labels', {
