@@ -64,8 +64,6 @@ const ReportsForm = () => {
     });
   });
 
-  console.log(errors);
-
   return (
     <form onSubmit={submitHandler} className='space-y-5'>
       <DialogHeader>
