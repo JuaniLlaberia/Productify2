@@ -102,12 +102,14 @@ export const Labels = Table('labels', {
 
 export const Templates = Table('templates', {
   title: v.string(),
-  description: v.string(),
-  status: taskStatusSchema,
-  priority: prioritySchema,
-  label: v.id('label'),
-  teamId: v.id('teams'),
   projectId: v.id('projects'),
+  teamId: v.id('teams'),
+
+  status: v.optional(taskStatusSchema),
+  priority: v.optional(prioritySchema),
+  description: v.optional(v.string()),
+  label: v.optional(v.id('labels')),
+  assignee: v.optional(v.id('users')),
 });
 
 export const Channels = Table('channels', {
