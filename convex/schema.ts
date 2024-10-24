@@ -153,7 +153,7 @@ export const Reports = Table('reports', {
   title: v.string(),
   description: v.string(),
   type: v.union(
-    v.literal('ui/ux'),
+    v.literal('interface'),
     v.literal('functional'),
     v.literal('performance'),
     v.literal('security'),
