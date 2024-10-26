@@ -35,7 +35,13 @@ export const getProjectTasks = query({
       query = query.filter(q => q.eq(q.field('priority'), priority));
     if (label) query = query.filter(q => q.eq(q.field('label'), label));
 
-    const tasks = query.order('desc').collect();
+    const tasks = await Promise.all(
+      (await query.order('desc').collect()).map(async task => ({
+        ...task,
+        assignee: await ctx.db.get(task.assignee!),
+        label: await ctx.db.get(task.label!),
+      }))
+    );
     return tasks;
   },
 });
@@ -125,12 +131,12 @@ export const updateTask = mutation({
   },
 });
 
-export const deleteTask = mutation({
-  args: { teamId: v.id('teams'), taskId: v.id('tasks') },
+export const deleteTasks = mutation({
+  args: { teamId: v.id('teams'), taskIds: v.array(v.id('tasks')) },
   handler: async (ctx, args) => {
-    const { teamId, taskId } = args;
+    const { teamId, taskIds } = args;
     await isMember(ctx, teamId);
 
-    await ctx.db.delete(taskId);
+    await Promise.all(taskIds.map(taskId => ctx.db.delete(taskId)));
   },
 });
