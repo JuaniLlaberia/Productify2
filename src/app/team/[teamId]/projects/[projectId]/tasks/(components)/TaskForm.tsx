@@ -35,6 +35,7 @@ import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { DatePicker } from '@/components/ui/date-picker';
 import { TaskSchema } from '@/lib/validators';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PopulatedTask } from './tasksColumns';
 
 const SelectMembers = dynamic(
   () => import('../../(components)/SelectMembers'),
@@ -47,44 +48,62 @@ const SelectLabel = dynamic(() => import('../../(components)/SelectLabels'), {
   loading: () => <Skeleton className='h-10 w-[120px]' />,
 });
 
-const TaskForm = () => {
+const TaskForm = ({ taskData }: { taskData?: PopulatedTask }) => {
+  const isEditMode = Boolean(taskData);
   const { teamId, projectId } = useParams<{
     teamId: Id<'teams'>;
     projectId: Id<'projects'>;
   }>();
+
+  const defaultValues = {
+    title: taskData?.title || '',
+    description: taskData?.description || '',
+    status: taskData?.status || 'backlog',
+    priority: taskData?.priority || 'low',
+    assignee: taskData?.assignee?._id || undefined,
+    date: taskData?.dueDate ? new Date(taskData.dueDate) : undefined,
+    label: taskData?.label?._id || undefined,
+  };
+
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: zodResolver(TaskSchema) });
+  } = useForm({
+    resolver: zodResolver(TaskSchema),
+    defaultValues,
+  });
 
   const createTask = useMutation(api.tasks.createTask);
-  const submitHanlder = handleSubmit(async data => {
-    const promise = createTask({
+  const editTask = useMutation(api.tasks.updateTask);
+
+  const submitHandler = handleSubmit(async data => {
+    const taskPayload = {
       title: data.title,
       description: data.description,
-      status: data.staus || 'backlog',
+      status: data.status || 'backlog',
       priority: data.priority || 'low',
       assignee: data.assignee,
       dueDate: data.date?.getTime(),
       label: data.label as Id<'labels'>,
-      teamId,
-      projectId,
-      isSubTask: false,
-    });
+    };
+
+    const promise = isEditMode
+      ? editTask({ teamId, taskId: taskData!._id, taskData: taskPayload })
+      : createTask({ ...taskPayload, isSubTask: false, teamId, projectId });
 
     toast.promise(promise, {
-      loading: 'Creating new task',
-      success: 'Task created successfully',
-      error: 'Failed to create task',
+      loading: `${isEditMode ? 'Updating' : 'Creating'} task`,
+      success: `Task ${isEditMode ? 'updated' : 'created'} successfully`,
+      error: `Failed to ${isEditMode ? 'update' : 'create'} task`,
     });
   });
 
   return (
-    <form onSubmit={submitHanlder} className='space-y-5'>
+    <form onSubmit={submitHandler} className='space-y-5'>
       <DialogHeader>
-        <DialogTitle>Create task</DialogTitle>
+        <DialogTitle>{isEditMode ? 'Edit' : 'Create'} task</DialogTitle>
       </DialogHeader>
       <fieldset className='space-y-2'>
         <InputWrapper
@@ -100,7 +119,10 @@ const TaskForm = () => {
       </fieldset>
       <ul className='flex gap-2 flex-wrap'>
         <li>
-          <Select onValueChange={val => setValue('status', val)}>
+          <Select
+            defaultValue={defaultValues.status}
+            onValueChange={(val: StatusEnum) => setValue('status', val)}
+          >
             <Tooltip>
               <TooltipTrigger asChild>
                 <SelectTrigger
@@ -123,7 +145,10 @@ const TaskForm = () => {
           </Select>
         </li>
         <li>
-          <Select onValueChange={val => setValue('priority', val)}>
+          <Select
+            defaultValue={defaultValues.priority}
+            onValueChange={(val: PriorityEnum) => setValue('priority', val)}
+          >
             <Tooltip>
               <TooltipTrigger asChild>
                 <SelectTrigger
@@ -134,7 +159,7 @@ const TaskForm = () => {
                   <SelectValue placeholder='Priority' />
                 </SelectTrigger>
               </TooltipTrigger>
-              <TooltipContent>Select type</TooltipContent>
+              <TooltipContent>Select priority</TooltipContent>
             </Tooltip>
             <SelectContent>
               {Object.values(PriorityEnum).map(priority => (
@@ -150,13 +175,16 @@ const TaskForm = () => {
           </Select>
         </li>
         <li>
-          <SelectMembers setField={setValue} />
+          <SelectMembers
+            defaultValue={defaultValues.assignee}
+            setField={setValue}
+          />
         </li>
         <li>
-          <SelectLabel setField={setValue} />
+          <SelectLabel defaultValue={defaultValues.label} setField={setValue} />
         </li>
         <li>
-          <DatePicker setValue={setValue} />
+          <DatePicker defaultValue={defaultValues.date} setValue={setValue} />
         </li>
       </ul>
       <DialogFooter className='flex items-center sm:justify-between'>
@@ -172,6 +200,8 @@ const TaskForm = () => {
           <Button size='sm' disabled={isSubmitting} className='min-w-16'>
             {isSubmitting ? (
               <Loader2 className='size-4 animate-spin' />
+            ) : isEditMode ? (
+              'Update'
             ) : (
               'Create'
             )}

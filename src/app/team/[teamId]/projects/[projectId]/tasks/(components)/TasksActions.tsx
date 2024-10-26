@@ -86,7 +86,7 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
       {/* Edit */}
       <Dialog open={editDialog} onOpenChange={setEditDialog}>
         <DialogContent>
-          <TaskForm />
+          <TaskForm taskData={data} />
         </DialogContent>
       </Dialog>
       {/* Remove */}

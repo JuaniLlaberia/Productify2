@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import type { FieldValues, UseFormSetValue } from 'react-hook-form';
+import type { UseFormSetValue } from 'react-hook-form';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -17,10 +17,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
 
 export function DatePicker({
   setValue,
+  defaultValue,
 }: {
-  setValue: UseFormSetValue<FieldValues>;
+  setValue: UseFormSetValue<any>;
+  defaultValue?: Date;
 }) {
-  const [date, setDate] = React.useState<Date>();
+  const [date, setDate] = React.useState<Date | undefined>(defaultValue);
 
   return (
     <Popover>
@@ -52,8 +54,10 @@ export function DatePicker({
           mode='single'
           selected={date}
           onSelect={selected => {
-            setValue('date', selected);
-            setDate(selected);
+            if (selected) {
+              setValue('date', selected);
+              setDate(selected);
+            }
           }}
           disabled={date => date < new Date()}
           initialFocus

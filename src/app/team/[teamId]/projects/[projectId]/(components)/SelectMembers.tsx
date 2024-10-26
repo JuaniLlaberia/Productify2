@@ -2,9 +2,9 @@
 
 import { useQuery } from 'convex/react';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Check, Users } from 'lucide-react';
-import type { FieldValues, UseFormSetValue } from 'react-hook-form';
+import type { UseFormSetValue } from 'react-hook-form';
 
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
@@ -31,8 +31,10 @@ import {
 
 const SelectMembers = ({
   setField,
+  defaultValue,
 }: {
-  setField: UseFormSetValue<FieldValues>;
+  setField: UseFormSetValue<any>;
+  defaultValue?: string;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<
@@ -52,6 +54,21 @@ const SelectMembers = ({
     teamId,
     projectId,
   });
+
+  useEffect(() => {
+    if (defaultValue && members) {
+      const defaultMember = members.find(
+        member => member?._id === defaultValue
+      );
+      if (defaultMember) {
+        setValue({
+          id: defaultMember._id,
+          name: defaultMember.fullName,
+          img: defaultMember.profileImage,
+        });
+      }
+    }
+  }, [defaultValue, members]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -93,7 +110,7 @@ const SelectMembers = ({
         align='start'
         className='w-auto min-w-[120px] p-0'
       >
-        <Command>
+        <Command value={defaultValue}>
           <CommandInput placeholder='Assignee...' />
           <CommandList>
             <CommandEmpty>
@@ -104,7 +121,7 @@ const SelectMembers = ({
                 {members.map(member => (
                   <CommandItem
                     key={member?._id}
-                    value={member?.fullName}
+                    value={`${member?._id} ${member?.fullName}`}
                     className='relative'
                     onSelect={() => {
                       setValue({

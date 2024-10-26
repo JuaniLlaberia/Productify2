@@ -2,9 +2,9 @@
 
 import { useQuery } from 'convex/react';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tag } from 'lucide-react';
-import type { FieldValues, UseFormSetValue } from 'react-hook-form';
+import type { UseFormSetValue } from 'react-hook-form';
 
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
@@ -30,20 +30,39 @@ import {
 
 const SelectLabel = ({
   setField,
+  defaultValue,
 }: {
-  setField: UseFormSetValue<FieldValues>;
+  setField: UseFormSetValue<any>;
+  defaultValue?: string;
 }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const { teamId, projectId } = useParams<{
     teamId: Id<'teams'>;
     projectId: Id<'projects'>;
   }>();
+
   const labels = useQuery(api.labels.getLabels, {
     teamId,
     projectId,
   });
+
+  // Find and set the default label when labels are loaded
+  useEffect(() => {
+    if (labels && defaultValue) {
+      const defaultLabel = labels.find(label => label._id === defaultValue);
+      if (defaultLabel) {
+        setSelectedLabel({
+          id: defaultLabel._id,
+          title: defaultLabel.title,
+        });
+      }
+    }
+  }, [labels, defaultValue]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -54,47 +73,44 @@ const SelectLabel = ({
               variant='outline'
               role='combobox'
               aria-expanded={isOpen}
-              className='min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden'
+              className='w-full justify-between'
             >
-              <Tag
-                className='size-4 mr-2 text-muted-foreground'
-                strokeWidth={1.5}
-              />
-              {value || 'Label'}
+              <div className='flex items-center gap-2'>
+                <Tag className='h-4 w-4' />
+                <span className='truncate'>
+                  {selectedLabel ? selectedLabel.title : 'Select label'}
+                </span>
+              </div>
             </Button>
           </PopoverTrigger>
         </TooltipTrigger>
+
         <TooltipContent>Set label</TooltipContent>
       </Tooltip>
-      <PopoverContent
-        side='bottom'
-        align='start'
-        className='w-auto min-w-[120px] p-0'
-      >
+
+      <PopoverContent className='p-0 w-[200px]'>
         <Command>
-          <CommandInput placeholder='Label...' />
+          <CommandInput placeholder='Search labels...' />
           <CommandList>
-            <CommandEmpty>
-              <span className='text-muted-foreground'>No label found</span>
-            </CommandEmpty>
-            {labels ? (
-              <CommandGroup>
-                {labels.map(label => (
-                  <CommandItem
-                    key={label._id}
-                    value={label.title}
-                    className='relative'
-                    onSelect={() => {
-                      setValue(label.title);
-                      setField('label', label._id);
-                      setIsOpen(false);
-                    }}
-                  >
-                    {label?.title}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            ) : null}
+            <CommandEmpty>No label found</CommandEmpty>
+            <CommandGroup>
+              {labels?.map(label => (
+                <CommandItem
+                  value={label._id}
+                  key={label._id}
+                  onSelect={() => {
+                    setSelectedLabel({
+                      id: label._id,
+                      title: label.title,
+                    });
+                    setField('label', label._id);
+                    setIsOpen(false);
+                  }}
+                >
+                  {label.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>
