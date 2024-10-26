@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import Sidebar from './(components)/Sidebar';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const TeamLayout = ({
   children,
@@ -10,8 +11,10 @@ const TeamLayout = ({
 }) => {
   return (
     <div className='flex'>
-      <Sidebar teamId={teamId} />
-      <section className='w-full'>{children}</section>
+      <TooltipProvider delayDuration={150}>
+        <Sidebar teamId={teamId} />
+        <section className='w-full'>{children}</section>
+      </TooltipProvider>
     </div>
   );
 };
