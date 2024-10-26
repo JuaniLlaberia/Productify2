@@ -30,6 +30,7 @@ import { Id } from '../../../../../../../../convex/_generated/dataModel';
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { PriorityEnum, StatusEnum } from '@/lib/enums';
@@ -87,67 +88,73 @@ const TaskForm = () => {
           <Input placeholder='Task description' {...register('description')} />
         </InputWrapper>
       </fieldset>
-      <ul className='flex gap-2 flex-wrap'>
-        <li>
-          <Select onValueChange={val => setValue('status', val)}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <SelectTrigger
-                  icon={<Shapes className='size-4' strokeWidth={1.5} />}
-                  removeArrow
-                  className='w-auto min-w-[120px]'
-                >
-                  <SelectValue placeholder='Status' />
-                </SelectTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Select status</TooltipContent>
-            </Tooltip>
-            <SelectContent>
-              {Object.values(StatusEnum).map(status => (
-                <SelectItem className='capitalize' key={status} value={status}>
-                  {status}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </li>
-        <li>
-          <Select onValueChange={val => setValue('priority', val)}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <SelectTrigger
-                  icon={<Clock className='size-4' strokeWidth={1.5} />}
-                  removeArrow
-                  className='w-auto min-w-[120px]'
-                >
-                  <SelectValue placeholder='Priority' />
-                </SelectTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Select type</TooltipContent>
-            </Tooltip>
-            <SelectContent>
-              {Object.values(PriorityEnum).map(priority => (
-                <SelectItem
-                  className='capitalize'
-                  key={priority}
-                  value={priority}
-                >
-                  {priority}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </li>
-        <li>
-          <SelectMembers setField={setValue} />
-        </li>
-        <li>
-          <SelectLabel setField={setValue} />
-        </li>
-        <li>
-          <DatePicker setValue={setValue} />
-        </li>
-      </ul>
+      <TooltipProvider delayDuration={150}>
+        <ul className='flex gap-2 flex-wrap'>
+          <li>
+            <Select onValueChange={val => setValue('status', val)}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SelectTrigger
+                    icon={<Shapes className='size-4' strokeWidth={1.5} />}
+                    removeArrow
+                    className='w-auto min-w-[120px]'
+                  >
+                    <SelectValue placeholder='Status' />
+                  </SelectTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Select status</TooltipContent>
+              </Tooltip>
+              <SelectContent>
+                {Object.values(StatusEnum).map(status => (
+                  <SelectItem
+                    className='capitalize'
+                    key={status}
+                    value={status}
+                  >
+                    {status}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </li>
+          <li>
+            <Select onValueChange={val => setValue('priority', val)}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SelectTrigger
+                    icon={<Clock className='size-4' strokeWidth={1.5} />}
+                    removeArrow
+                    className='w-auto min-w-[120px]'
+                  >
+                    <SelectValue placeholder='Priority' />
+                  </SelectTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Select type</TooltipContent>
+              </Tooltip>
+              <SelectContent>
+                {Object.values(PriorityEnum).map(priority => (
+                  <SelectItem
+                    className='capitalize'
+                    key={priority}
+                    value={priority}
+                  >
+                    {priority}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </li>
+          <li>
+            <SelectMembers setField={setValue} />
+          </li>
+          <li>
+            <SelectLabel setField={setValue} />
+          </li>
+          <li>
+            <DatePicker setValue={setValue} />
+          </li>
+        </ul>
+      </TooltipProvider>
       <DialogFooter className='flex items-center sm:justify-between'>
         <Button size='sm' variant='outline'>
           Use templates
