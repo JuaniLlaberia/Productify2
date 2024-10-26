@@ -84,7 +84,7 @@ const TemplatesActions = ({ data }: { data: PopulatedTemplates }) => {
       {/* Edit */}
       <Dialog open={editDialog} onOpenChange={setEditDialog}>
         <DialogContent>
-          <TemplatesForm />
+          <TemplatesForm templateData={data} />
         </DialogContent>
       </Dialog>
       {/* Remove */}

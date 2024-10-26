@@ -34,6 +34,7 @@ import {
 import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { TemplatesSchema } from '@/lib/validators';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PopulatedTemplates } from './templatesColumns';
 
 const SelectMembers = dynamic(
   () => import('../../(components)/SelectMembers'),
@@ -46,42 +47,66 @@ const SelectLabel = dynamic(() => import('../../(components)/SelectLabels'), {
   loading: () => <Skeleton className='h-10 w-[120px]' />,
 });
 
-const TemplatesForm = () => {
+const TemplatesForm = ({
+  templateData,
+}: {
+  templateData?: PopulatedTemplates;
+}) => {
+  const isEditMode = Boolean(templateData);
+
   const { teamId, projectId } = useParams<{
     teamId: Id<'teams'>;
     projectId: Id<'projects'>;
   }>();
+
+  const defaultValues = {
+    title: templateData?.title || '',
+    description: templateData?.description || '',
+    status: templateData?.status || 'backlog',
+    priority: templateData?.priority || 'low',
+    assignee: templateData?.assignee?._id || undefined,
+    label: templateData?.label?._id || undefined,
+  };
+
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: zodResolver(TemplatesSchema) });
+  } = useForm({ resolver: zodResolver(TemplatesSchema), defaultValues });
 
   const createTemplate = useMutation(api.templates.createTemplate);
+  const editTemplate = useMutation(api.templates.updateTemplate);
+
   const submitHanlder = handleSubmit(async data => {
-    const promise = createTemplate({
+    const templatePayload = {
       title: data.title,
       description: data.description,
-      status: data.status,
-      priority: data.priority,
+      status: data.status || 'backlog',
+      priority: data.priority || 'low',
       assignee: data.assignee,
       label: data.label as Id<'labels'>,
-      teamId,
-      projectId,
-    });
+    };
+
+    const promise = isEditMode
+      ? editTemplate({
+          teamId,
+          templateId: templateData!._id,
+          templateData: templatePayload,
+        })
+      : createTemplate({ ...templatePayload, teamId, projectId });
 
     toast.promise(promise, {
-      loading: 'Creating new template',
-      success: 'Template created successfully',
-      error: 'Failed to create template',
+      loading: `${isEditMode ? 'Updating' : 'Creating'} template`,
+      success: `Template ${isEditMode ? 'updated' : 'created'} successfully`,
+      error: `Failed to ${isEditMode ? 'update' : 'create'} template`,
     });
   });
 
   return (
     <form onSubmit={submitHanlder} className='space-y-5'>
       <DialogHeader>
-        <DialogTitle>Create template</DialogTitle>
+        <DialogTitle>{isEditMode ? 'Edit' : 'Create'} template</DialogTitle>
       </DialogHeader>
       <fieldset className='space-y-2'>
         <InputWrapper
@@ -97,7 +122,10 @@ const TemplatesForm = () => {
       </fieldset>
       <ul className='flex gap-2 flex-wrap'>
         <li>
-          <Select onValueChange={val => setValue('status', val)}>
+          <Select
+            defaultValue={defaultValues.status}
+            onValueChange={(val: StatusEnum) => setValue('status', val)}
+          >
             <Tooltip>
               <TooltipTrigger asChild>
                 <SelectTrigger
@@ -120,7 +148,10 @@ const TemplatesForm = () => {
           </Select>
         </li>
         <li>
-          <Select onValueChange={val => setValue('priority', val)}>
+          <Select
+            defaultValue={defaultValues.priority}
+            onValueChange={(val: PriorityEnum) => setValue('priority', val)}
+          >
             <Tooltip>
               <TooltipTrigger asChild>
                 <SelectTrigger
@@ -147,10 +178,13 @@ const TemplatesForm = () => {
           </Select>
         </li>
         <li>
-          <SelectMembers setField={setValue} />
+          <SelectMembers
+            defaultValue={defaultValues.assignee}
+            setField={setValue}
+          />
         </li>
         <li>
-          <SelectLabel setField={setValue} />
+          <SelectLabel defaultValue={defaultValues.label} setField={setValue} />
         </li>
       </ul>
       <DialogFooter>
