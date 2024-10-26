@@ -33,7 +33,7 @@ interface DeletableItem {
 
 interface DeleteModalProps {
   teamId: Id<'teams'>;
-  taskIds: Id<'tasks'>[];
+  ids: Id<any>[];
   onSuccess: () => void;
 }
 
@@ -150,7 +150,7 @@ export function DataTable<TData extends DeletableItem, TValue>({
               <DialogContent>
                 <DeleteModal
                   teamId={table.getSelectedRowModel().rows[0].original.teamId}
-                  taskIds={table
+                  ids={table
                     .getSelectedRowModel()
                     .rows.map(row => row.original._id)}
                   onSuccess={() => setRowSelection({})}
