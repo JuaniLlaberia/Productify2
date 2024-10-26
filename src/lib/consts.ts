@@ -1,3 +1,5 @@
+import { PriorityEnum, StatusEnum } from './enums';
+
 export const COLORS = [
   { label: 'red', value: '#ef4444' },
   { label: 'salmon', value: '#f87171' },
@@ -14,3 +16,18 @@ export const COLORS = [
   { label: 'gray', value: '#9ca3af' },
   { label: 'slate', value: '#94a3b8' },
 ];
+
+export const STATUS_COLORS = {
+  [StatusEnum.BACKLOG]: 'gray',
+  [StatusEnum.TODO]: 'red',
+  [StatusEnum.IN_PROGRESS]: 'blue',
+  [StatusEnum.COMPLETED]: 'green',
+  [StatusEnum.CANCELED]: 'gray',
+};
+
+export const PRIORITY_COLORS = {
+  [PriorityEnum.LOW]: 'gray',
+  [PriorityEnum.MEDIUM]: 'yellow',
+  [PriorityEnum.HIGH]: 'orange',
+  [PriorityEnum.URGENT]: 'red',
+};
