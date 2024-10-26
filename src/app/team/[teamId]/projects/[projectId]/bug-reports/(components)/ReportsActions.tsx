@@ -112,7 +112,7 @@ const ReportsActions = ({ data }: { data: Doc<'reports'> }) => {
       {/* Edit */}
       <Dialog open={editDialog} onOpenChange={setEditDialog}>
         <DialogContent>
-          <ReportsForm />
+          <ReportsForm reportData={data} />
         </DialogContent>
       </Dialog>
       {/* Remove */}

@@ -54,7 +54,7 @@ export const updateReport = mutation({
     reportId: v.id('reports'),
     teamId: v.id('teams'),
     reportData: v.object(
-      omit(Reports.withoutSystemFields, ['createdBy', 'teamId'])
+      omit(Reports.withoutSystemFields, ['createdBy', 'teamId', 'projectId'])
     ),
   },
   handler: async (ctx, args) => {

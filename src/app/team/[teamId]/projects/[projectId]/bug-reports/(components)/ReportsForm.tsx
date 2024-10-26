@@ -30,15 +30,24 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { api } from '../../../../../../../../convex/_generated/api';
-import { Id } from '../../../../../../../../convex/_generated/dataModel';
+import { Doc, Id } from '../../../../../../../../convex/_generated/dataModel';
 import { ReportSchema } from '@/lib/validators';
 import { PriorityEnum, ReportTypeEnum } from '@/lib/enums';
 
-const ReportsForm = () => {
+const ReportsForm = ({ reportData }: { reportData?: Doc<'reports'> }) => {
+  const isEditMode = Boolean(reportData);
   const { teamId, projectId } = useParams<{
     teamId: Id<'teams'>;
     projectId: Id<'projects'>;
   }>();
+
+  const defaultValues = {
+    title: reportData?.title || '',
+    description: reportData?.description || '',
+    priority: reportData?.priority || 'low',
+    type: reportData?.type || 'other',
+  };
+
   const {
     register,
     handleSubmit,
@@ -46,31 +55,39 @@ const ReportsForm = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(ReportSchema),
+    defaultValues,
   });
 
   const createReport = useMutation(api.reports.createReport);
+  const editReport = useMutation(api.reports.updateReport);
 
   const submitHandler = handleSubmit(async data => {
-    const promise = createReport({
+    const reportPayload = {
       title: data.title,
       description: data.description,
       type: data.type,
       priority: data.priority,
-      teamId,
-      projectId,
-    });
+    };
+
+    const promise = isEditMode
+      ? editReport({
+          teamId,
+          reportId: reportData!._id,
+          reportData: reportPayload,
+        })
+      : createReport({ ...reportPayload, teamId, projectId });
 
     toast.promise(promise, {
-      loading: 'Creating new report',
-      success: 'Report created successfully',
-      error: 'Failed to create report',
+      loading: `${isEditMode ? 'Updating' : 'Creating'} report`,
+      success: `Report ${isEditMode ? 'updated' : 'created'} successfully`,
+      error: `Failed to ${isEditMode ? 'update' : 'create'} report`,
     });
   });
 
   return (
     <form onSubmit={submitHandler} className='space-y-5'>
       <DialogHeader>
-        <DialogTitle>Create report</DialogTitle>
+        <DialogTitle>{isEditMode ? 'Edit' : 'Create'} report</DialogTitle>
       </DialogHeader>
       <fieldset className='space-y-2'>
         <InputWrapper
@@ -95,7 +112,10 @@ const ReportsForm = () => {
         </InputWrapper>
         <ul className='flex gap-2 flex-wrap pt-3'>
           <li>
-            <Select onValueChange={val => setValue('type', val)}>
+            <Select
+              defaultValue={defaultValues.type}
+              onValueChange={(val: ReportTypeEnum) => setValue('type', val)}
+            >
               <Tooltip>
                 <TooltipTrigger asChild>
                   <SelectTrigger
@@ -118,7 +138,10 @@ const ReportsForm = () => {
             </Select>
           </li>
           <li>
-            <Select onValueChange={val => setValue('priority', val)}>
+            <Select
+              defaultValue={defaultValues.priority}
+              onValueChange={(val: PriorityEnum) => setValue('priority', val)}
+            >
               <Tooltip>
                 <TooltipTrigger asChild>
                   <SelectTrigger
