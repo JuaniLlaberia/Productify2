@@ -51,10 +51,11 @@ export const updateLabel = mutation({
   },
 });
 
-export const deleteLabel = mutation({
-  args: { labelId: v.id('labels'), teamId: v.id('teams') },
+export const deleteLabels = mutation({
+  args: { labelsIds: v.array(v.id('labels')), teamId: v.id('teams') },
   handler: async (ctx, args) => {
     await isMember(ctx, args.teamId);
-    await ctx.db.delete(args.labelId);
+
+    await Promise.all(args.labelsIds.map(labelId => ctx.db.delete(labelId)));
   },
 });
