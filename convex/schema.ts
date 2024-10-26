@@ -224,7 +224,7 @@ export default defineSchema({
     .index('by_teamId_channelId', ['teamId', 'channelId'])
     .index('by_teamId_userId', ['teamId', 'userId'])
     .index('by_parentId', ['parentMessage']),
-  reports: Reports.table.index('by_teamId', ['teamId']),
+  reports: Reports.table.index('by_teamId_projectId', ['teamId', 'projectId']),
   documents: Documents.table
     .index('by_userId', ['createdBy'])
     .index('by_userId_parentId', ['createdBy', 'parentDocument'])
