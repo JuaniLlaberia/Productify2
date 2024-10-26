@@ -1,9 +1,41 @@
 import { omit } from 'convex-helpers';
 import { v } from 'convex/values';
 
-import { mutation } from './_generated/server';
+import { mutation, query } from './_generated/server';
 import { Reports } from './schema';
 import { isMember } from './auth';
+
+export const getProjectReports = query({
+  args: {
+    teamId: v.id('teams'),
+    projectId: v.id('projects'),
+    filters: v.object({
+      type: v.optional(Reports.withoutSystemFields.type),
+      priority: v.optional(Reports.withoutSystemFields.priority),
+    }),
+  },
+  handler: async (ctx, args) => {
+    const {
+      teamId,
+      projectId,
+      filters: { type, priority },
+    } = args;
+    await isMember(ctx, teamId);
+
+    let query = ctx.db
+      .query('reports')
+      .withIndex('by_teamId_projectId', q =>
+        q.eq('teamId', teamId).eq('projectId', projectId)
+      );
+
+    if (type) query = query.filter(q => q.eq(q.field('type'), type));
+    if (priority)
+      query = query.filter(q => q.eq(q.field('priority'), priority));
+
+    const tasks = await query.order('desc').collect();
+    return tasks;
+  },
+});
 
 export const createReport = mutation({
   args: omit(Reports.withoutSystemFields, ['createdBy']),
@@ -35,10 +67,11 @@ export const updateReport = mutation({
   },
 });
 
-export const deleteReport = mutation({
-  args: { reportId: v.id('reports'), teamId: v.id('teams') },
+export const deleteReports = mutation({
+  args: { reporstIds: v.array(v.id('reports')), teamId: v.id('teams') },
   handler: async (ctx, args) => {
     await isMember(ctx, args.teamId);
-    await ctx.db.delete(args.reportId);
+
+    await Promise.all(args.reporstIds.map(reportId => ctx.db.delete(reportId)));
   },
 });
