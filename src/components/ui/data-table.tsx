@@ -7,7 +7,11 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
+  ColumnFiltersState,
+  getFilteredRowModel,
 } from '@tanstack/react-table';
+import { ComponentType, type ReactNode, useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import {
   Table,
@@ -17,18 +21,41 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useState } from 'react';
+import { useTable } from '../TableContext';
+import { Dialog, DialogContent, DialogTrigger } from './dialog';
+import { Button } from './button';
+import { Id } from '../../../convex/_generated/dataModel';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DeletableItem {
+  _id: Id<any>;
+  teamId: Id<'teams'>;
 }
 
-export function DataTable<TData, TValue>({
+interface DeleteModalProps {
+  teamId: Id<'teams'>;
+  taskIds: Id<'tasks'>[];
+  onSuccess: () => void;
+}
+
+interface DataTableProps<TData extends DeletableItem, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  DeleteModal: ComponentType<DeleteModalProps>;
+  footerModal?: ReactNode;
+  footerModalTrigger?: ReactNode;
+}
+
+export function DataTable<TData extends DeletableItem, TValue>({
   columns,
   data,
+  DeleteModal,
+  footerModal,
+  footerModalTrigger,
 }: DataTableProps<TData, TValue>) {
+  const { setTable, columnVisibility } = useTable();
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const table = useReactTable({
     data,
@@ -36,10 +63,20 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onRowSelectionChange: setRowSelection,
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
+      rowSelection,
+      columnVisibility,
+      columnFilters,
     },
   });
+
+  useEffect(() => {
+    setTable(table);
+  }, [table, setTable]);
 
   return (
     <div>
@@ -78,13 +115,74 @@ export function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className='h-24 text-center'>
+              <TableCell
+                colSpan={columns.length}
+                className='h-24 text-center text-muted-foreground'
+              >
                 No results.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
+      <footer className='flex items-center justify-between p-1'>
+        <div>
+          {table.getFilteredSelectedRowModel().rows.length > 0 ? (
+            <p className='flex-1 text-sm text-muted-foreground p-1'>
+              {table.getFilteredSelectedRowModel().rows.length} of{' '}
+              {table.getFilteredRowModel().rows.length} row(s) selected.
+            </p>
+          ) : footerModal ? (
+            <Dialog>
+              <DialogTrigger asChild>{footerModalTrigger}</DialogTrigger>
+              <DialogContent>{footerModal}</DialogContent>
+            </Dialog>
+          ) : null}
+        </div>
+        <div className='m-1'>
+          {table.getFilteredSelectedRowModel().rows.length > 0 ? (
+            <Dialog>
+              <DialogTrigger>
+                <Button variant='destructive' size='sm'>
+                  Delete all
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DeleteModal
+                  teamId={table.getSelectedRowModel().rows[0].original.teamId}
+                  taskIds={table
+                    .getSelectedRowModel()
+                    .rows.map(row => row.original._id)}
+                  onSuccess={() => setRowSelection({})}
+                />
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <div className='flex items-center justify-end space-x-2'>
+              <Button
+                variant='ghost'
+                size='sm'
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className='text-muted-foreground'
+              >
+                <ChevronLeft className='mr-1.5 size-4' strokeWidth={1.5} />
+                Previous
+              </Button>
+              <Button
+                variant='ghost'
+                size='sm'
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className='text-muted-foreground'
+              >
+                Next
+                <ChevronRight className='ml-1.5 size-4' strokeWidth={1.5} />
+              </Button>
+            </div>
+          )}
+        </div>
+      </footer>
     </div>
   );
 }
