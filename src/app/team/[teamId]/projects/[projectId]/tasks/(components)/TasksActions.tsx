@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { PopulatedTask } from './columns';
+import { PopulatedTask } from './tasksColumns';
 import { api } from '../../../../../../../../convex/_generated/api';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import DeleteTasksModal from './DeleteTasksModal';
@@ -91,7 +91,7 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
       </Dialog>
       {/* Remove */}
       <Dialog open={removeDialog} onOpenChange={setRemoveDialog}>
-        <DeleteTasksModal teamId={data.teamId} taskIds={[data._id]} />
+        <DeleteTasksModal teamId={data.teamId} ids={[data._id]} />
       </Dialog>
     </>
   );

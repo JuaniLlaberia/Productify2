@@ -18,11 +18,11 @@ import { Id } from '../../../../../../../../convex/_generated/dataModel';
 
 const DeleteTasksModal = ({
   teamId,
-  taskIds,
+  ids,
   onSuccess,
 }: {
   teamId: Id<'teams'>;
-  taskIds: Id<'tasks'>[];
+  ids: Id<'tasks'>[];
   onSuccess?: () => void;
 }) => {
   const deleteTasks = useMutation(api.tasks.deleteTasks);
@@ -30,13 +30,10 @@ const DeleteTasksModal = ({
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>
-          Delete {taskIds.length > 1 ? 'tasks' : 'task'}
-        </DialogTitle>
+        <DialogTitle>Delete {ids.length > 1 ? 'tasks' : 'task'}</DialogTitle>
         <DialogDescription>
-          You are about to delete{' '}
-          {taskIds.length > 1 ? 'these tasks' : 'this task'}. All data related
-          will be deleted.
+          You are about to delete {ids.length > 1 ? 'these tasks' : 'this task'}
+          . All data related will be deleted.
         </DialogDescription>
       </DialogHeader>
       <Alert variant='destructive'>
@@ -54,7 +51,7 @@ const DeleteTasksModal = ({
           size='sm'
           variant='destructive'
           onClick={async () => {
-            await deleteTasks({ teamId, taskIds });
+            await deleteTasks({ teamId, taskIds: ids });
             onSuccess?.();
           }}
         >

@@ -4,13 +4,13 @@ import { Columns3, Plus, Sheet } from 'lucide-react';
 import { useQuery } from 'convex/react';
 
 import DeleteTasksModal from './(components)/DeleteTasksModal';
-import ProjectsNavbar from '../(components)/Navbar';
+import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
 import TaskForm from './(components)/TaskForm';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
 import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { DataTable } from '@/components/ui/data-table';
-import { tasksColumns } from './(components)/columns';
+import { tasksColumns } from './(components)/tasksColumns';
 import { TableProvider } from '@/components/TableContext';
 import { Button } from '@/components/ui/button';
 
@@ -24,6 +24,21 @@ const FILTERS = [
     label: 'Status',
     field: 'status',
     options: ['backlog', 'todo', 'in-progress', 'completed', 'canceled'],
+  },
+];
+
+const VIEWS = [
+  {
+    id: 'board',
+    label: 'Board',
+    icon: <Columns3 className='size-4' strokeWidth={1.5} />,
+    value: 'board',
+  },
+  {
+    id: 'table',
+    label: 'Table',
+    icon: <Sheet className='size-4' strokeWidth={1.5} />,
+    value: 'table',
   },
 ];
 
@@ -53,22 +68,9 @@ const ProjectTasksPage = ({
   return (
     <TableProvider>
       <section className='w-full'>
-        <ProjectsNavbar
+        <ProjectFeatureNavbar
           filters={FILTERS}
-          views={[
-            {
-              id: 'board',
-              label: 'Board',
-              icon: <Columns3 className='size-4' strokeWidth={1.5} />,
-              value: 'board',
-            },
-            {
-              id: 'table',
-              label: 'Table',
-              icon: <Sheet className='size-4' strokeWidth={1.5} />,
-              value: 'table',
-            },
-          ]}
+          views={VIEWS}
           defaultView='board'
           createButtonLabel='New task'
           createModal={<TaskForm />}
@@ -98,7 +100,7 @@ const ProjectTasksPage = ({
             )}
           </>
         ) : (
-          'loading'
+          <>{view === 'board' ? 'loading' : 'loading'}</>
         )}
       </section>
     </TableProvider>
