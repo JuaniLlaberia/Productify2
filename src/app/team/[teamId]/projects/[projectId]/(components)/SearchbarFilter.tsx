@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -14,8 +13,10 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useCreateQueryString } from '@/hooks/useCreateQueryString';
+import { useTable } from '@/components/TableContext';
 
 export default function SearchbarFilter() {
+  const { table } = useTable();
   const [isOpen, setIsOpen] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -49,9 +50,7 @@ export default function SearchbarFilter() {
     };
   }, [searchValue]);
 
-  const handleSearch = useDebouncedCallback((value: string) => {
-    router.push(pathname + '?' + createQueryString('search', value));
-  }, 500);
+  if (!table) return null;
 
   return (
     <div ref={containerRef} className='relative'>
@@ -95,8 +94,10 @@ export default function SearchbarFilter() {
         >
           <Input
             ref={inputRef}
-            defaultValue={searchValue ?? ''}
-            onChange={e => handleSearch(e.target.value)}
+            value={table.getColumn('title')?.getFilterValue() as string}
+            onChange={event =>
+              table.getColumn('title')?.setFilterValue(event.target.value)
+            }
             placeholder='Search'
             className={cn(
               'h-8 rounded-l-none border-l-0 focus-visible:ring-0 focus-visible:ring-offset-0',
