@@ -47,7 +47,7 @@ const TeamsDropdown = () => {
             </TooltipContent>
           </Tooltip>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side='right' className='mt-1'>
+        <DropdownMenuContent side='right' align='start'>
           <ul>
             {teams.map(team => (
               <DropdownMenuItem key={team?._id} asChild>

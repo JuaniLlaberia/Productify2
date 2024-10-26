@@ -46,7 +46,7 @@ const UserMenu = () => {
             </TooltipContent>
           </Tooltip>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side='right' className='mb-2'>
+        <DropdownMenuContent side='right' align='end' className='mb-1'>
           <DropdownMenuLabel className='flex items-center gap-3 font-normal'>
             <Avatar className='rounded-lg size-10'>
               <AvatarFallback>
