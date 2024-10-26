@@ -34,7 +34,13 @@ export const getProjectTemplates = query({
       query = query.filter(q => q.eq(q.field('priority'), priority));
     if (label) query = query.filter(q => q.eq(q.field('label'), label));
 
-    const templates = await query.order('desc').collect();
+    const templates = await Promise.all(
+      (await query.order('desc').collect()).map(async template => ({
+        ...template,
+        assignee: await ctx.db.get(template.assignee!),
+        label: await ctx.db.get(template.label!),
+      }))
+    );
     return templates;
   },
 });
@@ -69,11 +75,13 @@ export const updateTemplate = mutation({
 });
 
 export const deleteTemplate = mutation({
-  args: { teamId: v.id('teams'), teamplateId: v.id('templates') },
+  args: { teamId: v.id('teams'), templatesIds: v.array(v.id('templates')) },
   handler: async (ctx, args) => {
-    const { teamId, teamplateId } = args;
+    const { teamId, templatesIds } = args;
     await isMember(ctx, teamId);
 
-    await ctx.db.delete(teamplateId);
+    await Promise.all(
+      templatesIds.map(templateId => ctx.db.delete(templateId))
+    );
   },
 });
