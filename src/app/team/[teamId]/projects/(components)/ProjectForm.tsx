@@ -115,7 +115,7 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
             )}
           />
         </div>
-        <Alert variant='destructive'>
+        <Alert variant='informative'>
           <AlertCircle className='size-4' />
           <AlertTitle>Information</AlertTitle>
           <AlertDescription>
