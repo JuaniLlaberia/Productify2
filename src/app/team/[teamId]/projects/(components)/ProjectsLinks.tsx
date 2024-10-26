@@ -4,7 +4,6 @@ import { useQuery } from 'convex/react';
 import {
   Bug,
   LayoutPanelTop,
-  ListChecks,
   Plus,
   PlusCircle,
   SquareCheckBig,
@@ -50,12 +49,6 @@ const ProjectsLinks = () => {
           icon={<SquareCheckBig className='size-4 mr-1.5' strokeWidth={1.5} />}
           link={`/team/${teamId}/projects/my-tasks`}
           isActive={pathname.includes('my-tasks')}
-        />
-        <InnerSidebarLink
-          label='All tasks'
-          icon={<ListChecks className='size-4 mr-1.5' strokeWidth={1.5} />}
-          link={`/team/${teamId}/projects/all-tasks`}
-          isActive={pathname.includes('all-tasks')}
         />
       </ul>
 
