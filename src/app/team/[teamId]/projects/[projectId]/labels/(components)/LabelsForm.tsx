@@ -20,7 +20,7 @@ import { Input } from '@/components/ui/input';
 
 import { LabelSchema } from '@/lib/validators';
 import { api } from '../../../../../../../../convex/_generated/api';
-import { Id } from '../../../../../../../../convex/_generated/dataModel';
+import { Doc, Id } from '../../../../../../../../convex/_generated/dataModel';
 import {
   Popover,
   PopoverContent,
@@ -34,7 +34,9 @@ import {
 import { cn } from '@/lib/utils';
 import { COLORS } from '@/lib/consts';
 
-const LabelsForm = () => {
+const LabelsForm = ({ labelData }: { labelData?: Doc<'labels'> }) => {
+  const isEditMode = Boolean(labelData);
+
   const {
     register,
     handleSubmit,
@@ -43,7 +45,12 @@ const LabelsForm = () => {
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(LabelSchema),
-    defaultValues: { title: '', color: COLORS[0] },
+    defaultValues: {
+      title: labelData?.title || '',
+      color: labelData
+        ? COLORS.find(color => color.label === labelData.color)
+        : COLORS[0],
+    },
   });
   const { teamId, projectId } = useParams<{
     teamId: Id<'teams'>;
@@ -52,26 +59,29 @@ const LabelsForm = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<boolean>(false);
 
   const createLabel = useMutation(api.labels.createLabel);
+  const editLabel = useMutation(api.labels.updateLabel);
 
   const submitHandler = handleSubmit(async data => {
-    const promise = createLabel({
+    const labelPayload = {
       title: data.title,
-      color: data.color.label ?? 'red',
-      teamId,
-      projectId,
-    });
+      color: data.color!.label,
+    };
+
+    const promise = isEditMode
+      ? editLabel({ teamId, labelId: labelData!._id, labelData: labelPayload })
+      : createLabel({ ...labelPayload, teamId, projectId });
 
     toast.promise(promise, {
-      loading: 'Creating new label',
-      success: 'Label created successfully',
-      error: 'Failed to create label',
+      loading: `${isEditMode ? 'Updating' : 'Creating'} label`,
+      success: `Label ${isEditMode ? 'updated' : 'created'} successfully`,
+      error: `Failed to ${isEditMode ? 'update' : 'create'} label`,
     });
   });
 
   return (
     <form onSubmit={submitHandler} className='space-y-5'>
       <DialogHeader>
-        <DialogTitle>Create label</DialogTitle>
+        <DialogTitle>{isEditMode ? 'Edit' : 'Create'} label</DialogTitle>
       </DialogHeader>
       <fieldset className='space-y-2'>
         <div className='flex items-end gap-1.5'>
@@ -102,7 +112,7 @@ const LabelsForm = () => {
                 )}
               </button>
             </PopoverTrigger>
-            <PopoverContent side='bottom'>
+            <PopoverContent side='bottom' align='end'>
               <h2 className='text-sm font-medium'>Select a color</h2>
               <ul className='grid grid-cols-7 gap-2.5 mt-3'>
                 {COLORS.map(color => (

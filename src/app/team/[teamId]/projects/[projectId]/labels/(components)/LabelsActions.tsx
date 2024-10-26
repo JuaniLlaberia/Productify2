@@ -80,7 +80,7 @@ const LabelsActions = ({ data }: { data: Doc<'labels'> }) => {
       {/* Edit */}
       <Dialog open={editDialog} onOpenChange={setEditDialog}>
         <DialogContent>
-          <LabelsForm />
+          <LabelsForm labelData={data} />
         </DialogContent>
       </Dialog>
       {/* Remove */}
