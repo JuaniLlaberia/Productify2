@@ -52,13 +52,12 @@ export const getUserTasksInTeam = query({
     filters: v.object({
       status: v.optional(Tasks.withoutSystemFields.status),
       priority: v.optional(Tasks.withoutSystemFields.priority),
-      label: v.optional(Tasks.withoutSystemFields.label),
     }),
   },
   handler: async (ctx, args) => {
     const {
       teamId,
-      filters: { status, priority, label },
+      filters: { status, priority },
     } = args;
     const member = await isMember(ctx, teamId);
 
@@ -72,9 +71,14 @@ export const getUserTasksInTeam = query({
     if (status) query = query.filter(q => q.eq(q.field('status'), status));
     if (priority)
       query = query.filter(q => q.eq(q.field('priority'), priority));
-    if (label) query = query.filter(q => q.eq(q.field('label'), label));
 
-    const tasks = await query.order('desc').collect();
+    const tasks = await Promise.all(
+      (await query.order('desc').collect()).map(async task => ({
+        ...task,
+        assignee: await ctx.db.get(task.assignee!),
+        label: await ctx.db.get(task.label!),
+      }))
+    );
     return tasks;
   },
 });
