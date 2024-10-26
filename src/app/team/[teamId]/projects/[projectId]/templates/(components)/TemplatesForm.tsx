@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useMutation } from 'convex/react';
 import { Clock, Loader2, Shapes } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -7,8 +8,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
-import SelectMembers from '../../(components)/SelectMembers';
-import SelectLabel from '../../(components)/SelectLabels';
 import { Button } from '@/components/ui/button';
 import {
   DialogClose,
@@ -34,6 +33,18 @@ import {
 } from '@/components/ui/tooltip';
 import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { TemplatesSchema } from '@/lib/validators';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const SelectMembers = dynamic(
+  () => import('../../(components)/SelectMembers'),
+  {
+    loading: () => <Skeleton className='h-10 w-[120px]' />,
+  }
+);
+
+const SelectLabel = dynamic(() => import('../../(components)/SelectLabels'), {
+  loading: () => <Skeleton className='h-10 w-[120px]' />,
+});
 
 const TemplatesForm = () => {
   const { teamId, projectId } = useParams<{
@@ -52,7 +63,7 @@ const TemplatesForm = () => {
     const promise = createTemplate({
       title: data.title,
       description: data.description,
-      status: data.staus,
+      status: data.status,
       priority: data.priority,
       assignee: data.assignee,
       label: data.label as Id<'labels'>,
