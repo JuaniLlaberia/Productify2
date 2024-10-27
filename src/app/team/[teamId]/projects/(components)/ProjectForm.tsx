@@ -22,10 +22,18 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ProjectSchema } from '@/lib/validators';
-import { Id } from '../../../../../../convex/_generated/dataModel';
+import { Doc, Id } from '../../../../../../convex/_generated/dataModel';
 import { EmojiPopover } from '@/components/ui/emoji-popover';
 
-const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
+const ProjectForm = ({
+  teamId,
+  projectData,
+}: {
+  teamId: Id<'teams'>;
+  projectData?: Doc<'projects'>;
+}) => {
+  const isEditMode = Boolean(projectData);
+
   const {
     register,
     handleSubmit,
@@ -34,40 +42,55 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
     watch,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { name: '', public: false, autojoin: false, icon: '' },
+    defaultValues: {
+      name: projectData?.name || '',
+      private: projectData?.private || false,
+      autojoin: projectData?.autojoin || false,
+      icon: projectData?.icon || '',
+    },
     resolver: zodResolver(ProjectSchema),
   });
   const router = useRouter();
 
   const createProject = useMutation(api.projects.createProject);
+  const editProject = useMutation(api.projects.updateProject);
 
   const submitHandler = handleSubmit(async data => {
     try {
-      const projectId = await createProject({
+      const projectPayload = {
         teamId,
         projectData: {
           name: data.name,
-          public: data.public,
+          private: data.private,
           autojoin: data.autojoin,
           icon: data.icon,
         },
-      });
+      };
 
-      router.push(`${projectId}/tasks`);
-      toast.success('Document created successfully');
+      const projectId = await (isEditMode
+        ? editProject({ projectId: projectData!._id, ...projectPayload })
+        : createProject(projectPayload));
+
+      if (!isEditMode) router.push(`${projectId}/tasks`);
+
+      toast.success(
+        `Project ${isEditMode ? 'updated' : 'created'} successfully`
+      );
     } catch {
-      toast.error('Failed to create document');
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} project`);
     }
   });
 
   return (
     <form onSubmit={submitHandler} className='space-y-5'>
       <DialogHeader>
-        <DialogTitle>Create project</DialogTitle>
-        <DialogDescription>
-          A projects represents work-spaces, teams, or groups, each with its own
-          tasks, templates, labels and features.
-        </DialogDescription>
+        <DialogTitle>{isEditMode ? 'Edit' : 'Create'} project</DialogTitle>
+        {!isEditMode ? (
+          <DialogDescription>
+            A projects represents work-spaces, teams, or groups, each with its
+            own tasks, templates, labels and features.
+          </DialogDescription>
+        ) : null}
       </DialogHeader>
       <fieldset className='space-y-4'>
         <div className='flex items-end gap-1.5'>
@@ -103,7 +126,7 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
           </div>
           <Controller
             control={control}
-            name='public'
+            name='private'
             render={({ field: { onChange, value } }) => (
               <Switch onCheckedChange={onChange} checked={value} />
             )}
@@ -141,6 +164,8 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
         <Button size='sm' disabled={isSubmitting} className='min-w-16'>
           {isSubmitting ? (
             <Loader2 className='size-4 animate-spin' />
+          ) : isEditMode ? (
+            'Update'
           ) : (
             'Create'
           )}

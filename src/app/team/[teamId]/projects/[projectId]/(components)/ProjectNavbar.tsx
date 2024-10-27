@@ -1,29 +1,18 @@
 'use client';
 
-import { Edit, LogOut, Settings, Trash2, Users } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { useQuery } from 'convex/react';
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
-import { Button } from '@/components/ui/button';
+import ProjectSettingsMenu from '../(settings)/ProjectSettingsMenu';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ProjectNavbar = () => {
   const pathname = usePathname();
@@ -36,6 +25,14 @@ const ProjectNavbar = () => {
     teamId,
     projectId,
   });
+
+  if (!projectData)
+    return (
+      <div className='flex items-center justify-between w-full p-2 px-4 border-b border-border'>
+        <Skeleton className='h-8 w-32' />
+        <Skeleton className='h-8 w-32' />
+      </div>
+    );
 
   return (
     <div className='flex items-center justify-between w-full p-2 px-4 border-b border-border'>
@@ -53,37 +50,7 @@ const ProjectNavbar = () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <DropdownMenu>
-        <Tooltip>
-          <DropdownMenuTrigger asChild>
-            <TooltipTrigger>
-              <Button size='sm' variant='outline'>
-                <Settings className='size-4 mr-1.5' strokeWidth={1.5} />
-                Settings
-              </Button>
-            </TooltipTrigger>
-          </DropdownMenuTrigger>
-          <TooltipContent>Project settings</TooltipContent>
-        </Tooltip>
-        <DropdownMenuContent side='bottom' align='end'>
-          <DropdownMenuItem>
-            <Users className='size-4 mr-2' strokeWidth={1.5} />
-            Members
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Edit className='size-4 mr-2' strokeWidth={1.5} />
-            Edit project
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Trash2 className='size-4 mr-2' strokeWidth={1.5} />
-            Delete project
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <LogOut className='size-4 mr-2' strokeWidth={1.5} />
-            Leave project
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <ProjectSettingsMenu projectData={projectData} />
     </div>
   );
 };
