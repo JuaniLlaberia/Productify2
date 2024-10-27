@@ -22,6 +22,8 @@ export type PopulatedTask = Omit<Doc<'tasks'>, 'assignee' | 'label'> & {
 export const tasksColumns: ColumnDef<PopulatedTask>[] = [
   {
     id: 'select',
+    enableResizing: false,
+    size: 10,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -201,6 +203,8 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
   // Actions
   {
     id: 'actions',
+    enableResizing: false,
+    size: 10,
     cell: ({ row }) => {
       const data = row.original;
       return <TasksActions data={data} />;

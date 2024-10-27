@@ -16,6 +16,8 @@ import { Doc } from '../../../../../../../../convex/_generated/dataModel';
 export const reportsColumns: ColumnDef<Doc<'reports'>>[] = [
   {
     id: 'select',
+    enableResizing: false,
+    size: 10,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -133,6 +135,8 @@ export const reportsColumns: ColumnDef<Doc<'reports'>>[] = [
   // Actions
   {
     id: 'actions',
+    enableResizing: false,
+    size: 10,
     cell: ({ row }) => {
       const data = row.original;
       return <ReportsActions data={data} />;

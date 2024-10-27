@@ -24,6 +24,8 @@ export type PopulatedTemplates = Omit<
 export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
   {
     id: 'select',
+    enableResizing: false,
+    size: 10,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -183,6 +185,8 @@ export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
   // Actions
   {
     id: 'actions',
+    enableResizing: false,
+    size: 10,
     cell: ({ row }) => {
       const data = row.original;
       return <TemplatesActions data={data} />;
