@@ -11,7 +11,7 @@ const TeamLayout = ({
 }) => {
   return (
     <div className='flex'>
-      <TooltipProvider delayDuration={150}>
+      <TooltipProvider delayDuration={50}>
         <Sidebar teamId={teamId} />
         <section className='w-full'>{children}</section>
       </TooltipProvider>
