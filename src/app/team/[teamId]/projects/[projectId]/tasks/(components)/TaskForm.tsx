@@ -36,6 +36,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { TaskSchema } from '@/lib/validators';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PopulatedTask } from './tasksColumns';
+import TemplatesPopover from '../../templates/(components)/TemplatesPopover';
 
 const SelectMembers = dynamic(
   () => import('../../(components)/SelectMembers'),
@@ -69,11 +70,14 @@ const TaskForm = ({ taskData }: { taskData?: PopulatedTask }) => {
     register,
     setValue,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(TaskSchema),
     defaultValues,
   });
+
+  const formValues = watch();
 
   const createTask = useMutation(api.tasks.createTask);
   const editTask = useMutation(api.tasks.updateTask);
@@ -120,7 +124,7 @@ const TaskForm = ({ taskData }: { taskData?: PopulatedTask }) => {
       <ul className='flex gap-2 flex-wrap'>
         <li>
           <Select
-            defaultValue={defaultValues.status}
+            value={formValues.status}
             onValueChange={(val: StatusEnum) => setValue('status', val)}
           >
             <Tooltip>
@@ -146,7 +150,7 @@ const TaskForm = ({ taskData }: { taskData?: PopulatedTask }) => {
         </li>
         <li>
           <Select
-            defaultValue={defaultValues.priority}
+            value={formValues.priority}
             onValueChange={(val: PriorityEnum) => setValue('priority', val)}
           >
             <Tooltip>
@@ -188,9 +192,7 @@ const TaskForm = ({ taskData }: { taskData?: PopulatedTask }) => {
         </li>
       </ul>
       <DialogFooter className='flex items-center sm:justify-between'>
-        <Button size='sm' variant='outline'>
-          Use templates
-        </Button>
+        <TemplatesPopover setValue={setValue} />
         <div className='space-x-1.5 flex items-center justify-center'>
           <DialogClose asChild>
             <Button size='sm' variant='outline'>
