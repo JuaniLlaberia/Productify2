@@ -7,34 +7,35 @@ import { Projects } from './schema';
 export const getProjects = query({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
+    // Verify team membership
     const member = await isMember(ctx, args.teamId);
 
+    // Get all public projects for the team
+    const allTeamPublicProjects = await ctx.db
+      .query('projects')
+      .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
+      .filter(q => q.eq(q.field('private'), false))
+      .collect();
+
+    // Get project IDs where user is a member
     const projectMembers = await ctx.db
       .query('projectMembers')
       .withIndex('by_teamId_userId', q =>
         q.eq('teamId', args.teamId).eq('userId', member._id)
       )
       .collect();
+
     const projectIds = projectMembers.map(
       projectMember => projectMember.projectId
     );
-    const projects = await Promise.all(projectIds.map(id => ctx.db.get(id)));
+    const userProjects = await Promise.all(
+      projectIds.map(id => ctx.db.get(id))
+    );
 
-    return projects;
-  },
-});
+    const projects = [...allTeamPublicProjects, ...userProjects];
 
-export const getAllTeamProjects = query({
-  args: { teamId: v.id('teams') },
-  handler: async (ctx, args) => {
-    await isMember(ctx, args.teamId);
-
-    const projects = await ctx.db
-      .query('projects')
-      .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
-      .order('desc')
-      .collect();
-    return projects;
+    // Sort by creation date descending (assuming you want to keep the ordering)
+    return projects.sort((a, b) => b!._creationTime - a!._creationTime);
   },
 });
 
@@ -75,7 +76,7 @@ export const createProject = mutation({
     teamId: v.id('teams'),
     projectData: v.object({
       name: v.string(),
-      public: v.boolean(),
+      private: v.boolean(),
       autojoin: v.boolean(),
       icon: Projects.withoutSystemFields.icon,
     }),
@@ -95,9 +96,9 @@ export const createProject = mutation({
       teamId,
     });
 
-    //If the project is public all users are part of it
-    //If public is false, we keep track of members
-    if (!projectData.public) {
+    //If the project is private all users are part of it
+    //If private is false, we keep track of members
+    if (projectData.private) {
       await ctx.db.insert('projectMembers', {
         userId: user._id,
         teamId,
@@ -115,8 +116,7 @@ export const updateProject = mutation({
     projectId: v.id('projects'),
     projectData: v.object({
       name: v.string(),
-      description: v.string(),
-      public: v.boolean(),
+      private: v.boolean(),
       autojoin: v.boolean(),
       icon: Projects.withoutSystemFields.icon,
     }),
@@ -186,6 +186,31 @@ export const removeProjectMember = mutation({
       throw new ConvexError(
         'User does not have permissions to perform this action.'
       );
+
+    await ctx.db.delete(projectMemberId);
+  },
+});
+
+export const leaveProject = mutation({
+  args: {
+    teamId: v.id('teams'),
+    projectId: v.id('projects'),
+  },
+  handler: async (ctx, args) => {
+    const { teamId, projectId } = args;
+    const member = await isMember(ctx, teamId);
+
+    const projectMemberId = (
+      await ctx.db
+        .query('projectMembers')
+        .withIndex('by_projectId_memberId', q =>
+          q.eq('projectId', projectId).eq('userId', member._id)
+        )
+        .first()
+    )?._id;
+
+    if (!projectMemberId)
+      throw new ConvexError('You are not a member of this project.');
 
     await ctx.db.delete(projectMemberId);
   },
