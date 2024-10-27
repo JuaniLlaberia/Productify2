@@ -89,15 +89,15 @@ const TaskForm = ({ taskData }: { taskData?: PopulatedTask }) => {
       label: data.label as Id<'labels'>,
     };
 
-    const promise = isEditMode
-      ? editTask({ teamId, taskId: taskData!._id, taskData: taskPayload })
-      : createTask({ ...taskPayload, isSubTask: false, teamId, projectId });
+    try {
+      await (isEditMode
+        ? editTask({ teamId, taskId: taskData!._id, taskData: taskPayload })
+        : createTask({ ...taskPayload, isSubTask: false, teamId, projectId }));
 
-    toast.promise(promise, {
-      loading: `${isEditMode ? 'Updating' : 'Creating'} task`,
-      success: `Task ${isEditMode ? 'updated' : 'created'} successfully`,
-      error: `Failed to ${isEditMode ? 'update' : 'create'} task`,
-    });
+      toast.success(`Task ${isEditMode ? 'updated' : 'created'} successfully`);
+    } catch {
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} task`);
+    }
   });
 
   return (
@@ -191,7 +191,7 @@ const TaskForm = ({ taskData }: { taskData?: PopulatedTask }) => {
         <Button size='sm' variant='outline'>
           Use templates
         </Button>
-        <div className='space-x-1.5'>
+        <div className='space-x-1.5 flex items-center justify-center'>
           <DialogClose asChild>
             <Button size='sm' variant='outline'>
               Cancel

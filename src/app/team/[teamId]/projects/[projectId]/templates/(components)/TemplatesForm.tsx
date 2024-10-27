@@ -88,19 +88,21 @@ const TemplatesForm = ({
       label: data.label as Id<'labels'>,
     };
 
-    const promise = isEditMode
-      ? editTemplate({
-          teamId,
-          templateId: templateData!._id,
-          templateData: templatePayload,
-        })
-      : createTemplate({ ...templatePayload, teamId, projectId });
+    try {
+      await (isEditMode
+        ? editTemplate({
+            teamId,
+            templateId: templateData!._id,
+            templateData: templatePayload,
+          })
+        : createTemplate({ ...templatePayload, teamId, projectId }));
 
-    toast.promise(promise, {
-      loading: `${isEditMode ? 'Updating' : 'Creating'} template`,
-      success: `Template ${isEditMode ? 'updated' : 'created'} successfully`,
-      error: `Failed to ${isEditMode ? 'update' : 'create'} template`,
-    });
+      toast.success(
+        `Template ${isEditMode ? 'updated' : 'created'} successfully`
+      );
+    } catch {
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} template`);
+    }
   });
 
   return (

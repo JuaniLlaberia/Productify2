@@ -69,19 +69,21 @@ const ReportsForm = ({ reportData }: { reportData?: Doc<'reports'> }) => {
       priority: data.priority,
     };
 
-    const promise = isEditMode
-      ? editReport({
-          teamId,
-          reportId: reportData!._id,
-          reportData: reportPayload,
-        })
-      : createReport({ ...reportPayload, teamId, projectId });
+    try {
+      await (isEditMode
+        ? editReport({
+            teamId,
+            reportId: reportData!._id,
+            reportData: reportPayload,
+          })
+        : createReport({ ...reportPayload, teamId, projectId }));
 
-    toast.promise(promise, {
-      loading: `${isEditMode ? 'Updating' : 'Creating'} report`,
-      success: `Report ${isEditMode ? 'updated' : 'created'} successfully`,
-      error: `Failed to ${isEditMode ? 'update' : 'create'} report`,
-    });
+      toast.success(
+        `Report ${isEditMode ? 'updated' : 'created'} successfully`
+      );
+    } catch {
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} report`);
+    }
   });
 
   return (

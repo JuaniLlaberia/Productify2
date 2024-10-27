@@ -67,15 +67,19 @@ const LabelsForm = ({ labelData }: { labelData?: Doc<'labels'> }) => {
       color: data.color!.label,
     };
 
-    const promise = isEditMode
-      ? editLabel({ teamId, labelId: labelData!._id, labelData: labelPayload })
-      : createLabel({ ...labelPayload, teamId, projectId });
+    try {
+      await (isEditMode
+        ? editLabel({
+            teamId,
+            labelId: labelData!._id,
+            labelData: labelPayload,
+          })
+        : createLabel({ ...labelPayload, teamId, projectId }));
 
-    toast.promise(promise, {
-      loading: `${isEditMode ? 'Updating' : 'Creating'} label`,
-      success: `Label ${isEditMode ? 'updated' : 'created'} successfully`,
-      error: `Failed to ${isEditMode ? 'update' : 'create'} label`,
-    });
+      toast.success(`Label ${isEditMode ? 'updated' : 'created'} successfully`);
+    } catch {
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} label`);
+    }
   });
 
   return (
