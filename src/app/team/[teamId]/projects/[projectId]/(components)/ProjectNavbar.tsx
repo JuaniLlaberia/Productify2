@@ -41,7 +41,9 @@ const ProjectNavbar = () => {
     <div className='flex items-center justify-between w-full p-2 px-4 border-b border-border'>
       <Breadcrumb>
         <BreadcrumbList>
-          <div className='p-1 rounded bg-muted text-muted-foreground'>😎</div>
+          <div className='p-1 rounded bg-muted text-muted-foreground'>
+            {projectData?.icon}
+          </div>
           <BreadcrumbItem>Projects</BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>{projectData?.name}</BreadcrumbItem>

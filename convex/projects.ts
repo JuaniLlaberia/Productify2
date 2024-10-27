@@ -77,7 +77,7 @@ export const createProject = mutation({
       name: v.string(),
       public: v.boolean(),
       autojoin: v.boolean(),
-      icons: Projects.withoutSystemFields.icons,
+      icon: Projects.withoutSystemFields.icon,
     }),
   },
   handler: async (ctx, args) => {
@@ -118,7 +118,7 @@ export const updateProject = mutation({
       description: v.string(),
       public: v.boolean(),
       autojoin: v.boolean(),
-      icons: Projects.withoutSystemFields.icons,
+      icon: Projects.withoutSystemFields.icon,
     }),
   },
   handler: async (ctx, args) => {

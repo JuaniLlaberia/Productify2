@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 type ExpandItemProps = {
   title: string;
-  icon: string | ReactElement;
+  icon: string;
   itemId: string;
   links: {
     label: string;

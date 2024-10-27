@@ -23,15 +23,18 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ProjectSchema } from '@/lib/validators';
 import { Id } from '../../../../../../convex/_generated/dataModel';
+import { EmojiPopover } from '@/components/ui/emoji-popover';
 
 const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
   const {
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { name: '', public: false, autojoin: false },
+    defaultValues: { name: '', public: false, autojoin: false, icon: '' },
     resolver: zodResolver(ProjectSchema),
   });
   const router = useRouter();
@@ -45,6 +48,7 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
         name: data.name,
         public: data.public,
         autojoin: data.autojoin,
+        icon: data.icon,
       },
     }).then(projectId => {
       router.push(`${projectId}/tasks`);
@@ -80,10 +84,16 @@ const ProjectForm = ({ teamId }: { teamId: Id<'teams'> }) => {
               {...register('name')}
             />
           </InputWrapper>
-          <button className='flex items-center justify-center text-muted-foreground size-10 shrink-0 rounded-lg border border-input bg-transparent cursor-pointer hover:text-primary transition-all'>
-            <span className='sr-only'>Select icon</span>
-            <Plus className='size-4' />
-          </button>
+          <EmojiPopover
+            onEmojiSelect={emoji => {
+              setValue('icon', emoji.native);
+            }}
+          >
+            <button className='flex items-center justify-center text-muted-foreground size-10 shrink-0 rounded-lg border border-input bg-transparent cursor-pointer hover:text-primary transition-all'>
+              <span className='sr-only'>Select icon</span>
+              {!watch('icon') ? <Plus className='size-4' /> : watch('icon')}
+            </button>
+          </EmojiPopover>
         </div>
         <div className='flex items-center justify-between py-1'>
           <div className='flex flex-col'>

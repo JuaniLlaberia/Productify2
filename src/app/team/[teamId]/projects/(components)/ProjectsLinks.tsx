@@ -67,7 +67,7 @@ const ProjectsLinks = () => {
               key={project?._id}
               title={project?.name as string}
               itemId={project?._id as string}
-              icon='😎'
+              icon={project?.icon as string}
               links={[
                 {
                   label: 'Tasks',

@@ -15,6 +15,7 @@ export const ProjectSchema = z.object({
     .max(25, 'Must be less than 25 characters.'),
   public: z.boolean(),
   autojoin: z.boolean(),
+  icon: z.string().optional(),
 });
 
 export const ChannelSchema = z.object({
