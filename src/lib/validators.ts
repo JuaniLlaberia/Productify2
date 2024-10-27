@@ -13,7 +13,7 @@ export const ProjectSchema = z.object({
     .string()
     .min(1, { message: 'Must be at least 1 character.' })
     .max(25, 'Must be less than 25 characters.'),
-  public: z.boolean(),
+  private: z.boolean(),
   autojoin: z.boolean(),
   icon: z.string().optional(),
 });
