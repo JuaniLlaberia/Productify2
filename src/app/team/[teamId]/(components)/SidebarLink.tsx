@@ -15,12 +15,19 @@ type SidebarLinkProps = {
   label: string;
   tooltip: string;
   link: string;
+  activeKey: string;
   icon: ReactElement;
 };
 
-const SidebarLink = ({ link, label, tooltip, icon }: SidebarLinkProps) => {
+const SidebarLink = ({
+  link,
+  activeKey,
+  label,
+  tooltip,
+  icon,
+}: SidebarLinkProps) => {
   const pathname = usePathname();
-  const isActive = pathname.includes(link);
+  const isActive = pathname.includes(activeKey);
 
   return (
     <Tooltip key={link}>

@@ -15,31 +15,36 @@ const SIDEBAR_LINKS = [
   {
     label: 'Projects',
     tooltip: 'Projects',
-    link: 'projects',
+    link: 'projects/my-tasks',
+    activeKey: 'projects',
     icon: <Folder className='size-5' strokeWidth={1.5} />,
   },
   {
     label: 'Channels',
     tooltip: 'Channels',
     link: 'channels',
+    activeKey: 'channels',
     icon: <MessagesSquare className='size-5' strokeWidth={1.5} />,
   },
   {
     label: 'Docs',
     tooltip: 'Documents',
     link: 'documents',
+    activeKey: 'documents',
     icon: <FileText className='size-5' strokeWidth={1.5} />,
   },
   {
     label: 'Assets',
     tooltip: 'Assents & Links',
     link: 'assets',
+    activeKey: 'assets',
     icon: <LinkIcon className='size-5' strokeWidth={1.5} />,
   },
   {
     label: 'Settings',
     tooltip: 'Settings',
-    link: 'settings',
+    link: 'settings/general',
+    activeKey: 'settings',
     icon: <Settings className='size-5' strokeWidth={1.5} />,
   },
 ];
