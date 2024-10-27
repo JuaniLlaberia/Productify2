@@ -46,7 +46,7 @@ const SIDEBAR_LINKS = [
 
 const Sidebar = ({ teamId }: { teamId: string }) => {
   return (
-    <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-gray-100 border-r border-border'>
+    <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-muted/25 border-r border-border'>
       <div className='flex flex-1 flex-col gap-3 items-center'>
         <TeamsDropdown />
 

@@ -31,8 +31,8 @@ const SidebarLink = ({ link, label, tooltip, icon }: SidebarLinkProps) => {
         >
           <span
             className={cn(
-              'size-10 flex items-center justify-center rounded-lg group-hover:bg-gray-200 transition-all',
-              isActive ? 'bg-gray-200' : null
+              'size-10 flex items-center justify-center rounded-lg group-hover:bg-muted transition-all',
+              isActive ? 'bg-muted' : null
             )}
           >
             {icon}

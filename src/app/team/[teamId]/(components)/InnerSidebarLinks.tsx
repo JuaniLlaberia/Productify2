@@ -21,8 +21,8 @@ const InnerSidebarLink = ({
       <Link
         href={link}
         className={cn(
-          'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
-          isActive ? 'bg-gray-200' : null
+          'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-muted',
+          isActive ? 'bg-muted' : null
         )}
       >
         {icon}

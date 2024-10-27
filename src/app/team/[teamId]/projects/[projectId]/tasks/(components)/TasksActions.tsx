@@ -49,7 +49,7 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='size-6 p-0 hover:bg-gray-200'>
+          <Button variant='ghost' className='size-6 p-0 hover:bg-muted'>
             <span className='sr-only'>Open menu</span>
             <MoreHorizontal
               className='size-4 text-muted-foreground'

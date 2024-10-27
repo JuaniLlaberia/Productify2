@@ -28,7 +28,7 @@ const ChannelsLinks = () => {
       <ul className='flex flex-col gap-0.5 mb-4'>
         <li>
           <DialogTrigger asChild>
-            <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200'>
+            <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-muted/40'>
               <PlusCircle className='size-4 mr-1.5' strokeWidth={1.5} />
               New channel
             </button>
@@ -44,7 +44,7 @@ const ChannelsLinks = () => {
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
         <span className='py-0.5'>Your channels</span>
         <DialogTrigger asChild>
-          <span className='hover:bg-gray-200 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
+          <span className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
             <Plus className='size-4' />
           </span>
         </DialogTrigger>

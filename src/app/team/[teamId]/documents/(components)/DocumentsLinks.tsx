@@ -43,7 +43,7 @@ const DocumentsLinks = () => {
         <span className='py-0.5'>Team documents</span>
         <span
           onClick={handleDocCreate}
-          className='hover:bg-gray-200 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'
+          className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'
         >
           <Plus className='size-4' />
         </span>

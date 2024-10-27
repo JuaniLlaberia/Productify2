@@ -19,7 +19,7 @@ const CustomTableHeader = ({ icon, label, column }: TableHeaderProps) => {
         size='icon'
         variant='ghost'
         onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        className='size-5 bg-gray-100 hover:bg-gray-200 ml-2 p-1 opacity-0 group-hover:opacity-100 cursor-pointer'
+        className='size-5 bg-primary-foreground/50 hover:bg-primary-foreground ml-2 p-1 opacity-0 group-hover:opacity-100 cursor-pointer'
       >
         <ArrowUpDown className='size-3' />
       </Button>

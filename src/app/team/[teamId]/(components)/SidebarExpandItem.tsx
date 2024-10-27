@@ -34,7 +34,7 @@ const SidebarExpandItem = ({ title, icon, itemId, links }: ExpandItemProps) => {
           <span className='text-sm mr-1.5'>{icon}</span>
           <span>{title}</span>
         </p>
-        <div className='group-hover:bg-gray-200 p-0.5 rounded text-muted-foreground'>
+        <div className='group-hover:bg-muted p-0.5 rounded text-muted-foreground'>
           <ChevronDown
             className={cn(
               'size-4 transition-transform',
@@ -50,10 +50,10 @@ const SidebarExpandItem = ({ title, icon, itemId, links }: ExpandItemProps) => {
               <Link
                 href={link.link}
                 className={cn(
-                  'flex items-center gap-2  pl-4 px-3 py-1.5 rounded-lg text-sm hover:bg-gray-200',
+                  'flex items-center gap-2  pl-4 px-3 py-1.5 rounded-lg text-sm hover:bg-muted',
                   pathname.includes(itemId) &&
                     link.link.split('/').at(-1) === crrPath
-                    ? 'bg-gray-200'
+                    ? 'bg-muted'
                     : null
                 )}
               >

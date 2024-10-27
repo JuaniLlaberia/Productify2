@@ -2,7 +2,7 @@ import { PriorityEnum, StatusEnum } from './enums';
 
 export const COLORS = [
   { label: 'red', value: '#ef4444' },
-  { label: 'salmon', value: '#f87171' },
+  { label: 'rose', value: '#f87171' },
   { label: 'orange', value: '#f97316' },
   { label: 'yellow', value: '#fde047' },
   { label: 'pink', value: '#f472b6' },
