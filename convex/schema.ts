@@ -60,7 +60,7 @@ export const Members = Table('members', {
 export const Projects = Table('projects', {
   name: v.string(),
   icon: v.optional(v.string()),
-  public: v.boolean(),
+  private: v.boolean(),
   autojoin: v.boolean(),
   createdBy: v.id('users'),
   teamId: v.id('teams'),
@@ -201,6 +201,7 @@ export default defineSchema({
   projects: Projects.table.index('by_teamId', ['teamId']),
   projectMembers: ProjectMembers.table
     .index('by_projectId', ['projectId'])
+    .index('by_projectId_memberId', ['projectId', 'userId'])
     .index('by_teamId_userId', ['teamId', 'userId']),
   tasks: Tasks.table
     .index('by_teamId_projectId', ['teamId', 'projectId'])
