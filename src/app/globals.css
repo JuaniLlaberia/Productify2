@@ -76,3 +76,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+em-emoji-picker {
+  height: 250px;
+  --rgb-accent: 255, 154, 39;
+  border: 2px solid var(--border);
+}
