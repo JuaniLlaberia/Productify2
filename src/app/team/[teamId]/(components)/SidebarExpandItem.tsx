@@ -32,7 +32,7 @@ const SidebarExpandItem = ({ title, icon, itemId, links }: ExpandItemProps) => {
       >
         <p className='text-nowrap line-clamp-1'>
           <span className='text-sm mr-1.5'>{icon}</span>
-          <span>{title}</span>
+          <span className='text-sm'>{title}</span>
         </p>
         <div className='group-hover:bg-muted p-0.5 rounded text-muted-foreground'>
           <ChevronDown

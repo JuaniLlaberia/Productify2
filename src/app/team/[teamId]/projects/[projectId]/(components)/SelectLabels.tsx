@@ -76,7 +76,10 @@ const SelectLabel = ({
               className='min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden'
             >
               <div className='flex items-center gap-2'>
-                <Tag className='h-4 w-4' />
+                <Tag
+                  className='size-4 text-muted-foreground'
+                  strokeWidth={1.5}
+                />
                 <span className='truncate'>
                   {selectedLabel ? selectedLabel.title : 'Select label'}
                 </span>
