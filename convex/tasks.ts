@@ -38,8 +38,8 @@ export const getProjectTasks = query({
     const tasks = await Promise.all(
       (await query.order('desc').collect()).map(async task => ({
         ...task,
-        assignee: await ctx.db.get(task.assignee!),
-        label: await ctx.db.get(task.label!),
+        assignee: task.assignee ? await ctx.db.get(task.assignee) : null,
+        label: task.label ? await ctx.db.get(task.label) : null,
       }))
     );
     return tasks;

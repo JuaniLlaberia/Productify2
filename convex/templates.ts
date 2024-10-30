@@ -37,8 +37,10 @@ export const getProjectTemplates = query({
     const templates = await Promise.all(
       (await query.order('desc').collect()).map(async template => ({
         ...template,
-        assignee: await ctx.db.get(template.assignee!),
-        label: await ctx.db.get(template.label!),
+        assignee: template.assignee
+          ? await ctx.db.get(template.assignee)
+          : null,
+        label: template.label ? await ctx.db.get(template.label) : null,
       }))
     );
     return templates;
