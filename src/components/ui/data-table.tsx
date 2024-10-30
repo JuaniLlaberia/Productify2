@@ -10,7 +10,7 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from '@tanstack/react-table';
-import { ComponentType, type ReactNode, useEffect, useState } from 'react';
+import { type ComponentType, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import {
@@ -22,7 +22,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { useTable } from '../TableContext';
-import { Dialog, DialogContent, DialogTrigger } from './dialog';
 import { Button } from './button';
 import { Id } from '../../../convex/_generated/dataModel';
 
@@ -35,22 +34,19 @@ interface DeleteModalProps {
   teamId: Id<'teams'>;
   ids: Id<any>[];
   onSuccess: () => void;
+  trigger?: React.ReactNode;
 }
 
 interface DataTableProps<TData extends DeletableItem, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   DeleteModal: ComponentType<DeleteModalProps>;
-  footerModal?: ReactNode;
-  footerModalTrigger?: ReactNode;
 }
 
 export function DataTable<TData extends DeletableItem, TValue>({
   columns,
   data,
   DeleteModal,
-  footerModal,
-  footerModalTrigger,
 }: DataTableProps<TData, TValue>) {
   const { setTable, columnVisibility } = useTable();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -106,7 +102,6 @@ export function DataTable<TData extends DeletableItem, TValue>({
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                      {/* Resizer handle */}
                       {header.column.getCanResize() && (
                         <div
                           onMouseDown={header.getResizeHandler()}
@@ -164,31 +159,17 @@ export function DataTable<TData extends DeletableItem, TValue>({
               {table.getFilteredSelectedRowModel().rows.length} of{' '}
               {table.getFilteredRowModel().rows.length} row(s) selected.
             </p>
-          ) : footerModal ? (
-            <Dialog>
-              <DialogTrigger asChild>{footerModalTrigger}</DialogTrigger>
-              <DialogContent>{footerModal}</DialogContent>
-            </Dialog>
           ) : null}
         </div>
         <div className='m-1'>
           {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-            <Dialog>
-              <DialogTrigger>
-                <Button variant='destructive' size='sm'>
-                  Delete all
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DeleteModal
-                  teamId={table.getSelectedRowModel().rows[0].original.teamId}
-                  ids={table
-                    .getSelectedRowModel()
-                    .rows.map(row => row.original._id)}
-                  onSuccess={() => setRowSelection({})}
-                />
-              </DialogContent>
-            </Dialog>
+            <DeleteModal
+              teamId={table.getSelectedRowModel().rows[0].original.teamId}
+              ids={table
+                .getSelectedRowModel()
+                .rows.map(row => row.original._id)}
+              onSuccess={() => setRowSelection({})}
+            />
           ) : (
             <div className='flex items-center justify-end space-x-2'>
               <Button

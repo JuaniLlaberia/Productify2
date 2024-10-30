@@ -17,6 +17,7 @@ const PopoverContent = React.forwardRef<
 >(({ className, align = 'start', sideOffset = 4, ...props }, ref) => (
   <PopoverPrimitive.Portal>
     <PopoverPrimitive.Content
+      onCloseAutoFocus={e => e.preventDefault()}
       ref={ref}
       align={align}
       sideOffset={sideOffset}

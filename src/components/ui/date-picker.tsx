@@ -22,10 +22,11 @@ export function DatePicker({
   setValue: UseFormSetValue<any>;
   defaultValue?: Date;
 }) {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [date, setDate] = React.useState<Date | undefined>(defaultValue);
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
@@ -57,6 +58,7 @@ export function DatePicker({
             if (selected) {
               setValue('date', selected);
               setDate(selected);
+              setIsOpen(false);
             }
           }}
           disabled={date => date < new Date()}
