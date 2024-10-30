@@ -1,6 +1,6 @@
 'use client';
 
-import { List, Plus, Sheet } from 'lucide-react';
+import { List, Sheet } from 'lucide-react';
 import { useQuery } from 'convex/react';
 
 import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
@@ -12,7 +12,6 @@ import { api } from '../../../../../../../convex/_generated/api';
 import { TableProvider } from '@/components/TableContext';
 import { DataTable } from '@/components/ui/data-table';
 import { templatesColumns } from './(components)/templatesColumns';
-import { Button } from '@/components/ui/button';
 
 const FILTERS = [
   {
@@ -78,13 +77,6 @@ const ProjectTemplatesPage = ({
           columns={templatesColumns}
           data={templates}
           DeleteModal={DeleteTemplatesModal}
-          footerModal={<TemplatesForm />}
-          footerModalTrigger={
-            <Button size='sm' variant='ghost' className='text-muted-foreground'>
-              <Plus className='size-4 mr-1.5' strokeWidth={2} />
-              Add template
-            </Button>
-          }
         />
       </section>
     </TableProvider>

@@ -15,13 +15,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { api } from '../../../../../../../../convex/_generated/api';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { PopulatedTemplates } from './templatesColumns';
 
 const TemplatesActions = ({ data }: { data: PopulatedTemplates }) => {
-  // Dialog states
-  const [editDialog, setEditDialog] = useState<boolean>(false);
-  const [removeDialog, setRemoveDialog] = useState<boolean>(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+
   // Duplicate functionality
   const createTemplate = useMutation(api.templates.createTemplate);
   const handleDuplicateTask = async () => {
@@ -44,54 +42,53 @@ const TemplatesActions = ({ data }: { data: PopulatedTemplates }) => {
   };
 
   return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant='ghost' className='size-6 p-0 hover:bg-muted'>
-            <span className='sr-only'>Open menu</span>
-            <MoreHorizontal
-              className='size-4 text-muted-foreground'
-              strokeWidth={1.5}
-            />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='end'>
-          {/* Edit button */}
-          <DropdownMenuItem
-            className='text-xs'
-            onClick={() => setEditDialog(true)}
-          >
-            <Edit className='size-3 mr-2' strokeWidth={1.5} />
-            Edit template
-          </DropdownMenuItem>
-          {/* Duplicate button */}
-          <DropdownMenuItem className='text-xs' onClick={handleDuplicateTask}>
-            <Copy className='size-3 mr-2' strokeWidth={1.5} />
-            Duplicate
-          </DropdownMenuItem>
-          {/* Remove button */}
-          <DropdownMenuItem
-            className='text-xs'
-            onClick={() => setRemoveDialog(true)}
-          >
-            <Trash2 className='size-3 mr-2' strokeWidth={1.5} />
-            Delete template
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      {/* Dialogs */}
-      {/* Edit */}
-      <Dialog open={editDialog} onOpenChange={setEditDialog}>
-        <DialogContent>
-          <TemplatesForm templateData={data} />
-        </DialogContent>
-      </Dialog>
-      {/* Remove */}
-      <Dialog open={removeDialog} onOpenChange={setRemoveDialog}>
-        <DeleteTemplatesModal teamId={data.teamId} ids={[data._id]} />
-      </Dialog>
-    </>
+    <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant='ghost' className='size-6 p-0 hover:bg-muted'>
+          <span className='sr-only'>Open menu</span>
+          <MoreHorizontal
+            className='size-4 text-muted-foreground'
+            strokeWidth={1.5}
+          />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align='end'>
+        {/* Edit button */}
+        <TemplatesForm
+          templateData={data}
+          trigger={
+            <DropdownMenuItem
+              className='text-xs'
+              onSelect={e => e.preventDefault()}
+            >
+              <Edit className='size-3 mr-2' strokeWidth={1.5} />
+              Edit template
+            </DropdownMenuItem>
+          }
+          onClose={() => setIsDropdownOpen(false)}
+        />
+        {/* Duplicate button */}
+        <DropdownMenuItem className='text-xs' onClick={handleDuplicateTask}>
+          <Copy className='size-3 mr-2' strokeWidth={1.5} />
+          Duplicate
+        </DropdownMenuItem>
+        {/* Remove button */}
+        <DeleteTemplatesModal
+          teamId={data.teamId}
+          ids={[data._id]}
+          trigger={
+            <DropdownMenuItem
+              className='text-xs'
+              onSelect={e => e.preventDefault()}
+            >
+              <Trash2 className='size-3 mr-2' strokeWidth={1.5} />
+              Delete template
+            </DropdownMenuItem>
+          }
+          onSuccess={() => setIsDropdownOpen(false)}
+        />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

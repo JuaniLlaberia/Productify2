@@ -1,6 +1,6 @@
 'use client';
 
-import { Columns3, Plus, Sheet } from 'lucide-react';
+import { Columns3, Sheet } from 'lucide-react';
 import { useQuery } from 'convex/react';
 
 import DeleteTasksModal from './(components)/DeleteTasksModal';
@@ -12,7 +12,6 @@ import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { DataTable } from '@/components/ui/data-table';
 import { tasksColumns } from './(components)/tasksColumns';
 import { TableProvider } from '@/components/TableContext';
-import { Button } from '@/components/ui/button';
 
 const FILTERS = [
   {
@@ -85,17 +84,6 @@ const ProjectTasksPage = ({
                 columns={tasksColumns}
                 data={tasks}
                 DeleteModal={DeleteTasksModal}
-                footerModal={<TaskForm />}
-                footerModalTrigger={
-                  <Button
-                    size='sm'
-                    variant='ghost'
-                    className='text-muted-foreground'
-                  >
-                    <Plus className='size-4 mr-1.5' strokeWidth={2} />
-                    Add task
-                  </Button>
-                }
               />
             )}
           </>

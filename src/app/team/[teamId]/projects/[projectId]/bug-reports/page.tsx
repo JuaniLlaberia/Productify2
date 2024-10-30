@@ -1,6 +1,6 @@
 'use client';
 
-import { List, Plus, Sheet } from 'lucide-react';
+import { List, Sheet } from 'lucide-react';
 import { useQuery } from 'convex/react';
 import DeleteReportsModal from './(components)/DeleteReportsModal';
 
@@ -12,7 +12,6 @@ import { Id } from '../../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../../convex/_generated/api';
 import { DataTable } from '@/components/ui/data-table';
 import { reportsColumns } from './(components)/reportsColumns';
-import { Button } from '@/components/ui/button';
 
 const FILTERS = [
   {
@@ -78,13 +77,6 @@ const ProjectBugReportsPage = ({
           columns={reportsColumns}
           data={reports}
           DeleteModal={DeleteReportsModal}
-          footerModal={<ReportsForm />}
-          footerModalTrigger={
-            <Button size='sm' variant='ghost' className='text-muted-foreground'>
-              <Plus className='size-4 mr-1.5' strokeWidth={2} />
-              Add report
-            </Button>
-          }
         />
       </section>
     </TableProvider>

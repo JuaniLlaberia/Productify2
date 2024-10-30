@@ -1,6 +1,6 @@
 'use client';
 
-import { List, Plus, Sheet } from 'lucide-react';
+import { List, Sheet } from 'lucide-react';
 import { useQuery } from 'convex/react';
 
 import DeleteLabelsModal from './(components)/DeleteLabelsModal';
@@ -9,7 +9,6 @@ import LabelsForm from './(components)/LabelsForm';
 import { TableProvider } from '@/components/TableContext';
 import { DataTable } from '@/components/ui/data-table';
 import { labelsColumns } from './(components)/labelsColumns';
-import { Button } from '@/components/ui/button';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
 
@@ -52,13 +51,6 @@ const ProjectLabelsPage = ({
           columns={labelsColumns}
           data={labels}
           DeleteModal={DeleteLabelsModal}
-          footerModal={<LabelsForm />}
-          footerModalTrigger={
-            <Button size='sm' variant='ghost' className='text-muted-foreground'>
-              <Plus className='size-4 mr-1.5' strokeWidth={2} />
-              Add label
-            </Button>
-          }
         />
       </section>
     </TableProvider>
