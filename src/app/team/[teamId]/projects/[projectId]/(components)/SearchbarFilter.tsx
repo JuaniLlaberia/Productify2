@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,20 +11,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useCreateQueryString } from '@/hooks/useCreateQueryString';
 import { useTable } from '@/components/TableContext';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 export default function SearchbarFilter() {
   const { table } = useTable();
   const [isOpen, setIsOpen] = useState(false);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-  const createQueryString = useCreateQueryString();
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const searchValue = searchParams.get('search');
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -33,22 +26,22 @@ export default function SearchbarFilter() {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchValue) return;
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
+  useClickOutside(containerRef, () => {
+    if (isOpen && !inputRef.current?.value) {
+      setIsOpen(false);
+      table?.getColumn('title')?.setFilterValue(null);
+    }
+  });
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [searchValue]);
+  const handleSearchToggle = () => {
+    setIsOpen(prev => {
+      if (prev && inputRef.current) {
+        inputRef.current.value = '';
+        table?.getColumn('title')?.setFilterValue(null);
+      }
+      return !prev;
+    });
+  };
 
   if (!table) return null;
 
@@ -59,14 +52,7 @@ export default function SearchbarFilter() {
           <TooltipTrigger asChild>
             <Button
               type='button'
-              onClick={() => {
-                setIsOpen(prev => !prev);
-
-                if (isOpen) {
-                  router.push(pathname + '?' + createQueryString('search', ''));
-                  if (inputRef.current) inputRef.current.value = '';
-                }
-              }}
+              onClick={handleSearchToggle}
               size='icon'
               variant='outline'
               className={cn(
