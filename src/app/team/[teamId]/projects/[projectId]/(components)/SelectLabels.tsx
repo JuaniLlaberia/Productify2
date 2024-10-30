@@ -3,7 +3,7 @@
 import { useQuery } from 'convex/react';
 import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Tag } from 'lucide-react';
+import { Check, Tag } from 'lucide-react';
 import type { UseFormSetValue } from 'react-hook-form';
 
 import { api } from '../../../../../../../convex/_generated/api';
@@ -111,6 +111,9 @@ const SelectLabel = ({
                   }}
                 >
                   {label.title}
+                  {selectedLabel?.id === label?._id ? (
+                    <Check className='size-4 absolute right-2.5' />
+                  ) : null}
                 </CommandItem>
               ))}
             </CommandGroup>

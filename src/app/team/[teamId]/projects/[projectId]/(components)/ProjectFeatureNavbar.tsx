@@ -1,12 +1,11 @@
 'use client';
 
-import { ListFilter, Plus } from 'lucide-react';
+import { ListFilter } from 'lucide-react';
 import type { ReactElement, ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import SearchbarFilter from './SearchbarFilter';
 import FiltersForm, { Filter } from './FiltersForm';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Popover,
@@ -42,7 +41,6 @@ const ProjectFeatureNavbar = ({
   views = [],
   defaultView,
   createModal,
-  createButtonLabel,
 }: NavbarProps) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -100,17 +98,7 @@ const ProjectFeatureNavbar = ({
           ) : null}
 
           {/* Create component */}
-          {createModal ? (
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button size='sm'>
-                  <Plus className='size-4 mr-1.5' strokeWidth={2} />
-                  {createButtonLabel ?? 'New'}
-                </Button>
-              </DialogTrigger>
-              <DialogContent>{createModal}</DialogContent>
-            </Dialog>
-          ) : null}
+          {createModal ? createModal : null}
         </div>
       </div>
     </nav>
