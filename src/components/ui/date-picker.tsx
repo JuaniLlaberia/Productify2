@@ -43,7 +43,7 @@ export function DatePicker({
               {date ? (
                 format(date, 'PPP')
               ) : (
-                <span className='text-primary'>Due date</span>
+                <span className='text-muted-foreground'>Due date</span>
               )}
             </Button>
           </PopoverTrigger>

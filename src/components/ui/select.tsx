@@ -32,9 +32,16 @@ const SelectTrigger = React.forwardRef<
     )}
     {...props}
   >
-    <p className='flex items-center gap-2 capitalize'>
+    <p
+      className={cn('flex items-center gap-2 capitalize', {
+        'text-primary': children,
+        'text-muted-foreground': !children,
+      })}
+    >
       <span className='text-muted-foreground'>{icon && icon}</span>
-      {children}
+      {children || (
+        <span className='text-muted-foreground'>Select an option</span>
+      )}
     </p>
     {!removeArrow ? (
       <SelectPrimitive.Icon asChild>
