@@ -97,7 +97,7 @@ const SelectMembers = ({
                     className='size-4 mr-2 text-muted-foreground'
                     strokeWidth={1.5}
                   />
-                  Assignee
+                  <span className='text-muted-foreground'>Assignee</span>
                 </>
               )}
             </Button>

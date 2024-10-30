@@ -50,10 +50,6 @@ const ReportsActions = ({ data }: { data: Doc<'reports'> }) => {
       teamId: data.teamId,
       projectId: data.projectId,
       isSubTask: false,
-      dueDate: new Date().getTime(),
-
-      // assignee: data.assignee?._id,
-      // label: data.label?._id,
     });
 
     toast.promise(promise, {

@@ -26,7 +26,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select';
 import { api } from '../../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../../convex/_generated/dataModel';
@@ -73,8 +72,8 @@ const TemplatesForm = ({
   const defaultValues = {
     title: templateData?.title || '',
     description: templateData?.description || '',
-    status: templateData?.status || 'backlog',
-    priority: templateData?.priority || 'low',
+    status: templateData?.status,
+    priority: templateData?.priority,
     assignee: templateData?.assignee?._id || undefined,
     label: templateData?.label?._id || undefined,
   };
@@ -83,9 +82,12 @@ const TemplatesForm = ({
     register,
     setValue,
     handleSubmit,
+    watch,
     reset,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(TemplatesSchema), defaultValues });
+
+  const formValues = watch();
 
   const createTemplate = useMutation(api.templates.createTemplate);
   const editTemplate = useMutation(api.templates.updateTemplate);
@@ -94,8 +96,8 @@ const TemplatesForm = ({
     const templatePayload = {
       title: data.title,
       description: data.description,
-      status: data.status || 'backlog',
-      priority: data.priority || 'low',
+      status: data.status,
+      priority: data.priority,
       assignee: data.assignee,
       label: data.label as Id<'labels'>,
     };
@@ -169,7 +171,9 @@ const TemplatesForm = ({
                       removeArrow
                       className='w-auto min-w-[120px]'
                     >
-                      <SelectValue placeholder='Status' />
+                      {formValues.status || (
+                        <span className='text-muted-foreground'>Status</span>
+                      )}
                     </SelectTrigger>
                   </TooltipTrigger>
                   <TooltipContent>Select status</TooltipContent>
@@ -199,10 +203,12 @@ const TemplatesForm = ({
                       removeArrow
                       className='w-auto min-w-[120px]'
                     >
-                      <SelectValue placeholder='Priority' />
+                      {formValues.priority || (
+                        <span className='text-muted-foreground'>Priority</span>
+                      )}
                     </SelectTrigger>
                   </TooltipTrigger>
-                  <TooltipContent>Select type</TooltipContent>
+                  <TooltipContent>Select priority</TooltipContent>
                 </Tooltip>
                 <SelectContent>
                   {Object.values(PriorityEnum).map(priority => (

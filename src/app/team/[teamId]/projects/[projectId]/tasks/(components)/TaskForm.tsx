@@ -27,7 +27,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select';
 import { api } from '../../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../../convex/_generated/dataModel';
@@ -71,8 +70,8 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
   const defaultValues = {
     title: taskData?.title || '',
     description: taskData?.description || '',
-    status: taskData?.status || 'backlog',
-    priority: taskData?.priority || 'low',
+    status: taskData?.status,
+    priority: taskData?.priority,
     assignee: taskData?.assignee?._id || undefined,
     date: taskData?.dueDate ? new Date(taskData.dueDate) : undefined,
     label: taskData?.label?._id || undefined,
@@ -99,8 +98,8 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
     const taskPayload = {
       title: data.title,
       description: data.description,
-      status: data.status || 'backlog',
-      priority: data.priority || 'low',
+      status: data.status,
+      priority: data.priority,
       assignee: data.assignee,
       dueDate: data.date?.getTime(),
       label: data.label as Id<'labels'>,
@@ -169,7 +168,9 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
                       removeArrow
                       className='w-auto min-w-[120px]'
                     >
-                      <SelectValue placeholder='Status' />
+                      {formValues.status || (
+                        <span className='text-muted-foreground'>Status</span>
+                      )}
                     </SelectTrigger>
                   </TooltipTrigger>
                   <TooltipContent>Select status</TooltipContent>
@@ -199,7 +200,9 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
                       removeArrow
                       className='w-auto min-w-[120px]'
                     >
-                      <SelectValue placeholder='Priority' />
+                      {formValues.priority || (
+                        <span className='text-muted-foreground'>Priority</span>
+                      )}
                     </SelectTrigger>
                   </TooltipTrigger>
                   <TooltipContent>Select priority</TooltipContent>
@@ -219,21 +222,18 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
             </li>
             <li>
               <SelectMembers
-                defaultValue={defaultValues.assignee}
+                defaultValue={formValues.assignee}
                 setField={setValue}
               />
             </li>
             <li>
               <SelectLabel
-                defaultValue={defaultValues.label}
+                defaultValue={formValues.label}
                 setField={setValue}
               />
             </li>
             <li>
-              <DatePicker
-                defaultValue={defaultValues.date}
-                setValue={setValue}
-              />
+              <DatePicker defaultValue={formValues.date} setValue={setValue} />
             </li>
           </ul>
           <DialogFooter className='flex items-center sm:justify-between'>

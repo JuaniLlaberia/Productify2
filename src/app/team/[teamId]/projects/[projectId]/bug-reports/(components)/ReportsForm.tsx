@@ -196,7 +196,7 @@ const ReportsForm = ({ reportData, trigger, onClose }: ReportsFormProps) => {
                         <SelectValue placeholder='Priority' />
                       </SelectTrigger>
                     </TooltipTrigger>
-                    <TooltipContent>Select type</TooltipContent>
+                    <TooltipContent>Select priority</TooltipContent>
                   </Tooltip>
                   <SelectContent>
                     {Object.values(PriorityEnum).map(priority => (

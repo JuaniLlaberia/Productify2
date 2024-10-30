@@ -37,7 +37,7 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
     cell: ({ row }) => (
       <div className='group flex items-center'>
         <div className='relative'>
-          <span className='absolute inset-0 flex items-center justify-center group-hover:opacity-0 pointer-events-none text-muted-foreground text-xs font-medium'>
+          <span className='absolute inset-0 flex items-center justify-center group-hover:opacity-0 pointer-events-none text-muted-foreground/75 text-xs font-medium'>
             {row.index + 1}
           </span>
           <Checkbox
@@ -86,6 +86,9 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
     },
     cell: ({ row }) => {
       const status = row.getValue('status') as StatusEnum;
+      if (!status)
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
+
       return (
         <div className='px-2'>
           <Badge
@@ -111,6 +114,9 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
     },
     cell: ({ row }) => {
       const priority = row.getValue('priority') as PriorityEnum;
+      if (!priority)
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
+
       return (
         <div className='px-2'>
           <Badge
@@ -136,7 +142,8 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
     },
     cell: ({ row }) => {
       const label = row.getValue('label') as Doc<'labels'>;
-      if (!label) return '';
+      if (!label)
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
 
       return (
         <div className='px-2'>
@@ -165,7 +172,7 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
       const assignee = row.getValue('assignee') as Doc<'users'>;
 
       if (!assignee)
-        return <p className='px-2 text-muted-foreground'>Not assigned</p>;
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
 
       return (
         <div className='flex items-center gap-2 px-2'>
@@ -194,7 +201,8 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
     },
     cell: ({ row }) => {
       const dueDate = parseInt(row.getValue('dueDate'));
-      if (!dueDate) return '';
+      if (!dueDate)
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
 
       const formattedDueDate = intlFormat(new Date(dueDate));
       return <p className='px-2 text-sm'>{formattedDueDate}</p>;

@@ -81,7 +81,11 @@ const SelectLabel = ({
                   strokeWidth={1.5}
                 />
                 <span className='truncate'>
-                  {selectedLabel ? selectedLabel.title : 'Select label'}
+                  {selectedLabel ? (
+                    selectedLabel.title
+                  ) : (
+                    <span className='text-muted-foreground'>Select label</span>
+                  )}
                 </span>
               </div>
             </Button>

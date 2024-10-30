@@ -88,6 +88,9 @@ export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
     },
     cell: ({ row }) => {
       const status = row.getValue('status') as StatusEnum;
+      if (!status)
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
+
       return (
         <div className='px-2'>
           <Badge
@@ -113,6 +116,9 @@ export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
     },
     cell: ({ row }) => {
       const priority = row.getValue('priority') as PriorityEnum;
+      if (!priority)
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
+
       return (
         <div className='px-2'>
           <Badge
@@ -138,7 +144,8 @@ export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
     },
     cell: ({ row }) => {
       const label = row.getValue('label') as Doc<'labels'>;
-      if (!label) return '';
+      if (!label)
+        return <p className='px-2 text-muted-foreground/75'>Not assigned</p>;
 
       return (
         <div className='px-2'>
