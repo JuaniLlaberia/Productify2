@@ -2,7 +2,7 @@
 
 import { ListFilter } from 'lucide-react';
 import type { ReactElement, ReactNode } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import SearchbarFilter from './SearchbarFilter';
 import FiltersForm, { Filter } from './FiltersForm';
@@ -46,6 +46,9 @@ const ProjectFeatureNavbar = ({
   const router = useRouter();
   const createQueryString = useCreateQueryString();
 
+  const searchParams = useSearchParams();
+  const view = searchParams.get('view');
+
   return (
     <nav className='w-full p-2 px-4 border-b border-border'>
       <div className='flex items-center justify-between'>
@@ -69,8 +72,12 @@ const ProjectFeatureNavbar = ({
               </PopoverContent>
             </Popover>
           ) : null}
-          <ColumnVisibilityDropdown />
-          <SearchbarFilter />
+          {view === 'table' ? (
+            <>
+              <ColumnVisibilityDropdown />
+              <SearchbarFilter />
+            </>
+          ) : null}
         </div>
 
         {/* VIEW COMPONENT */}
