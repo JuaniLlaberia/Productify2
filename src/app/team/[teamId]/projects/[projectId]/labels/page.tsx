@@ -1,6 +1,6 @@
 'use client';
 
-import { List, Sheet } from 'lucide-react';
+import { Sheet } from 'lucide-react';
 import { useQuery } from 'convex/react';
 
 import DeleteLabelsModal from './(components)/DeleteLabelsModal';
@@ -18,12 +18,6 @@ const VIEWS = [
     label: 'Table',
     icon: <Sheet className='size-4' strokeWidth={1.5} />,
     value: 'table',
-  },
-  {
-    id: 'list',
-    label: 'List',
-    icon: <List className='size-4' strokeWidth={1.5} />,
-    value: 'list',
   },
 ];
 

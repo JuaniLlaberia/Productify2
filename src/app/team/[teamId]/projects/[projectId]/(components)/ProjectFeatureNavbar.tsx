@@ -47,7 +47,7 @@ const ProjectFeatureNavbar = ({
   const createQueryString = useCreateQueryString();
 
   const searchParams = useSearchParams();
-  const view = searchParams.get('view');
+  const view = searchParams.get('view') || 'table';
 
   return (
     <nav className='w-full p-2 px-4 border-b border-border'>
