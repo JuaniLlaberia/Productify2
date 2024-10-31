@@ -77,7 +77,6 @@ export const createProject = mutation({
     projectData: v.object({
       name: v.string(),
       private: v.boolean(),
-      autojoin: v.boolean(),
       icon: Projects.withoutSystemFields.icon,
     }),
   },
@@ -117,7 +116,6 @@ export const updateProject = mutation({
     projectData: v.object({
       name: v.string(),
       private: v.boolean(),
-      autojoin: v.boolean(),
       icon: Projects.withoutSystemFields.icon,
     }),
   },

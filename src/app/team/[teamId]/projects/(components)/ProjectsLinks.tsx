@@ -19,8 +19,10 @@ import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { useState } from 'react';
 
 const ProjectsLinks = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const { teamId } = useParams<{
     teamId: Id<'teams'>;
@@ -33,7 +35,7 @@ const ProjectsLinks = () => {
   const reUsableUrl = `/team/${teamId}/projects`;
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2'>
         <span className='py-0.5'>General</span>
       </h3>
@@ -117,7 +119,10 @@ const ProjectsLinks = () => {
         )}
       </ul>
       <DialogContent>
-        <ProjectForm teamId={teamId as Id<'teams'>} />
+        <ProjectForm
+          teamId={teamId as Id<'teams'>}
+          onSuccess={() => setIsOpen(false)}
+        />
       </DialogContent>
     </Dialog>
   );

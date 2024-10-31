@@ -28,9 +28,11 @@ import { EmojiPopover } from '@/components/ui/emoji-popover';
 const ProjectForm = ({
   teamId,
   projectData,
+  onSuccess,
 }: {
   teamId: Id<'teams'>;
   projectData?: Doc<'projects'>;
+  onSuccess?: () => void;
 }) => {
   const isEditMode = Boolean(projectData);
 
@@ -45,7 +47,6 @@ const ProjectForm = ({
     defaultValues: {
       name: projectData?.name || '',
       private: projectData?.private || false,
-      autojoin: projectData?.autojoin || false,
       icon: projectData?.icon || '',
     },
     resolver: zodResolver(ProjectSchema),
@@ -62,7 +63,6 @@ const ProjectForm = ({
         projectData: {
           name: data.name,
           private: data.private,
-          autojoin: data.autojoin,
           icon: data.icon,
         },
       };
@@ -70,6 +70,9 @@ const ProjectForm = ({
       const projectId = await (isEditMode
         ? editProject({ projectId: projectData!._id, ...projectPayload })
         : createProject(projectPayload));
+
+      onSuccess?.();
+      console.log(onSuccess);
 
       if (!isEditMode) router.push(`${projectId}/tasks`);
 
@@ -127,21 +130,6 @@ const ProjectForm = ({
           <Controller
             control={control}
             name='private'
-            render={({ field: { onChange, value } }) => (
-              <Switch onCheckedChange={onChange} checked={value} />
-            )}
-          />
-        </div>
-        <div className='flex items-center justify-between py-1'>
-          <div className='flex flex-col'>
-            <Label>Auto join</Label>
-            <p className='text-sm text-muted-foreground'>
-              Automatically join new members to this project
-            </p>
-          </div>
-          <Controller
-            control={control}
-            name='autojoin'
             render={({ field: { onChange, value } }) => (
               <Switch onCheckedChange={onChange} checked={value} />
             )}

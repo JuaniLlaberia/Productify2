@@ -83,7 +83,11 @@ const ProjectSettingsMenu = ({
 
       <Dialog open={editDialog} onOpenChange={setEditDialog}>
         <DialogContent>
-          <ProjectForm teamId={teamId} projectData={projectData} />
+          <ProjectForm
+            teamId={teamId}
+            projectData={projectData}
+            onSuccess={() => setEditDialog(false)}
+          />
         </DialogContent>
       </Dialog>
 

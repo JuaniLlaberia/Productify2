@@ -61,7 +61,6 @@ export const Projects = Table('projects', {
   name: v.string(),
   icon: v.optional(v.string()),
   private: v.boolean(),
-  autojoin: v.boolean(),
   createdBy: v.id('users'),
   teamId: v.id('teams'),
 });
