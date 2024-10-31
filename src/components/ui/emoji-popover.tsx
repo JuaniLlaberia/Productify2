@@ -51,7 +51,10 @@ export const EmojiPopover = ({
       >
         <Picker
           data={data}
-          onEmojiSelect={onEmojiSelect}
+          onEmojiSelect={(emoji: any) => {
+            onEmojiSelect(emoji);
+            setPopoverOpen(false);
+          }}
           searchPosition={searchbar ? 'top' : 'none'}
           previewPosition='none'
           skinTonePosition='none'
