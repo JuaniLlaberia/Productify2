@@ -5,7 +5,7 @@ import { useQuery } from 'convex/react';
 
 import DeleteTasksModal from './(components)/DeleteTasksModal';
 import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
-import KanbanBoard from './(components)/KanbanBoard';
+import TasksBoard from './(components)/TasksBoard';
 import TaskForm from './(components)/TaskForm';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
@@ -42,7 +42,7 @@ const VIEWS = [
   },
 ];
 
-const COLUMNS = [
+export const COLUMNS = [
   {
     id: StatusEnum.BACKLOG,
     title: 'Backlog',
@@ -102,7 +102,7 @@ const ProjectTasksPage = ({
         {tasks ? (
           <>
             {view === 'board' ? (
-              <KanbanBoard tasks={tasks} columns={COLUMNS} />
+              <TasksBoard tasks={tasks} columns={COLUMNS} />
             ) : (
               <DataTable
                 columns={tasksColumns}
