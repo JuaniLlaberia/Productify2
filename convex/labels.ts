@@ -4,9 +4,14 @@ import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { Labels } from './schema';
 import { isMember } from './auth';
+import { paginationOptsValidator } from 'convex/server';
 
 export const getLabels = query({
-  args: { teamId: v.id('teams'), projectId: v.id('projects') },
+  args: {
+    teamId: v.id('teams'),
+    projectId: v.id('projects'),
+    paginationOpts: paginationOptsValidator,
+  },
   handler: async (ctx, args) => {
     await isMember(ctx, args.teamId);
 
@@ -16,7 +21,7 @@ export const getLabels = query({
         q.eq('teamId', args.teamId).eq('projectId', args.projectId)
       )
       .order('desc')
-      .collect();
+      .paginate(args.paginationOpts);
     return labels;
   },
 });

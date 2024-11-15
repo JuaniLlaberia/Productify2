@@ -4,6 +4,7 @@ import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { Templates } from './schema';
 import { isMember } from './auth';
+import { paginationOptsValidator } from 'convex/server';
 
 export const getProjectTemplates = query({
   args: {
@@ -14,12 +15,14 @@ export const getProjectTemplates = query({
       priority: v.optional(Templates.withoutSystemFields.priority),
       label: v.optional(Templates.withoutSystemFields.label),
     }),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const {
       teamId,
       projectId,
       filters: { status, priority, label },
+      paginationOpts,
     } = args;
     await isMember(ctx, teamId);
 
@@ -34,8 +37,10 @@ export const getProjectTemplates = query({
       query = query.filter(q => q.eq(q.field('priority'), priority));
     if (label) query = query.filter(q => q.eq(q.field('label'), label));
 
-    const templates = await Promise.all(
-      (await query.order('desc').collect()).map(async template => ({
+    const paginatedResult = await query.order('desc').paginate(paginationOpts);
+
+    const templatesWithDetails = await Promise.all(
+      paginatedResult.page.map(async template => ({
         ...template,
         assignee: template.assignee
           ? await ctx.db.get(template.assignee)
@@ -43,7 +48,11 @@ export const getProjectTemplates = query({
         label: template.label ? await ctx.db.get(template.label) : null,
       }))
     );
-    return templates;
+
+    return {
+      ...paginatedResult,
+      page: templatesWithDetails,
+    };
   },
 });
 

@@ -1,5 +1,6 @@
 import { omit } from 'convex-helpers';
 import { v } from 'convex/values';
+import { paginationOptsValidator } from 'convex/server';
 
 import { mutation, query } from './_generated/server';
 import { Tasks } from './schema';
@@ -14,12 +15,14 @@ export const getProjectTasks = query({
       priority: v.optional(Tasks.withoutSystemFields.priority),
       label: v.optional(Tasks.withoutSystemFields.label),
     }),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const {
       teamId,
       projectId,
       filters: { status, priority, label },
+      paginationOpts,
     } = args;
     await isMember(ctx, teamId);
 
@@ -34,14 +37,20 @@ export const getProjectTasks = query({
       query = query.filter(q => q.eq(q.field('priority'), priority));
     if (label) query = query.filter(q => q.eq(q.field('label'), label));
 
-    const tasks = await Promise.all(
-      (await query.order('desc').collect()).map(async task => ({
+    const paginatedResult = await query.order('desc').paginate(paginationOpts);
+
+    const tasksWithDetails = await Promise.all(
+      paginatedResult.page.map(async task => ({
         ...task,
         assignee: task.assignee ? await ctx.db.get(task.assignee) : null,
         label: task.label ? await ctx.db.get(task.label) : null,
       }))
     );
-    return tasks;
+
+    return {
+      ...paginatedResult,
+      page: tasksWithDetails,
+    };
   },
 });
 
@@ -52,11 +61,13 @@ export const getUserTasksInTeam = query({
       status: v.optional(Tasks.withoutSystemFields.status),
       priority: v.optional(Tasks.withoutSystemFields.priority),
     }),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const {
       teamId,
       filters: { status, priority },
+      paginationOpts,
     } = args;
     const member = await isMember(ctx, teamId);
 
@@ -70,14 +81,20 @@ export const getUserTasksInTeam = query({
     if (priority)
       query = query.filter(q => q.eq(q.field('priority'), priority));
 
-    const tasks = await Promise.all(
-      (await query.order('desc').collect()).map(async task => ({
+    const paginatedResult = await query.order('desc').paginate(paginationOpts);
+
+    const tasksWithDetails = await Promise.all(
+      paginatedResult.page.map(async task => ({
         ...task,
-        assignee: await ctx.db.get(task.assignee!),
-        label: await ctx.db.get(task.label!),
+        assignee: task.assignee ? await ctx.db.get(task.assignee) : null,
+        label: task.label ? await ctx.db.get(task.label) : null,
       }))
     );
-    return tasks;
+
+    return {
+      ...paginatedResult,
+      page: tasksWithDetails,
+    };
   },
 });
 

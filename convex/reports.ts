@@ -4,6 +4,7 @@ import { v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { Reports } from './schema';
 import { isMember } from './auth';
+import { paginationOptsValidator } from 'convex/server';
 
 export const getProjectReports = query({
   args: {
@@ -13,12 +14,14 @@ export const getProjectReports = query({
       type: v.optional(Reports.withoutSystemFields.type),
       priority: v.optional(Reports.withoutSystemFields.priority),
     }),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     const {
       teamId,
       projectId,
       filters: { type, priority },
+      paginationOpts,
     } = args;
     await isMember(ctx, teamId);
 
@@ -32,7 +35,7 @@ export const getProjectReports = query({
     if (priority)
       query = query.filter(q => q.eq(q.field('priority'), priority));
 
-    const tasks = await query.order('desc').collect();
+    const tasks = await query.order('desc').paginate(paginationOpts);
     return tasks;
   },
 });
