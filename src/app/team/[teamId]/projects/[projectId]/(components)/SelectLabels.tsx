@@ -27,13 +27,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import { getColorClass } from '@/lib/helpers';
+import { ColorsType } from '@/components/ui/badge';
 
 const SelectLabel = ({
   setField,
   defaultValue,
+  borderHidden,
 }: {
   setField: UseFormSetValue<any>;
   defaultValue?: string;
+  borderHidden?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState<{
@@ -73,7 +78,10 @@ const SelectLabel = ({
               variant='outline'
               role='combobox'
               aria-expanded={isOpen}
-              className='min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden'
+              className={cn(
+                'min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden hover:bg-transparent',
+                borderHidden ? 'border-transparent hover:border-input' : ''
+              )}
             >
               <div className='flex items-center gap-2'>
                 <Tag
@@ -92,7 +100,9 @@ const SelectLabel = ({
           </PopoverTrigger>
         </TooltipTrigger>
 
-        <TooltipContent>Set label</TooltipContent>
+        <TooltipContent side={borderHidden ? 'left' : 'top'}>
+          Set label
+        </TooltipContent>
       </Tooltip>
 
       <PopoverContent className='p-0 w-[200px]'>
@@ -114,6 +124,12 @@ const SelectLabel = ({
                     setIsOpen(false);
                   }}
                 >
+                  <span
+                    className={cn(
+                      'size-3 rounded mr-1.5',
+                      getColorClass(label.color as ColorsType)
+                    )}
+                  />
                   {label.title}
                   {selectedLabel?.id === label?._id ? (
                     <Check className='size-4 absolute right-2.5' />

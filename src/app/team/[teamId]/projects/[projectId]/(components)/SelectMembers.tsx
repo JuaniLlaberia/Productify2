@@ -28,13 +28,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 
 const SelectMembers = ({
   setField,
   defaultValue,
+  borderHidden,
 }: {
   setField: UseFormSetValue<any>;
   defaultValue?: string;
+  borderHidden?: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<
@@ -79,12 +82,15 @@ const SelectMembers = ({
               variant='outline'
               role='combobox'
               aria-expanded={isOpen}
-              className='min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden'
+              className={cn(
+                'min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden hover:bg-transparent',
+                borderHidden ? 'border-transparent hover:border-input' : ''
+              )}
             >
               {value ? (
                 <>
-                  <Avatar className='rounded-lg size-7'>
-                    <AvatarFallback className='rounded-lg size-7'>
+                  <Avatar className='rounded-lg size-6'>
+                    <AvatarFallback className='rounded-lg size-6'>
                       {value?.name?.at(0)}
                     </AvatarFallback>
                     <AvatarImage src={value?.img} />
@@ -103,7 +109,9 @@ const SelectMembers = ({
             </Button>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent>Set assignee</TooltipContent>
+        <TooltipContent side={borderHidden ? 'left' : 'top'}>
+          Set assignee
+        </TooltipContent>
       </Tooltip>
       <PopoverContent
         side='bottom'

@@ -189,7 +189,11 @@ const FiltersForm = ({ filters }: { filters: Filter[] }) => {
                     filters
                       .find(f => f.field === filter.field)
                       ?.options.map(option => (
-                        <SelectItem key={option} value={option}>
+                        <SelectItem
+                          key={option}
+                          value={option}
+                          className='capitalize'
+                        >
                           {option}
                         </SelectItem>
                       ))}

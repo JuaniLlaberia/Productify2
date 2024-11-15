@@ -4,6 +4,7 @@ import { useQuery } from 'convex/react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
+import { LayoutPanelTop } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
@@ -99,6 +100,7 @@ const TemplatesPopover = ({ setValue }: TemplatesPopoverProps) => {
                   key={template._id}
                   onSelect={() => applyTemplate(template)}
                 >
+                  <LayoutPanelTop className='size-4 mr-2.5' strokeWidth={1.5} />
                   {template.title}
                 </CommandItem>
               ))}
