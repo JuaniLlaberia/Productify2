@@ -9,7 +9,7 @@ export const COLORS = [
   { label: 'sky', value: '#38bdf8' },
   { label: 'blue', value: '#3b82f6' },
   { label: 'purple', value: '#8b5cf6' },
-  { label: 'fusia', value: '#d946ef' },
+  { label: 'fuchsia', value: '#d946ef' },
   { label: 'indigo', value: '#818cf8' },
   { label: 'green', value: '#22c55e' },
   { label: 'emerald', value: '#34d399' },
