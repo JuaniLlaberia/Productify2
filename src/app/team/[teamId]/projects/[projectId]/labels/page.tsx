@@ -1,7 +1,6 @@
 'use client';
 
 import { Sheet } from 'lucide-react';
-import { useQuery } from 'convex/react';
 
 import DeleteLabelsModal from './(components)/DeleteLabelsModal';
 import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
@@ -11,6 +10,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { labelsColumns } from './(components)/labelsColumns';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
+import { useStableQuery } from '../../../../../../../convex/helpers';
 
 const VIEWS = [
   {
@@ -29,7 +29,7 @@ const ProjectLabelsPage = ({
     projectId: Id<'projects'>;
   };
 }) => {
-  const labels = useQuery(api.labels.getLabels, { teamId, projectId });
+  const labels = useStableQuery(api.labels.getLabels, { teamId, projectId });
   if (!labels) return <p>Loading</p>;
 
   return (

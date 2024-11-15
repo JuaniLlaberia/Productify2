@@ -1,9 +1,8 @@
 'use client';
 
 import { Sheet } from 'lucide-react';
-import { useQuery } from 'convex/react';
-import DeleteReportsModal from './(components)/DeleteReportsModal';
 
+import DeleteReportsModal from './(components)/DeleteReportsModal';
 import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
 import ReportsForm from './(components)/ReportsForm';
 import { TableProvider } from '@/components/TableContext';
@@ -12,6 +11,7 @@ import { Id } from '../../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../../convex/_generated/api';
 import { DataTable } from '@/components/ui/data-table';
 import { reportsColumns } from './(components)/reportsColumns';
+import { useStableQuery } from '../../../../../../../convex/helpers';
 
 const FILTERS = [
   {
@@ -49,7 +49,7 @@ const ProjectBugReportsPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const reports = useQuery(api.reports.getProjectReports, {
+  const reports = useStableQuery(api.reports.getProjectReports, {
     teamId,
     projectId,
     filters: { priority, type },

@@ -1,7 +1,6 @@
 'use client';
 
 import { Columns3, Sheet } from 'lucide-react';
-import { useQuery } from 'convex/react';
 
 import DeleteTasksModal from './(components)/DeleteTasksModal';
 import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
@@ -13,6 +12,7 @@ import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { DataTable } from '@/components/ui/data-table';
 import { tasksColumns } from './(components)/tasksColumns';
 import { TableProvider } from '@/components/TableContext';
+import { useStableQuery } from '../../../../../../../convex/helpers';
 
 const FILTERS = [
   {
@@ -79,7 +79,7 @@ const ProjectTasksPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const tasks = useQuery(api.tasks.getProjectTasks, {
+  const tasks = useStableQuery(api.tasks.getProjectTasks, {
     teamId,
     projectId,
     filters: {

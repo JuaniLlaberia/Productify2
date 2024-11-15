@@ -1,7 +1,6 @@
 'use client';
 
 import { Sheet } from 'lucide-react';
-import { useQuery } from 'convex/react';
 
 import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
 import DeleteTemplatesModal from './(components)/DeleteTemplatesModal';
@@ -12,6 +11,7 @@ import { api } from '../../../../../../../convex/_generated/api';
 import { TableProvider } from '@/components/TableContext';
 import { DataTable } from '@/components/ui/data-table';
 import { templatesColumns } from './(components)/templatesColumns';
+import { useStableQuery } from '../../../../../../../convex/helpers';
 
 const FILTERS = [
   {
@@ -49,7 +49,7 @@ const ProjectTemplatesPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const templates = useQuery(api.templates.getProjectTemplates, {
+  const templates = useStableQuery(api.templates.getProjectTemplates, {
     teamId,
     projectId,
     filters: { priority, status },

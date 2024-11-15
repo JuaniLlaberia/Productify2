@@ -1,7 +1,6 @@
 'use client';
 
 import { Columns3, Sheet, SquareCheckBig } from 'lucide-react';
-import { useQuery } from 'convex/react';
 
 import TasksBoard from '../[projectId]/tasks/(components)/TasksBoard';
 import ProjectFeatureNavbar from '../[projectId]/(components)/ProjectFeatureNavbar';
@@ -13,6 +12,7 @@ import { tasksColumns } from '../[projectId]/tasks/(components)/tasksColumns';
 import { DataTable } from '@/components/ui/data-table';
 import { TableProvider } from '@/components/TableContext';
 import { COLUMNS } from '../[projectId]/tasks/page';
+import { useStableQuery } from '../../../../../../convex/helpers';
 
 const FILTERS = [
   {
@@ -60,7 +60,7 @@ const MyTasksPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const tasks = useQuery(api.tasks.getUserTasksInTeam, {
+  const tasks = useStableQuery(api.tasks.getUserTasksInTeam, {
     teamId,
     filters: {
       priority,
