@@ -111,7 +111,7 @@ const LabelsForm = ({ labelData, trigger, onClose }: TaskLabelsProps) => {
         {trigger || (
           <Button size='sm'>
             <Plus className='size-4 mr-1.5' strokeWidth={2} />
-            New task
+            New label
           </Button>
         )}
       </DialogTrigger>
@@ -189,6 +189,8 @@ const LabelsForm = ({ labelData, trigger, onClose }: TaskLabelsProps) => {
             <Button size='sm' disabled={isSubmitting} className='min-w-16'>
               {isSubmitting ? (
                 <Loader2 className='size-4 animate-spin' />
+              ) : isEditMode ? (
+                'Update'
               ) : (
                 'Create'
               )}
