@@ -206,6 +206,8 @@ const TaskSheet = ({ taskData, trigger, onClose }: TaskSheetProps) => {
                 Assignee
               </Label>
               <SelectMembers
+                teamId={teamId}
+                projectId={projectId || taskData.projectId}
                 defaultValue={formValues.assignee}
                 setField={setValue}
                 borderHidden
@@ -216,6 +218,8 @@ const TaskSheet = ({ taskData, trigger, onClose }: TaskSheetProps) => {
                 Label
               </Label>
               <SelectLabel
+                teamId={teamId}
+                projectId={projectId || taskData.projectId}
                 defaultValue={formValues.label}
                 setField={setValue}
                 borderHidden
@@ -235,7 +239,7 @@ const TaskSheet = ({ taskData, trigger, onClose }: TaskSheetProps) => {
           <SubTasksList
             teamId={teamId}
             parentId={taskData._id}
-            projectId={projectId}
+            projectId={projectId || taskData.projectId}
           />
         </div>
         <SheetFooter className='mt-auto flex justify-between items-center w-full'>
