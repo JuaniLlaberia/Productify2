@@ -15,8 +15,8 @@ import {
 import { arrayMove } from '@dnd-kit/sortable';
 import { useMutation } from 'convex/react';
 
-import TasksColumn from './KanbanColumn';
-import TaskCard from './KanbanCard';
+import TasksColumn from './TasksColumn';
+import TaskCard from './TaskCard';
 import { StatusEnum } from '@/lib/enums';
 import { PopulatedTask } from './tasksColumns';
 import { api } from '../../../../../../../../convex/_generated/api';

@@ -5,7 +5,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Plus } from 'lucide-react';
 
-import TaskCard from './KanbanCard';
+import TaskCard from './TaskCard';
 import TaskForm from './TaskForm';
 import Badge, { ColorsType } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,7 @@ const TasksColumn = ({ status, tasks }: TasksColumnType) => {
           </p>
         </div>
         <TaskForm
+          taskData={{ status } as PopulatedTask}
           trigger={
             <Button
               variant='ghost'

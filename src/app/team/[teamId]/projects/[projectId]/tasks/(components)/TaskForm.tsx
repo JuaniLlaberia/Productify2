@@ -59,7 +59,7 @@ type TasksFormProps = {
 };
 
 const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
-  const isEditMode = Boolean(taskData);
+  const isEditMode = Boolean(taskData?._id);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const { teamId, projectId } = useParams<{
@@ -108,7 +108,7 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
     try {
       await (isEditMode
         ? editTask({ teamId, taskId: taskData!._id, taskData: taskPayload })
-        : createTask({ ...taskPayload, isSubTask: false, teamId, projectId }));
+        : createTask({ ...taskPayload, teamId, projectId }));
 
       setIsOpen(false);
       onClose?.();

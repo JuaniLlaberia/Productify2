@@ -1,10 +1,18 @@
 'use client';
 
-import { Copy, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
+import {
+  Copy,
+  Edit,
+  MoreHorizontal,
+  PanelLeftClose,
+  Trash2,
+} from 'lucide-react';
 import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 import TaskForm from './TaskForm';
+import TaskSheet from './TaskSheet';
 import DeleteTasksModal from './DeleteTasksModal';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +23,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { PopulatedTask } from './tasksColumns';
 import { api } from '../../../../../../../../convex/_generated/api';
-import { useState } from 'react';
 
 const TasksActions = ({ data }: { data: PopulatedTask }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -32,7 +39,6 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
       label: data.label?._id,
       teamId: data.teamId,
       projectId: data.projectId,
-      isSubTask: false,
     });
 
     toast.promise(promise, {
@@ -53,7 +59,25 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent
+        align='end'
+        onClick={e => {
+          e.stopPropagation();
+        }}
+      >
+        <TaskSheet
+          taskData={data}
+          trigger={
+            <DropdownMenuItem
+              className='text-xs'
+              onSelect={e => e.preventDefault()}
+            >
+              <PanelLeftClose className='size-3 mr-2' strokeWidth={1.5} />
+              Open task
+            </DropdownMenuItem>
+          }
+          onClose={() => setIsDropdownOpen(false)}
+        />
         <TaskForm
           taskData={data}
           trigger={
