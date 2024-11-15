@@ -28,8 +28,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { getColorClass } from '@/lib/helpers';
-import { ColorsType } from '@/components/ui/badge';
+import { ColorsType, getColorClass } from '@/components/ui/badge';
 
 const SelectLabel = ({
   setField,
