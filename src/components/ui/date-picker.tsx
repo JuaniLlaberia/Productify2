@@ -18,9 +18,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
 export function DatePicker({
   setValue,
   defaultValue,
+  borderHidden,
 }: {
   setValue: UseFormSetValue<any>;
   defaultValue?: Date;
+  borderHidden?: boolean;
 }) {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [date, setDate] = React.useState<Date | undefined>(defaultValue);
@@ -33,7 +35,8 @@ export function DatePicker({
             <Button
               variant={'outline'}
               className={cn(
-                'min-w-[120px] max-w-[200px] justify-start text-left font-normal'
+                'min-w-[120px] max-w-[200px] justify-start text-left font-normal hover:bg-transparent',
+                borderHidden ? 'border-transparent hover:border-input' : ''
               )}
             >
               <CalendarIcon
@@ -41,14 +44,16 @@ export function DatePicker({
                 strokeWidth={1.5}
               />
               {date ? (
-                format(date, 'PPP')
+                format(date, 'PP')
               ) : (
                 <span className='text-muted-foreground'>Due date</span>
               )}
             </Button>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent>Set date</TooltipContent>
+        <TooltipContent side={borderHidden ? 'left' : 'top'}>
+          Set date
+        </TooltipContent>
       </Tooltip>
       <PopoverContent className='w-auto p-0'>
         <Calendar
