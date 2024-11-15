@@ -31,7 +31,14 @@ const SidebarExpandItem = ({ title, icon, itemId, links }: ExpandItemProps) => {
         onClick={() => setIsOpen(prev => !prev)}
       >
         <p className='text-nowrap line-clamp-1'>
-          <span className='text-sm mr-1.5'>{icon}</span>
+          <span
+            className={cn(
+              'text-sm mr-1.5',
+              `${isOpen ? 'bg-muted' : 'group-hover:bg-muted'} px-0.5 py-1 rounded`
+            )}
+          >
+            {icon}
+          </span>
           <span className='text-sm'>{title}</span>
         </p>
         <div className='group-hover:bg-muted p-0.5 rounded text-muted-foreground'>
