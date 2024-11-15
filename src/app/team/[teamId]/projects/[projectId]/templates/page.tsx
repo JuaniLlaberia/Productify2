@@ -11,20 +11,8 @@ import { api } from '../../../../../../../convex/_generated/api';
 import { TableProvider } from '@/components/TableContext';
 import { DataTable } from '@/components/ui/data-table';
 import { templatesColumns } from './(components)/templatesColumns';
-import { useStableQuery } from '../../../../../../../convex/helpers';
-
-const FILTERS = [
-  {
-    label: 'Priority',
-    field: 'priority',
-    options: ['low', 'medium', 'high', 'urgent'],
-  },
-  {
-    label: 'Status',
-    field: 'status',
-    options: ['backlog', 'todo', 'in-progress', 'completed', 'canceled'],
-  },
-];
+import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
+import { FILTERS } from '@/lib/consts';
 
 const VIEWS = [
   {
@@ -49,27 +37,31 @@ const ProjectTemplatesPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const templates = useStableQuery(api.templates.getProjectTemplates, {
-    teamId,
-    projectId,
-    filters: { priority, status },
-  });
-
-  if (!templates) return <p>Loading</p>;
+  const { results, isLoading } = useStablePaginatedQuery(
+    api.templates.getProjectTemplates,
+    {
+      teamId,
+      projectId,
+      filters: { priority, status },
+    },
+    { initialNumItems: 10 }
+  );
 
   return (
     <TableProvider>
       <section className='w-full'>
         <ProjectFeatureNavbar
-          filters={FILTERS}
+          filters={[FILTERS.priority, FILTERS.status]}
           views={VIEWS}
           defaultView='table'
           createButtonLabel='New template'
           createModal={<TemplatesForm />}
         />
+
         <DataTable
           columns={templatesColumns}
-          data={templates}
+          data={results}
+          isLoading={isLoading}
           DeleteModal={DeleteTemplatesModal}
         />
       </section>

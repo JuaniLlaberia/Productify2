@@ -10,7 +10,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { labelsColumns } from './(components)/labelsColumns';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
-import { useStableQuery } from '../../../../../../../convex/helpers';
+import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 
 const VIEWS = [
   {
@@ -29,8 +29,11 @@ const ProjectLabelsPage = ({
     projectId: Id<'projects'>;
   };
 }) => {
-  const labels = useStableQuery(api.labels.getLabels, { teamId, projectId });
-  if (!labels) return <p>Loading</p>;
+  const { results, isLoading } = useStablePaginatedQuery(
+    api.labels.getLabels,
+    { teamId, projectId },
+    { initialNumItems: 10 }
+  );
 
   return (
     <TableProvider>
@@ -43,7 +46,8 @@ const ProjectLabelsPage = ({
         />
         <DataTable
           columns={labelsColumns}
-          data={labels}
+          data={results}
+          isLoading={isLoading}
           DeleteModal={DeleteLabelsModal}
         />
       </section>

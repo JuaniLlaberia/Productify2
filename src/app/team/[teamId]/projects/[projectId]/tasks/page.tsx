@@ -12,20 +12,8 @@ import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { DataTable } from '@/components/ui/data-table';
 import { tasksColumns } from './(components)/tasksColumns';
 import { TableProvider } from '@/components/TableContext';
-import { useStableQuery } from '../../../../../../../convex/helpers';
-
-const FILTERS = [
-  {
-    label: 'Priority',
-    field: 'priority',
-    options: ['low', 'medium', 'high', 'urgent'],
-  },
-  {
-    label: 'Status',
-    field: 'status',
-    options: ['backlog', 'todo', 'in-progress', 'completed', 'canceled'],
-  },
-];
+import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
+import { FILTERS } from '@/lib/consts';
 
 const VIEWS = [
   {
@@ -67,7 +55,7 @@ export const COLUMNS = [
 
 const ProjectTasksPage = ({
   params: { teamId, projectId },
-  searchParams: { priority, status, view = 'board' },
+  searchParams: { priority, status, view },
 }: {
   params: {
     teamId: Id<'teams'>;
@@ -79,41 +67,46 @@ const ProjectTasksPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const tasks = useStableQuery(api.tasks.getProjectTasks, {
-    teamId,
-    projectId,
-    filters: {
-      priority: priority || undefined,
-      status: status || undefined,
+  const { results, isLoading } = useStablePaginatedQuery(
+    api.tasks.getProjectTasks,
+    {
+      teamId,
+      projectId,
+      filters: {
+        priority: priority || undefined,
+        status: status || undefined,
+      },
     },
-  });
+    { initialNumItems: 2 }
+  );
 
   return (
     <TableProvider>
       <section className='w-full'>
         <ProjectFeatureNavbar
-          filters={FILTERS}
+          filters={[FILTERS.priority, FILTERS.status]}
           views={VIEWS}
           defaultView='board'
           createButtonLabel='New task'
           createModal={<TaskForm />}
         />
 
-        {tasks ? (
-          <>
-            {view === 'board' ? (
-              <TasksBoard tasks={tasks} columns={COLUMNS} />
-            ) : (
-              <DataTable
-                columns={tasksColumns}
-                data={tasks}
-                DeleteModal={DeleteTasksModal}
-              />
-            )}
-          </>
-        ) : (
-          <>{view === 'board' ? 'loading' : 'loading'}</>
-        )}
+        <>
+          {view === 'board' ? (
+            <TasksBoard
+              tasks={results}
+              columns={COLUMNS}
+              isLoading={isLoading}
+            />
+          ) : (
+            <DataTable
+              columns={tasksColumns}
+              data={results}
+              isLoading={isLoading}
+              DeleteModal={DeleteTasksModal}
+            />
+          )}
+        </>
       </section>
     </TableProvider>
   );

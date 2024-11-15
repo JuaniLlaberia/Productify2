@@ -11,20 +11,8 @@ import { Id } from '../../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../../convex/_generated/api';
 import { DataTable } from '@/components/ui/data-table';
 import { reportsColumns } from './(components)/reportsColumns';
-import { useStableQuery } from '../../../../../../../convex/helpers';
-
-const FILTERS = [
-  {
-    label: 'Priority',
-    field: 'priority',
-    options: ['low', 'medium', 'high', 'urgent'],
-  },
-  {
-    label: 'Type',
-    field: 'type',
-    options: ['ui/ux', 'functional', 'performance', 'security', 'other'],
-  },
-];
+import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
+import { FILTERS } from '@/lib/consts';
 
 const VIEWS = [
   {
@@ -49,19 +37,21 @@ const ProjectBugReportsPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const reports = useStableQuery(api.reports.getProjectReports, {
-    teamId,
-    projectId,
-    filters: { priority, type },
-  });
-
-  if (!reports) return <p>Loading</p>;
+  const { results, isLoading } = useStablePaginatedQuery(
+    api.reports.getProjectReports,
+    {
+      teamId,
+      projectId,
+      filters: { priority, type },
+    },
+    { initialNumItems: 10 }
+  );
 
   return (
     <TableProvider>
       <section className='w-full'>
         <ProjectFeatureNavbar
-          filters={FILTERS}
+          filters={[FILTERS.priority, FILTERS.type]}
           views={VIEWS}
           defaultView='table'
           createButtonLabel='New report'
@@ -69,7 +59,8 @@ const ProjectBugReportsPage = ({
         />
         <DataTable
           columns={reportsColumns}
-          data={reports}
+          data={results}
+          isLoading={isLoading}
           DeleteModal={DeleteReportsModal}
         />
       </section>

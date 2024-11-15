@@ -12,25 +12,8 @@ import { tasksColumns } from '../[projectId]/tasks/(components)/tasksColumns';
 import { DataTable } from '@/components/ui/data-table';
 import { TableProvider } from '@/components/TableContext';
 import { COLUMNS } from '../[projectId]/tasks/page';
-import { useStableQuery } from '../../../../../../convex/helpers';
-
-const FILTERS = [
-  {
-    label: 'Priority',
-    field: 'priority',
-    options: ['low', 'medium', 'high', 'urgent'],
-  },
-  {
-    label: 'Status',
-    field: 'status',
-    options: ['backlog', 'todo', 'in-progress', 'completed', 'canceled'],
-  },
-  {
-    label: 'Label',
-    field: 'label',
-    options: ['Test', 'Test', 'Test'],
-  },
-];
+import { FILTERS } from '@/lib/consts';
+import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 
 const VIEWS = [
   {
@@ -49,7 +32,7 @@ const VIEWS = [
 
 const MyTasksPage = ({
   params: { teamId },
-  searchParams: { priority, status, view = 'board' },
+  searchParams: { priority, status, view },
 }: {
   params: {
     teamId: Id<'teams'>;
@@ -60,15 +43,17 @@ const MyTasksPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const tasks = useStableQuery(api.tasks.getUserTasksInTeam, {
-    teamId,
-    filters: {
-      priority,
-      status,
+  const { results, isLoading } = useStablePaginatedQuery(
+    api.tasks.getUserTasksInTeam,
+    {
+      teamId,
+      filters: {
+        priority: priority || undefined,
+        status: status || undefined,
+      },
     },
-  });
-
-  if (!tasks) return <p>Loading</p>;
+    { initialNumItems: 2 }
+  );
 
   return (
     <TableProvider>
@@ -77,20 +62,25 @@ const MyTasksPage = ({
           <div className='p-1 rounded bg-muted text-muted-foreground'>
             <SquareCheckBig className='size-4' strokeWidth={1.5} />
           </div>
-          <h1 className='text-sm font-medium'>My Tasks</h1>{' '}
+          <h1 className='text-sm font-medium'>My Tasks</h1>
         </div>
         <ProjectFeatureNavbar
-          filters={FILTERS}
+          filters={[FILTERS.priority, FILTERS.status]}
           views={VIEWS}
           defaultView='board'
         />
         <>
           {view === 'board' ? (
-            <TasksBoard tasks={tasks} columns={COLUMNS} />
+            <TasksBoard
+              tasks={results}
+              columns={COLUMNS}
+              isLoading={isLoading}
+            />
           ) : (
             <DataTable
               columns={tasksColumns}
-              data={tasks}
+              data={results}
+              isLoading={isLoading}
               DeleteModal={DeleteTasksModal}
             />
           )}
