@@ -194,6 +194,7 @@ export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
     id: 'actions',
     enableResizing: false,
     size: 10,
+    enableHiding: false,
     cell: ({ row }) => {
       const data = row.original;
       return <TemplatesActions data={data} />;

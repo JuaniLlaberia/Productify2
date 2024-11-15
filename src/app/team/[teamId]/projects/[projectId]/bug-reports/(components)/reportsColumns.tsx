@@ -136,6 +136,7 @@ export const reportsColumns: ColumnDef<Doc<'reports'>>[] = [
   {
     id: 'actions',
     enableResizing: false,
+    enableHiding: false,
     size: 10,
     cell: ({ row }) => {
       const data = row.original;
