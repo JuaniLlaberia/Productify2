@@ -4,7 +4,7 @@ import { useMutation } from 'convex/react';
 import { useForm, Controller } from 'react-hook-form';
 import { api } from '../../../../../../convex/_generated/api';
 import { useParams, useRouter } from 'next/navigation';
-import { Loader2, Plus } from 'lucide-react';
+import { AlertCircle, Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -22,6 +22,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { EmojiPopover } from '@/components/ui/emoji-popover';
 
 const ChannelForm = () => {
   const router = useRouter();
@@ -31,12 +33,15 @@ const ChannelForm = () => {
   const {
     register,
     handleSubmit,
+    watch,
     control,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm({
     defaultValues: {
       name: '',
-      public: false,
+      private: false,
+      icon: '',
     },
     resolver: zodResolver(ChannelSchema),
   });
@@ -47,7 +52,7 @@ const ChannelForm = () => {
       teamId,
       channelData: {
         name: data.name,
-        public: data.public,
+        private: data.private,
       },
     }).then(channelId => {
       router.push(`/team/${teamId}/channels/${channelId}`);
@@ -68,39 +73,54 @@ const ChannelForm = () => {
           Channel allows you to communicate between and within teams.
         </DialogDescription>
       </DialogHeader>
-      <div className='flex items-end gap-1.5'>
-        <InputWrapper
-          label='Name & Icon'
-          error={errors.name?.message as string}
-          inputId='name'
-          className='w-full'
-        >
-          <Input
-            id='name'
-            placeholder='e.g. Front-End, Research, HR'
-            {...register('name')}
-          />
-        </InputWrapper>
-        <button className='flex items-center justify-center text-muted-foreground size-10 rounded-lg border border-input bg-transparent cursor-pointer hover:text-primary transition-all'>
-          <span className='sr-only'>Select icon</span>
-          <Plus className='size-4' />
-        </button>
-      </div>
-      <div className='flex items-center justify-between py-1'>
-        <div className='flex flex-col'>
-          <Label htmlFor='public'>Make private</Label>
-          <p className='text-sm text-muted-foreground'>
-            Only members will see it
-          </p>
+      <fieldset className='space-y-4'>
+        <div className='flex items-end gap-1.5'>
+          <InputWrapper
+            label='Name & Icon'
+            error={errors.name?.message as string}
+            inputId='name'
+            className='w-full'
+          >
+            <Input
+              id='name'
+              placeholder='e.g. Front-End, Research, HR'
+              {...register('name')}
+            />
+          </InputWrapper>
+          <EmojiPopover
+            onEmojiSelect={emoji => {
+              setValue('icon', emoji.native);
+            }}
+          >
+            <button className='flex items-center justify-center text-muted-foreground size-10 shrink-0 rounded-lg border border-input bg-transparent cursor-pointer hover:text-primary transition-all'>
+              <span className='sr-only'>Select icon</span>
+              {!watch('icon') ? <Plus className='size-4' /> : watch('icon')}
+            </button>
+          </EmojiPopover>
         </div>
-        <Controller
-          control={control}
-          name='public'
-          render={({ field: { onChange, value } }) => (
-            <Switch id='public' onCheckedChange={onChange} checked={value} />
-          )}
-        />
-      </div>
+        <div className='flex items-center justify-between py-1'>
+          <div className='flex flex-col'>
+            <Label>Make private</Label>
+            <p className='text-sm text-muted-foreground'>
+              Only members will see it
+            </p>
+          </div>
+          <Controller
+            control={control}
+            name='private'
+            render={({ field: { onChange, value } }) => (
+              <Switch onCheckedChange={onChange} checked={value} />
+            )}
+          />
+        </div>
+        <Alert variant='informative'>
+          <AlertCircle className='size-4' />
+          <AlertTitle>Information</AlertTitle>
+          <AlertDescription>
+            Public project will be accessible to all team members
+          </AlertDescription>
+        </Alert>
+      </fieldset>
       <DialogFooter className='flex justify-end gap-2'>
         <DialogClose asChild>
           <Button size='sm' variant='ghost' disabled={isSubmitting}>

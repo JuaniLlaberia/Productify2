@@ -115,7 +115,7 @@ export const Templates = Table('templates', {
 export const Channels = Table('channels', {
   name: v.string(),
   icon: v.optional(v.string()),
-  public: v.boolean(),
+  private: v.boolean(),
   teamId: v.id('teams'),
 });
 

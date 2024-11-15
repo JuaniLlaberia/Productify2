@@ -29,7 +29,7 @@ export const createChannel = mutation({
     channelData: v.object({
       name: v.string(),
       icon: v.optional(v.string()),
-      public: v.boolean(),
+      private: v.boolean(),
     }),
   },
   handler: async (ctx, args) => {
