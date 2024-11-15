@@ -20,6 +20,7 @@ import TaskCard from './TaskCard';
 import { StatusEnum } from '@/lib/enums';
 import { PopulatedTask } from './tasksColumns';
 import { api } from '../../../../../../../../convex/_generated/api';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type GroupedTasks = {
   [K in StatusEnum]?: PopulatedTask[];
@@ -33,9 +34,14 @@ type TasksColumns = {
 type TasksBoardProps = {
   tasks: PopulatedTask[];
   columns: TasksColumns[];
+  isLoading?: boolean;
 };
 
-const TasksBoard = ({ columns, tasks: initialTasks }: TasksBoardProps) => {
+const TasksBoard = ({
+  columns,
+  tasks: initialTasks,
+  isLoading,
+}: TasksBoardProps) => {
   const [tasks, setTasks] = useState<PopulatedTask[]>(initialTasks);
   const [activeTask, setActiveTask] = useState<PopulatedTask | null>(null);
 
@@ -170,6 +176,22 @@ const TasksBoard = ({ columns, tasks: initialTasks }: TasksBoardProps) => {
 
     setActiveTask(null);
   };
+
+  if (isLoading)
+    return (
+      <div className='flex w-full h-full items-start gap-4 px-6 py-2 overflow-auto'>
+        {[1, 2, 3, 4, 5].map((_, index) => (
+          <ul
+            key={index}
+            className='w-full min-w-[250px] max-w-[350px] space-y-3'
+          >
+            <Skeleton className='w-full h-40' />
+            <Skeleton className='w-full h-40' />
+            <Skeleton className='w-full h-40' />
+          </ul>
+        ))}
+      </div>
+    );
 
   return (
     <DndContext
