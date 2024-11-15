@@ -27,8 +27,7 @@ export const getProjectTasks = query({
       .query('tasks')
       .withIndex('by_teamId_projectId', q =>
         q.eq('teamId', teamId).eq('projectId', projectId)
-      )
-      .filter(q => q.eq(q.field('isSubTask'), false));
+      );
 
     if (status) query = query.filter(q => q.eq(q.field('status'), status));
     if (priority)
@@ -65,8 +64,7 @@ export const getUserTasksInTeam = query({
       .query('tasks')
       .withIndex('by_teamId_assignee', q =>
         q.eq('teamId', args.teamId).eq('assignee', member._id)
-      )
-      .filter(q => q.eq(q.field('isSubTask'), false));
+      );
 
     if (status) query = query.filter(q => q.eq(q.field('status'), status));
     if (priority)
@@ -80,23 +78,6 @@ export const getUserTasksInTeam = query({
       }))
     );
     return tasks;
-  },
-});
-
-export const getSubTasks = query({
-  args: { teamId: v.id('teams'), parentTask: v.id('tasks') },
-  handler: async (ctx, args) => {
-    await isMember(ctx, args.teamId);
-
-    const subTasks = await ctx.db
-      .query('tasks')
-      .withIndex('by_teamId_parentId', q =>
-        q.eq('teamId', args.teamId).eq('parentTask', args.parentTask)
-      )
-      .filter(q => q.eq(q.field('isSubTask'), true))
-      .order('desc')
-      .collect();
-    return subTasks;
   },
 });
 
@@ -117,12 +98,7 @@ export const updateTask = mutation({
     teamId: v.id('teams'),
     taskId: v.id('tasks'),
     taskData: v.object(
-      omit(Tasks.withoutSystemFields, [
-        'parentTask',
-        'teamId',
-        'projectId',
-        'isSubTask',
-      ])
+      omit(Tasks.withoutSystemFields, ['teamId', 'projectId'])
     ),
   },
   handler: async (ctx, args) => {

@@ -24,6 +24,7 @@ import type * as messages from "../messages.js";
 import type * as projects from "../projects.js";
 import type * as reports from "../reports.js";
 import type * as resources from "../resources.js";
+import type * as subtasks from "../subtasks.js";
 import type * as tasks from "../tasks.js";
 import type * as teams from "../teams.js";
 import type * as templates from "../templates.js";
@@ -47,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   projects: typeof projects;
   reports: typeof reports;
   resources: typeof resources;
+  subtasks: typeof subtasks;
   tasks: typeof tasks;
   teams: typeof teams;
   templates: typeof templates;
