@@ -51,7 +51,6 @@ const ReportsActions = ({ data }: { data: Doc<'reports'> }) => {
         status: 'backlog',
         teamId: data.teamId,
         projectId: data.projectId,
-        isSubTask: false,
       }),
       deleteReport({ teamId: data.teamId, reporstIds: [data._id] }),
     ]);

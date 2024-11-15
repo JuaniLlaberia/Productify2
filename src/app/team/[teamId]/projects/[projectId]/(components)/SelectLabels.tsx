@@ -1,7 +1,5 @@
 'use client';
 
-import { useQuery } from 'convex/react';
-import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Check, Tag } from 'lucide-react';
 import type { UseFormSetValue } from 'react-hook-form';
@@ -29,12 +27,17 @@ import {
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { ColorsType, getColorClass } from '@/components/ui/badge';
+import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 
 const SelectLabel = ({
+  teamId,
+  projectId,
   setField,
   defaultValue,
   borderHidden,
 }: {
+  teamId: Id<'teams'>;
+  projectId: Id<'projects'>;
   setField: UseFormSetValue<any>;
   defaultValue?: string;
   borderHidden?: boolean;
@@ -45,20 +48,21 @@ const SelectLabel = ({
     title: string;
   } | null>(null);
 
-  const { teamId, projectId } = useParams<{
-    teamId: Id<'teams'>;
-    projectId: Id<'projects'>;
-  }>();
-
-  const labels = useQuery(api.labels.getLabels, {
-    teamId,
-    projectId,
-  });
+  const labels = useStablePaginatedQuery(
+    api.labels.getLabels,
+    {
+      teamId,
+      projectId,
+    },
+    { initialNumItems: 1000000 }
+  );
 
   // Find and set the default label when labels are loaded
   useEffect(() => {
-    if (labels && defaultValue) {
-      const defaultLabel = labels.find(label => label._id === defaultValue);
+    if (labels.results && defaultValue) {
+      const defaultLabel = labels.results.find(
+        label => label._id === defaultValue
+      );
       if (defaultLabel) {
         setSelectedLabel({
           id: defaultLabel._id,
@@ -66,7 +70,7 @@ const SelectLabel = ({
         });
       }
     }
-  }, [labels, defaultValue]);
+  }, [labels.results, defaultValue]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -110,7 +114,7 @@ const SelectLabel = ({
           <CommandList>
             <CommandEmpty>No label found</CommandEmpty>
             <CommandGroup>
-              {labels?.map(label => (
+              {labels?.results.map(label => (
                 <CommandItem
                   value={label._id}
                   key={label._id}

@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from 'convex/react';
-import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Check, Users } from 'lucide-react';
 import type { UseFormSetValue } from 'react-hook-form';
@@ -31,10 +30,14 @@ import {
 import { cn } from '@/lib/utils';
 
 const SelectMembers = ({
+  teamId,
+  projectId,
   setField,
   defaultValue,
   borderHidden,
 }: {
+  teamId: Id<'teams'>;
+  projectId: Id<'projects'>;
   setField: UseFormSetValue<any>;
   defaultValue?: string;
   borderHidden?: boolean;
@@ -48,11 +51,6 @@ const SelectMembers = ({
       }
     | undefined
   >(undefined);
-
-  const { teamId, projectId } = useParams<{
-    teamId: Id<'teams'>;
-    projectId: Id<'projects'>;
-  }>();
   const members = useQuery(api.projects.getProjectMembers, {
     teamId,
     projectId,

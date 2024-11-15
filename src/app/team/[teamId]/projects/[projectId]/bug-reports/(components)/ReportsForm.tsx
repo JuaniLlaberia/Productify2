@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 
 import InputWrapper from '@/components/ui/input-wrapper';
 import { Button } from '@/components/ui/button';
@@ -36,7 +37,6 @@ import { api } from '../../../../../../../../convex/_generated/api';
 import { Doc, Id } from '../../../../../../../../convex/_generated/dataModel';
 import { ReportSchema } from '@/lib/validators';
 import { PriorityEnum, ReportTypeEnum } from '@/lib/enums';
-import { useState } from 'react';
 
 type ReportsFormProps = {
   reportData?: Doc<'reports'>;
@@ -214,7 +214,7 @@ const ReportsForm = ({ reportData, trigger, onClose }: ReportsFormProps) => {
             </ul>
           </fieldset>
           <DialogFooter>
-            <DialogClose>
+            <DialogClose asChild>
               <Button size='sm' variant='outline'>
                 Cancel
               </Button>

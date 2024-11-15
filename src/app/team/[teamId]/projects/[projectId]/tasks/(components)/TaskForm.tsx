@@ -222,12 +222,16 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
             </li>
             <li>
               <SelectMembers
+                teamId={teamId}
+                projectId={projectId || taskData!.projectId}
                 defaultValue={formValues.assignee}
                 setField={setValue}
               />
             </li>
             <li>
               <SelectLabel
+                teamId={teamId}
+                projectId={projectId || taskData!.projectId}
                 defaultValue={formValues.label}
                 setField={setValue}
               />
@@ -237,7 +241,11 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
             </li>
           </ul>
           <DialogFooter className='flex items-center sm:justify-between'>
-            <TemplatesPopover setValue={setValue} />
+            <TemplatesPopover
+              setValue={setValue}
+              teamId={teamId}
+              projectId={projectId || taskData!.projectId}
+            />
             <div className='space-x-1.5 flex items-center justify-center'>
               <DialogClose asChild>
                 <Button size='sm' variant='outline'>

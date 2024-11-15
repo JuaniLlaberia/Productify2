@@ -1,7 +1,6 @@
 'use client';
 
-import { useQuery } from 'convex/react';
-import { useParams } from 'next/navigation';
+import { usePaginatedQuery } from 'convex/react';
 import { useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { LayoutPanelTop } from 'lucide-react';
@@ -28,21 +27,27 @@ import { Id } from '../../../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../../../convex/_generated/api';
 
 interface TemplatesPopoverProps {
+  teamId: Id<'teams'>;
+  projectId: Id<'projects'>;
   setValue: UseFormSetValue<any>;
 }
 
-const TemplatesPopover = ({ setValue }: TemplatesPopoverProps) => {
+const TemplatesPopover = ({
+  teamId,
+  projectId,
+  setValue,
+}: TemplatesPopoverProps) => {
   const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
-  const { teamId, projectId } = useParams<{
-    teamId: Id<'teams'>;
-    projectId: Id<'projects'>;
-  }>();
 
-  const templates = useQuery(api.templates.getProjectTemplates, {
-    teamId,
-    projectId,
-    filters: {},
-  });
+  const templates = usePaginatedQuery(
+    api.templates.getProjectTemplates,
+    {
+      teamId,
+      projectId,
+      filters: {},
+    },
+    { initialNumItems: 1000000 }
+  );
 
   const applyTemplate = (template: any) => {
     // Set each field with shouldDirty: true and shouldTouch: true
@@ -94,7 +99,7 @@ const TemplatesPopover = ({ setValue }: TemplatesPopoverProps) => {
           <CommandList>
             <CommandEmpty>No templates found</CommandEmpty>
             <CommandGroup>
-              {templates?.map(template => (
+              {templates?.results.map(template => (
                 <CommandItem
                   value={`${template._id} ${template.title}`}
                   key={template._id}

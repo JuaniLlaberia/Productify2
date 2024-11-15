@@ -225,12 +225,16 @@ const TemplatesForm = ({
             </li>
             <li>
               <SelectMembers
+                teamId={teamId}
+                projectId={projectId}
                 defaultValue={defaultValues.assignee}
                 setField={setValue}
               />
             </li>
             <li>
               <SelectLabel
+                teamId={teamId}
+                projectId={projectId}
                 defaultValue={defaultValues.label}
                 setField={setValue}
               />
