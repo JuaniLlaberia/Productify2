@@ -17,6 +17,24 @@ export const COLORS = [
   { label: 'slate', value: '#94a3b8' },
 ];
 
+export const FILTERS = {
+  priority: {
+    label: 'Priority',
+    field: 'priority',
+    options: ['low', 'medium', 'high', 'urgent'],
+  },
+  status: {
+    label: 'Status',
+    field: 'status',
+    options: ['backlog', 'todo', 'in-progress', 'completed', 'canceled'],
+  },
+  type: {
+    label: 'Type',
+    field: 'type',
+    options: ['ui/ux', 'functional', 'performance', 'security', 'other'],
+  },
+};
+
 export const STATUS_COLORS = {
   [StatusEnum.BACKLOG]: 'gray',
   [StatusEnum.TODO]: 'red',
