@@ -41,16 +41,20 @@ const ReportsActions = ({ data }: { data: Doc<'reports'> }) => {
 
   // Transform into task functionality
   const createTask = useMutation(api.tasks.createTask);
+  const deleteReport = useMutation(api.reports.deleteReports);
   const handleTransformToTask = () => {
-    const promise = createTask({
-      title: data.title,
-      description: data.description,
-      priority: data.priority,
-      status: 'backlog',
-      teamId: data.teamId,
-      projectId: data.projectId,
-      isSubTask: false,
-    });
+    const promise = Promise.all([
+      createTask({
+        title: data.title,
+        description: data.description,
+        priority: data.priority,
+        status: 'backlog',
+        teamId: data.teamId,
+        projectId: data.projectId,
+        isSubTask: false,
+      }),
+      deleteReport({ teamId: data.teamId, reporstIds: [data._id] }),
+    ]);
 
     toast.promise(promise, {
       loading: 'Transforming report into task',
