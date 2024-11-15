@@ -24,6 +24,7 @@ import {
 import { useTable } from '../TableContext';
 import { Button } from './button';
 import { Id } from '../../../convex/_generated/dataModel';
+import { Skeleton } from './skeleton';
 
 interface DeletableItem {
   _id: Id<any>;
@@ -40,12 +41,14 @@ interface DeleteModalProps {
 interface DataTableProps<TData extends DeletableItem, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
   DeleteModal: ComponentType<DeleteModalProps>;
 }
 
 export function DataTable<TData extends DeletableItem, TValue>({
   columns,
   data,
+  isLoading,
   DeleteModal,
 }: DataTableProps<TData, TValue>) {
   const { setTable, columnVisibility } = useTable();
@@ -120,35 +123,45 @@ export function DataTable<TData extends DeletableItem, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell
-                      key={cell.id}
-                      style={{ width: cell.column.getSize() }}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+            {isLoading &&
+              [1, 2, 3, 4, 5].map((_, index) => (
+                <TableRow key={index}>
+                  {columns.map((_, columnIndex) => (
+                    <TableCell key={columnIndex}>
+                      <Skeleton className='w-full h-5' />
                     </TableCell>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className='h-24 text-center text-muted-foreground'
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
+              ))}
+            {table.getRowModel().rows?.length
+              ? table.getRowModel().rows.map(row => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                  >
+                    {row.getVisibleCells().map(cell => (
+                      <TableCell
+                        key={cell.id}
+                        style={{ width: cell.column.getSize() }}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : !isLoading && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className='h-24 text-center text-muted-foreground'
+                    >
+                      No results
+                    </TableCell>
+                  </TableRow>
+                )}
           </TableBody>
         </Table>
       </div>
