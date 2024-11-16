@@ -219,7 +219,7 @@ export default defineSchema({
   ]),
   channels: Channels.table.index('by_teamId', ['teamId']),
   channelMembers: ChannelMembers.table
-    .index('by_channelId', ['channelId'])
+    .index('by_channelId_userId', ['channelId', 'userId'])
     .index('by_teamId_userId', ['teamId', 'userId']),
   messages: Messages.table
     .index('by_teamId_channelId', ['teamId', 'channelId'])

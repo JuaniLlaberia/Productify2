@@ -1,7 +1,9 @@
 import { ConvexError, v } from 'convex/values';
+import { omit } from 'convex-helpers';
 
 import { mutation, query } from './_generated/server';
 import { isAdmin, isMember } from './auth';
+import { Channels } from './schema';
 
 export const getChannels = query({
   args: { teamId: v.id('teams') },
@@ -26,11 +28,7 @@ export const getChannels = query({
 export const createChannel = mutation({
   args: {
     teamId: v.id('teams'),
-    channelData: v.object({
-      name: v.string(),
-      icon: v.optional(v.string()),
-      private: v.boolean(),
-    }),
+    channelData: v.object(omit(Channels.withoutSystemFields, ['teamId'])),
   },
   handler: async (ctx, args) => {
     const { teamId, channelData } = args;
@@ -51,6 +49,8 @@ export const createChannel = mutation({
       teamId,
       channelId,
     });
+
+    return channelId;
   },
 });
 
@@ -58,11 +58,7 @@ export const updateChannel = mutation({
   args: {
     teamId: v.id('teams'),
     channelId: v.id('channels'),
-    channelData: v.object({
-      name: v.string(),
-      icon: v.string(),
-      allowsWritting: v.boolean(),
-    }),
+    channelData: v.object(omit(Channels.withoutSystemFields, ['teamId'])),
   },
   handler: async (ctx, args) => {
     const { teamId, channelData, channelId } = args;
@@ -126,5 +122,30 @@ export const removeProjectMember = mutation({
       );
 
     await ctx.db.delete(args.channelMember);
+  },
+});
+
+export const leaveChannel = mutation({
+  args: {
+    teamId: v.id('teams'),
+    channelId: v.id('channels'),
+  },
+  handler: async (ctx, args) => {
+    const { teamId, channelId } = args;
+    const member = await isMember(ctx, teamId);
+
+    const channelMemberId = (
+      await ctx.db
+        .query('channelMembers')
+        .withIndex('by_channelId_userId', q =>
+          q.eq('channelId', channelId).eq('userId', member._id)
+        )
+        .first()
+    )?._id;
+
+    if (!channelMemberId)
+      throw new ConvexError('You are not a member of this channel.');
+
+    await ctx.db.delete(channelMemberId);
   },
 });
