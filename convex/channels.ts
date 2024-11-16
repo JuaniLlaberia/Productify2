@@ -25,6 +25,20 @@ export const getChannels = query({
   },
 });
 
+export const getChannelById = query({
+  args: { teamId: v.id('teams'), channelId: v.id('channels') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const channel = await ctx.db
+      .query('channels')
+      .withIndex('by_id', q => q.eq('_id', args.channelId))
+      .first();
+
+    return channel;
+  },
+});
+
 export const createChannel = mutation({
   args: {
     teamId: v.id('teams'),
