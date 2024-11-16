@@ -8,6 +8,7 @@ type InnerSidebarLinkProps = {
   icon: string | ReactElement;
   link: string;
   isActive: boolean;
+  options?: ReactElement;
 };
 
 const InnerSidebarLink = ({
@@ -15,18 +16,26 @@ const InnerSidebarLink = ({
   icon,
   link,
   isActive,
+  options,
 }: InnerSidebarLinkProps) => {
   return (
     <li>
       <Link
         href={link}
         className={cn(
-          'flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-muted',
-          isActive ? 'bg-muted' : null
+          'flex items-center justify-between px-2 py-1.5 rounded-lg text-sm hover:bg-muted/60 group',
+          isActive ? 'bg-muted/60' : null
         )}
       >
-        {icon}
-        {label}
+        <span className='flex items-center gap-2'>
+          {icon}
+          {label}
+        </span>
+        {options ? (
+          <div className='opacity-100 md:opacity-0 md:[&:has([data-state="open"])]:opacity-100 group-hover:opacity-100'>
+            {options}
+          </div>
+        ) : null}
       </Link>
     </li>
   );
