@@ -9,7 +9,7 @@ const ChannelsLayout = ({ children }: { children: ReactNode }) => {
       <InnerSidebar title='Channels'>
         <ChannelsLinks />
       </InnerSidebar>
-      <section className='p-4'>{children}</section>
+      {children}
     </div>
   );
 };
