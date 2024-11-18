@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MessageToolbar } from './MessageToolbar';
 import { api } from '../../../../../../convex/_generated/api';
 import { cn } from '@/lib/utils';
+import { Reactions } from './Reactions';
 
 const Renderer = dynamic(() => import('@/components/Renderer'), { ssr: false });
 const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
@@ -22,21 +23,19 @@ const formatFullTime = (date: Date) => {
 
 type MessageProps = {
   id: Id<'messages'>;
-  memberId?: Id<'members'>;
   teamId: Id<'teams'>;
   isAuthor: boolean;
   authorImage?: string;
   authorName?: string;
   reactions: Array<
-    Omit<Doc<'reactions'>, 'memberId'> & {
+    Omit<Doc<'reactions'>, 'userId'> & {
       count: number;
-      memberIds: Id<'members'>;
+      userIds: Id<'users'>[];
     }
   >;
   body: Doc<'messages'>['message'];
   image: string | null | undefined;
   createdAt: Doc<'messages'>['_creationTime'];
-  updatedAt: Doc<'messages'>['updatedAt'];
   isEdited: boolean;
   isEditing: boolean;
   isCompact?: boolean;
@@ -47,12 +46,9 @@ type MessageProps = {
   threadTimestampt?: number;
 };
 
-// FIX LOADING STATES
-
 const Message = ({
   id,
   isAuthor,
-  memberId,
   teamId,
   authorImage,
   authorName = 'Member',
@@ -60,18 +56,16 @@ const Message = ({
   body,
   image,
   createdAt,
-  updatedAt,
   isEdited,
   isEditing,
   isCompact,
   setEditingId,
   hideThreadButton,
-  threadCount,
-  threadImage,
-  threadTimestampt,
+  // threadCount,
+  // threadImage,
+  // threadTimestampt,
 }: MessageProps) => {
   const updateMessage = useMutation(api.messages.updateMessage);
-
   const handleUpdate = async ({ body }: { body: string }) => {
     try {
       await updateMessage({
@@ -83,6 +77,15 @@ const Message = ({
       setEditingId(null);
     } catch {
       toast.error('Failed to update message');
+    }
+  };
+
+  const toggleReaction = useMutation(api.reactions.toggle);
+  const handleReaction = async (value: string) => {
+    try {
+      toggleReaction({ teamId, messageId: id, value });
+    } catch {
+      toast.error('Failed to add reaction');
     }
   };
 
@@ -117,6 +120,7 @@ const Message = ({
               {isEdited ? (
                 <span className='text-xs text-muted-foreground'>(edited)</span>
               ) : null}
+              <Reactions data={reactions} onChange={handleReaction} />
             </div>
           )}
         </div>
@@ -128,7 +132,7 @@ const Message = ({
             isPending={false}
             handleEdit={() => setEditingId(id)}
             handleThread={() => {}}
-            handleReaction={() => {}}
+            handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
           />
         )}
@@ -177,6 +181,7 @@ const Message = ({
             {isEdited ? (
               <span className='text-xs text-muted-foreground'>(edited)</span>
             ) : null}
+            <Reactions data={reactions} onChange={handleReaction} />
           </div>
         )}
       </div>
@@ -188,7 +193,7 @@ const Message = ({
           isPending={false}
           handleEdit={() => setEditingId(id)}
           handleThread={() => {}}
-          handleReaction={() => {}}
+          handleReaction={handleReaction}
           hideThreadButton={hideThreadButton}
         />
       )}
