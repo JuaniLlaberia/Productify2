@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  Bookmark,
   PlusCircle,
   Hash,
   Plus,
@@ -50,12 +49,6 @@ const ChannelsLinks = () => {
           }
           link={`/team/${teamId}/channels/threads`}
           isActive={pathname.includes('/channels/threads')}
-        />
-        <InnerSidebarLink
-          label='Saved'
-          icon={<Bookmark className='size-4 mr-1.5' strokeWidth={1.5} />}
-          link={`/team/${teamId}/channels/saved`}
-          isActive={pathname.includes('/channels/saved')}
         />
         <InnerSidebarLink
           label='Browse'
