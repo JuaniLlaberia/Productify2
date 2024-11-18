@@ -77,8 +77,110 @@ body {
   }
 }
 
+/* Emoji picker styles */
 em-emoji-picker {
   height: 250px;
   --rgb-accent: 255, 154, 39;
   border: 2px solid var(--border);
+}
+
+/* Rich text editor styles */
+.ql-toolbar {
+  border: none !important;
+  background-color: hsl(var(--accent) / 0.2) !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
+
+.ql-toolbar .ql-formats:not(:last-child) {
+  border-right: 1px solid hsl(var(--border)) !important;
+  padding-right: 12px !important;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button.ql-active,
+.ql-custom .ql-toolbar.ql-snow .ql-formats button.ql-active .ql-stroke {
+  color: hsl(var(--primary)) !important;
+  stroke: hsl(var(--primary)) !important;
+  background-color: hsl(var(--accent)) !important;
+  border-radius: calc(var(--radius) - 2px) !important;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button {
+  color: hsl(var(--muted-foreground)) !important;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button:hover {
+  color: hsl(var(--accent-foreground)) !important;
+  stroke: hsl(var(--accent-foreground)) !important;
+  background-color: hsl(var(--accent)) !important;
+  border-radius: calc(var(--radius) - 2px) !important;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button .ql-stroke {
+  stroke: hsl(var(--muted-foreground)) !important;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button:hover .ql-stroke {
+  stroke: hsl(var(--accent-foreground)) !important;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button .ql-fill {
+  fill: hsl(var(--muted-foreground)) !important;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button:hover .ql-fill {
+  fill: hsl(var(--accent-foreground)) !important;
+}
+
+.ql-custom .ql-toolbar.ql-snow .ql-formats button svg {
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+.ql-container {
+  border: none !important;
+  height: unset !important;
+}
+
+.ql-editor {
+  line-height: 22px !important;
+  padding: 8px 12px !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+}
+
+.ql-editor.ql-blank::before {
+  font-size: 14px !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.ql-editor a {
+  color: blueviolet !important;
+}
+
+.ql-editor a:hover {
+  text-decoration: underline !important;
+}
+
+.ql-renderer {
+  padding: 0 !important;
+}
+
+.ql-editor::before {
+  left: 12px !important;
+  font-style: normal !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+
+  @apply truncate;
+}
+
+/* Messages custom class */
+.messages-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hls(var(--accent));
 }
