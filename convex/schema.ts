@@ -17,20 +17,6 @@ const taskStatusSchema = v.union(
   v.literal('canceled')
 );
 
-const messageTypeEnum = v.union(
-  v.literal('text'),
-  v.literal('image'),
-  v.literal('poll')
-);
-const durationEnum = v.union(
-  v.literal('1h'),
-  v.literal('4h'),
-  v.literal('8h'),
-  v.literal('24h'),
-  v.literal('3d'),
-  v.literal('1w')
-);
-
 export const Users = Table('users', {
   fullName: v.string(),
   email: v.string(),
@@ -125,31 +111,31 @@ export const ChannelMembers = Table('channelMembers', {
   teamId: v.id('teams'),
 });
 
+export const Conversations = Table('conversations', {
+  teamId: v.id('teams'),
+  memberOneId: v.id('users'),
+  memberTwoId: v.id('users'),
+});
+
 export const Messages = Table('messages', {
-  //Common (all) messages fields
   message: v.string(),
-  type: messageTypeEnum,
-  channelId: v.id('channels'),
+  image: v.optional(v.id('_storage')),
+  channelId: v.optional(v.id('channels')),
+  memberId: v.optional(v.id('members')),
   teamId: v.id('teams'),
   userId: v.id('users'),
   isEdited: v.boolean(),
-  isResponse: v.boolean(),
-  parentMessage: v.id('messages'),
-  //Images messages fields
-  imageUrl: v.optional(v.string()),
-  //Poll message fields
-  question: v.optional(v.string()),
-  options: v.optional(
-    v.array(
-      v.object({
-        text: v.string(),
-        quantity: v.number(),
-        votes: v.array(v.id('users')),
-      })
-    )
-  ),
-  allowsMultiAnswer: v.optional(v.boolean()),
-  duration: durationEnum,
+  conversationId: v.optional(v.id('conversations')),
+  parentMessage: v.optional(v.id('messages')),
+  updatedAt: v.optional(v.number()),
+});
+
+export const Reactions = Table('reactions', {
+  teamId: v.id('teams'),
+  messageId: v.id('messages'),
+  userId: v.id('users'),
+  memberId: v.id('members'),
+  value: v.string(),
 });
 
 export const Reports = Table('reports', {
@@ -221,10 +207,21 @@ export default defineSchema({
   channelMembers: ChannelMembers.table
     .index('by_channelId_userId', ['channelId', 'userId'])
     .index('by_teamId_userId', ['teamId', 'userId']),
+  conversations: Conversations.table.index('by_teamId', ['teamId']),
   messages: Messages.table
     .index('by_teamId_channelId', ['teamId', 'channelId'])
-    .index('by_teamId_userId', ['teamId', 'userId'])
+    .index('by_teamId', ['teamId'])
+    .index('by_teamId_conversationId', ['teamId', 'conversationId'])
+    .index('by_channelId_parentId_conversationId', [
+      'channelId',
+      'parentMessage',
+      'conversationId',
+    ])
     .index('by_parentId', ['parentMessage']),
+  reactions: Reactions.table
+    .index('by_teamId', ['teamId'])
+    .index('by_messageId', ['messageId'])
+    .index('by_userId', ['userId']),
   reports: Reports.table.index('by_teamId_projectId', ['teamId', 'projectId']),
   documents: Documents.table
     .index('by_userId', ['createdBy'])
