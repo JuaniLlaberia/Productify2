@@ -6,17 +6,13 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import SearchbarFilter from './SearchbarFilter';
 import FiltersForm, { Filter } from './FiltersForm';
+import Hint from '@/components/ui/hint';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { useCreateQueryString } from '@/hooks/useCreateQueryString';
 import { ColumnVisibilityDropdown } from '@/components/TableContext';
@@ -57,15 +53,12 @@ const ProjectFeatureNavbar = ({
           {filters ? (
             <Popover>
               <PopoverTrigger>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant='outline' size='sm'>
-                      <ListFilter className='size-4 mr-1.5' strokeWidth={1.5} />
-                      Filters
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Filters</TooltipContent>
-                </Tooltip>
+                <Hint label='Filters'>
+                  <Button variant='outline' size='sm'>
+                    <ListFilter className='size-4 mr-1.5' strokeWidth={1.5} />
+                    Filters
+                  </Button>
+                </Hint>
               </PopoverTrigger>
               <PopoverContent side='bottom' className='w-auto'>
                 <FiltersForm filters={filters} />
@@ -91,14 +84,11 @@ const ProjectFeatureNavbar = ({
             >
               <TabsList>
                 {views.map(view => (
-                  <Tooltip key={view.id}>
-                    <TooltipTrigger className='h-full'>
-                      <TabsTrigger value={view.value} className='h-full'>
-                        {view.icon}
-                      </TabsTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>{view.label}</TooltipContent>
-                  </Tooltip>
+                  <Hint key={view.id} label={view.label}>
+                    <TabsTrigger value={view.value} className='h-full'>
+                      {view.icon}
+                    </TabsTrigger>
+                  </Hint>
                 ))}
               </TabsList>
             </Tabs>

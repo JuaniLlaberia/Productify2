@@ -25,11 +25,6 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { TaskSchema } from '@/lib/validators';
 import { Id } from '../../../../../../../../convex/_generated/dataModel';
@@ -38,6 +33,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { api } from '../../../../../../../../convex/_generated/api';
 import SubTasksList from './SubTasksList';
+import Hint from '@/components/ui/hint';
 
 type TaskSheetProps = {
   taskData: PopulatedTask;
@@ -139,20 +135,17 @@ const TaskSheet = ({ taskData, trigger, onClose }: TaskSheetProps) => {
                 value={formValues.status}
                 onValueChange={(val: StatusEnum) => setValue('status', val)}
               >
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SelectTrigger
-                      icon={<Shapes className='size-4' strokeWidth={1.5} />}
-                      removeArrow
-                      className='w-auto min-w-[120px] border-transparent hover:border-input'
-                    >
-                      {formValues.status || (
-                        <span className='text-muted-foreground'>Status</span>
-                      )}
-                    </SelectTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent side='left'>Select status</TooltipContent>
-                </Tooltip>
+                <Hint label='Select status'>
+                  <SelectTrigger
+                    icon={<Shapes className='size-4' strokeWidth={1.5} />}
+                    removeArrow
+                    className='w-auto min-w-[120px] border-transparent hover:border-input'
+                  >
+                    {formValues.status || (
+                      <span className='text-muted-foreground'>Status</span>
+                    )}
+                  </SelectTrigger>
+                </Hint>
                 <SelectContent>
                   {Object.values(StatusEnum).map(status => (
                     <SelectItem
@@ -174,20 +167,17 @@ const TaskSheet = ({ taskData, trigger, onClose }: TaskSheetProps) => {
                 value={formValues.priority}
                 onValueChange={(val: PriorityEnum) => setValue('priority', val)}
               >
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SelectTrigger
-                      icon={<Clock className='size-4' strokeWidth={1.5} />}
-                      removeArrow
-                      className='w-auto min-w-[120px] border-transparent hover:border-input'
-                    >
-                      {formValues.priority || (
-                        <span className='text-muted-foreground'>Priority</span>
-                      )}
-                    </SelectTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent side='left'>Select priority</TooltipContent>
-                </Tooltip>
+                <Hint label='Select priority'>
+                  <SelectTrigger
+                    icon={<Clock className='size-4' strokeWidth={1.5} />}
+                    removeArrow
+                    className='w-auto min-w-[120px] border-transparent hover:border-input'
+                  >
+                    {formValues.priority || (
+                      <span className='text-muted-foreground'>Priority</span>
+                    )}
+                  </SelectTrigger>
+                </Hint>
                 <SelectContent>
                   {Object.values(PriorityEnum).map(priority => (
                     <SelectItem

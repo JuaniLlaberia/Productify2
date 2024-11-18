@@ -40,6 +40,7 @@ import { DatePicker } from '@/components/ui/date-picker';
 import { TaskSchema } from '@/lib/validators';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PopulatedTask } from './tasksColumns';
+import Hint from '@/components/ui/hint';
 
 const SelectMembers = dynamic(
   () => import('../../(components)/SelectMembers'),
@@ -161,20 +162,17 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
                 value={formValues.status}
                 onValueChange={(val: StatusEnum) => setValue('status', val)}
               >
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SelectTrigger
-                      icon={<Shapes className='size-4' strokeWidth={1.5} />}
-                      removeArrow
-                      className='w-auto min-w-[120px]'
-                    >
-                      {formValues.status || (
-                        <span className='text-muted-foreground'>Status</span>
-                      )}
-                    </SelectTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent>Select status</TooltipContent>
-                </Tooltip>
+                <Hint label='Select status'>
+                  <SelectTrigger
+                    icon={<Shapes className='size-4' strokeWidth={1.5} />}
+                    removeArrow
+                    className='w-auto min-w-[120px]'
+                  >
+                    {formValues.status || (
+                      <span className='text-muted-foreground'>Status</span>
+                    )}
+                  </SelectTrigger>
+                </Hint>
                 <SelectContent>
                   {Object.values(StatusEnum).map(status => (
                     <SelectItem
@@ -193,20 +191,17 @@ const TaskForm = ({ taskData, trigger, onClose }: TasksFormProps) => {
                 value={formValues.priority}
                 onValueChange={(val: PriorityEnum) => setValue('priority', val)}
               >
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SelectTrigger
-                      icon={<Clock className='size-4' strokeWidth={1.5} />}
-                      removeArrow
-                      className='w-auto min-w-[120px]'
-                    >
-                      {formValues.priority || (
-                        <span className='text-muted-foreground'>Priority</span>
-                      )}
-                    </SelectTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent>Select priority</TooltipContent>
-                </Tooltip>
+                <Hint label='Select priority'>
+                  <SelectTrigger
+                    icon={<Clock className='size-4' strokeWidth={1.5} />}
+                    removeArrow
+                    className='w-auto min-w-[120px]'
+                  >
+                    {formValues.priority || (
+                      <span className='text-muted-foreground'>Priority</span>
+                    )}
+                  </SelectTrigger>
+                </Hint>
                 <SelectContent>
                   {Object.values(PriorityEnum).map(priority => (
                     <SelectItem

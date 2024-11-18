@@ -4,16 +4,13 @@ import { usePaginatedQuery } from 'convex/react';
 import { useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 import { LayoutPanelTop } from 'lucide-react';
+
+import Hint from '@/components/ui/hint';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -83,16 +80,13 @@ const TemplatesPopover = ({
 
   return (
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
-            <Button size='sm' variant='outline'>
-              Use templates
-            </Button>
-          </PopoverTrigger>
-        </TooltipTrigger>
-        <TooltipContent>Use template</TooltipContent>
-      </Tooltip>
+      <Hint label='Use template'>
+        <PopoverTrigger asChild>
+          <Button size='sm' variant='outline'>
+            Use templates
+          </Button>
+        </PopoverTrigger>
+      </Hint>
       <PopoverContent align='start' side='top' className='p-0 w-[200px]'>
         <Command>
           <CommandInput placeholder='Search templates...' />

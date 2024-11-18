@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 
 import InputWrapper from '@/components/ui/input-wrapper';
+import Hint from '@/components/ui/hint';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -28,11 +29,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { api } from '../../../../../../../../convex/_generated/api';
 import { Doc, Id } from '../../../../../../../../convex/_generated/dataModel';
 import { ReportSchema } from '@/lib/validators';
@@ -154,18 +150,15 @@ const ReportsForm = ({ reportData, trigger, onClose }: ReportsFormProps) => {
                   defaultValue={defaultValues.type}
                   onValueChange={(val: ReportTypeEnum) => setValue('type', val)}
                 >
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectTrigger
-                        icon={<Tag className='size-4' strokeWidth={1.5} />}
-                        removeArrow
-                        className='w-auto min-w-[120px]'
-                      >
-                        <SelectValue placeholder='Type' />
-                      </SelectTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>Select type</TooltipContent>
-                  </Tooltip>
+                  <Hint label='Select type'>
+                    <SelectTrigger
+                      icon={<Tag className='size-4' strokeWidth={1.5} />}
+                      removeArrow
+                      className='w-auto min-w-[120px]'
+                    >
+                      <SelectValue placeholder='Type' />
+                    </SelectTrigger>
+                  </Hint>
                   <SelectContent>
                     {Object.values(ReportTypeEnum).map(type => (
                       <SelectItem
@@ -186,18 +179,15 @@ const ReportsForm = ({ reportData, trigger, onClose }: ReportsFormProps) => {
                     setValue('priority', val)
                   }
                 >
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectTrigger
-                        icon={<Clock className='size-4' strokeWidth={1.5} />}
-                        removeArrow
-                        className='w-auto min-w-[120px]'
-                      >
-                        <SelectValue placeholder='Priority' />
-                      </SelectTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>Select priority</TooltipContent>
-                  </Tooltip>
+                  <Hint label='Select priority'>
+                    <SelectTrigger
+                      icon={<Clock className='size-4' strokeWidth={1.5} />}
+                      removeArrow
+                      className='w-auto min-w-[120px]'
+                    >
+                      <SelectValue placeholder='Priority' />
+                    </SelectTrigger>
+                  </Hint>
                   <SelectContent>
                     {Object.values(PriorityEnum).map(priority => (
                       <SelectItem

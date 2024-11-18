@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Check, Users } from 'lucide-react';
 import type { UseFormSetValue } from 'react-hook-form';
 
+import Hint from '@/components/ui/hint';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
 import {
@@ -22,11 +23,6 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 const SelectMembers = ({
@@ -73,44 +69,39 @@ const SelectMembers = ({
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
-            <Button
-              variant='outline'
-              role='combobox'
-              aria-expanded={isOpen}
-              className={cn(
-                'min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden hover:bg-transparent',
-                borderHidden ? 'border-transparent hover:border-input' : ''
-              )}
-            >
-              {value ? (
-                <>
-                  <Avatar className='rounded-lg size-6'>
-                    <AvatarFallback className='rounded-lg size-6'>
-                      {value?.name?.at(0)}
-                    </AvatarFallback>
-                    <AvatarImage src={value?.img} />
-                  </Avatar>
-                  <p className='ml-2'>{value?.name}</p>
-                </>
-              ) : (
-                <>
-                  <Users
-                    className='size-4 mr-2 text-muted-foreground'
-                    strokeWidth={1.5}
-                  />
-                  <span className='text-muted-foreground'>Assignee</span>
-                </>
-              )}
-            </Button>
-          </PopoverTrigger>
-        </TooltipTrigger>
-        <TooltipContent side={borderHidden ? 'left' : 'top'}>
-          Set assignee
-        </TooltipContent>
-      </Tooltip>
+      <Hint side={borderHidden ? 'left' : 'top'} label='Set assignee'>
+        <PopoverTrigger asChild>
+          <Button
+            variant='outline'
+            role='combobox'
+            aria-expanded={isOpen}
+            className={cn(
+              'min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden hover:bg-transparent',
+              borderHidden ? 'border-transparent hover:border-input' : ''
+            )}
+          >
+            {value ? (
+              <>
+                <Avatar className='rounded-lg size-6'>
+                  <AvatarFallback className='rounded-lg size-6'>
+                    {value?.name?.at(0)}
+                  </AvatarFallback>
+                  <AvatarImage src={value?.img} />
+                </Avatar>
+                <p className='ml-2'>{value?.name}</p>
+              </>
+            ) : (
+              <>
+                <Users
+                  className='size-4 mr-2 text-muted-foreground'
+                  strokeWidth={1.5}
+                />
+                <span className='text-muted-foreground'>Assignee</span>
+              </>
+            )}
+          </Button>
+        </PopoverTrigger>
+      </Hint>
       <PopoverContent
         side='bottom'
         align='start'

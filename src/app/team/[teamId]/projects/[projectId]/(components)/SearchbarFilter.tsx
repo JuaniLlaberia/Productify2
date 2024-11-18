@@ -3,14 +3,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 
+import Hint from '@/components/ui/hint';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { useTable } from '@/components/TableContext';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -48,30 +44,27 @@ export default function SearchbarFilter() {
   return (
     <div ref={containerRef} className='relative'>
       <div className='flex items-center'>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type='button'
-              onClick={handleSearchToggle}
-              size='icon'
-              variant='outline'
-              className={cn(
-                'relative z-10 transition-all',
-                isOpen && 'rounded-r-none border-r-0'
-              )}
-            >
-              {isOpen ? (
-                <X className='absolute size-4 text-muted-foreground' />
-              ) : (
-                <Search className='size-4' />
-              )}
-              <span className='sr-only'>
-                {isOpen ? 'Close search' : 'Open search'}
-              </span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Search</TooltipContent>
-        </Tooltip>
+        <Hint label='Search'>
+          <Button
+            type='button'
+            onClick={handleSearchToggle}
+            size='icon'
+            variant='outline'
+            className={cn(
+              'relative z-10 transition-all',
+              isOpen && 'rounded-r-none border-r-0'
+            )}
+          >
+            {isOpen ? (
+              <X className='absolute size-4 text-muted-foreground' />
+            ) : (
+              <Search className='size-4' />
+            )}
+            <span className='sr-only'>
+              {isOpen ? 'Close search' : 'Open search'}
+            </span>
+          </Button>
+        </Hint>
         <div
           className={cn(
             'overflow-hidden transition-all',

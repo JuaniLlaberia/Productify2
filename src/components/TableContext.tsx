@@ -4,6 +4,7 @@ import { Table } from '@tanstack/react-table';
 import { createContext, useContext, ReactNode, useState } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
 
+import Hint from './ui/hint';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 interface TableContextType {
   table: Table<any> | null;
@@ -57,16 +57,13 @@ export function ColumnVisibilityDropdown() {
 
   return (
     <DropdownMenu>
-      <Tooltip>
-        <TooltipTrigger>
-          <DropdownMenuTrigger asChild>
-            <Button variant='outline' size='icon'>
-              <SlidersHorizontal className='size-4' strokeWidth={1.5} />
-            </Button>
-          </DropdownMenuTrigger>
-        </TooltipTrigger>
-        <TooltipContent>Customize view</TooltipContent>
-      </Tooltip>
+      <Hint label='Customize view'>
+        <DropdownMenuTrigger asChild>
+          <Button variant='outline' size='icon'>
+            <SlidersHorizontal className='size-4' strokeWidth={1.5} />
+          </Button>
+        </DropdownMenuTrigger>
+      </Hint>
       <DropdownMenuContent align='end'>
         {table
           .getAllColumns()

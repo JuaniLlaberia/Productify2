@@ -6,6 +6,7 @@ import { useQuery } from 'convex/react';
 import { Bell, CircleHelp, LogOut, Settings, User } from 'lucide-react';
 
 import ThemeButton from './ThemeButton';
+import Hint from '@/components/ui/hint';
 import { api } from '../../../../../convex/_generated/api';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
@@ -17,11 +18,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 const UserMenu = () => {
   const user = useQuery(api.users.getUser);
@@ -30,19 +26,14 @@ const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Tooltip>
-          <TooltipTrigger>
-            <Avatar className='rounded-lg size-10'>
-              <AvatarFallback className='rounded-lg size-10'>
-                {user.fullName.at(0)?.toUpperCase()}
-              </AvatarFallback>
-              <AvatarImage src={user.profileImage} />
-            </Avatar>
-          </TooltipTrigger>
-          <TooltipContent sideOffset={12} side='right'>
-            {user.fullName}
-          </TooltipContent>
-        </Tooltip>
+        <Hint label={user.fullName} side='right'>
+          <Avatar className='rounded-lg size-10'>
+            <AvatarFallback className='rounded-lg size-10'>
+              {user.fullName.at(0)?.toUpperCase()}
+            </AvatarFallback>
+            <AvatarImage src={user.profileImage} />
+          </Avatar>
+        </Hint>
       </DropdownMenuTrigger>
       <DropdownMenuContent side='right' align='end' className='mb-1'>
         <DropdownMenuLabel className='flex items-center gap-3 font-normal'>

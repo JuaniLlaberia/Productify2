@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Check, Tag } from 'lucide-react';
 import type { UseFormSetValue } from 'react-hook-form';
 
+import Hint from '@/components/ui/hint';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
 import {
@@ -20,11 +21,6 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { ColorsType, getColorClass } from '@/components/ui/badge';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
@@ -74,40 +70,30 @@ const SelectLabel = ({
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
-            <Button
-              variant='outline'
-              role='combobox'
-              aria-expanded={isOpen}
-              className={cn(
-                'min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden hover:bg-transparent',
-                borderHidden ? 'border-transparent hover:border-input' : ''
-              )}
-            >
-              <div className='flex items-center gap-2'>
-                <Tag
-                  className='size-4 text-muted-foreground'
-                  strokeWidth={1.5}
-                />
-                <span className='truncate'>
-                  {selectedLabel ? (
-                    selectedLabel.title
-                  ) : (
-                    <span className='text-muted-foreground'>Select label</span>
-                  )}
-                </span>
-              </div>
-            </Button>
-          </PopoverTrigger>
-        </TooltipTrigger>
-
-        <TooltipContent side={borderHidden ? 'left' : 'top'}>
-          Set label
-        </TooltipContent>
-      </Tooltip>
-
+      <Hint side={borderHidden ? 'left' : 'top'} label='Set label'>
+        <PopoverTrigger asChild>
+          <Button
+            variant='outline'
+            role='combobox'
+            aria-expanded={isOpen}
+            className={cn(
+              'min-w-[120px] max-w-[175px] px-3 justify-start font-normal overflow-hidden hover:bg-transparent',
+              borderHidden ? 'border-transparent hover:border-input' : ''
+            )}
+          >
+            <div className='flex items-center gap-2'>
+              <Tag className='size-4 text-muted-foreground' strokeWidth={1.5} />
+              <span className='truncate'>
+                {selectedLabel ? (
+                  selectedLabel.title
+                ) : (
+                  <span className='text-muted-foreground'>Select label</span>
+                )}
+              </span>
+            </div>
+          </Button>
+        </PopoverTrigger>
+      </Hint>
       <PopoverContent className='p-0 w-[200px]'>
         <Command>
           <CommandInput placeholder='Search labels...' />

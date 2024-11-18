@@ -2,6 +2,10 @@
 
 import Link from 'next/link';
 import { Check, Plus } from 'lucide-react';
+import { useQuery } from 'convex/react';
+import { useParams } from 'next/navigation';
+
+import Hint from '@/components/ui/hint';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,17 +13,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useQuery } from 'convex/react';
-import { useParams } from 'next/navigation';
-
 import { api } from '../../../../../convex/_generated/api';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 const TeamsDropdown = () => {
   const { teamId } = useParams();
@@ -31,19 +27,14 @@ const TeamsDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Tooltip>
-          <TooltipTrigger>
-            <Avatar className='rounded-lg size-10'>
-              <AvatarFallback className='rounded-lg size-10'>
-                {crrTeam?.name.at(0)?.toUpperCase()}
-              </AvatarFallback>
-              <AvatarImage src={crrTeam?.imageUrl} />
-            </Avatar>
-          </TooltipTrigger>
-          <TooltipContent side='right' sideOffset={12}>
-            {crrTeam?.name}
-          </TooltipContent>
-        </Tooltip>
+        <Hint label={crrTeam?.name || 'T'} side='right'>
+          <Avatar className='rounded-lg size-10'>
+            <AvatarFallback className='rounded-lg size-10'>
+              {crrTeam?.name.at(0)?.toUpperCase()}
+            </AvatarFallback>
+            <AvatarImage src={crrTeam?.imageUrl} />
+          </Avatar>
+        </Hint>
       </DropdownMenuTrigger>
       <DropdownMenuContent side='right' align='start'>
         <ul>
