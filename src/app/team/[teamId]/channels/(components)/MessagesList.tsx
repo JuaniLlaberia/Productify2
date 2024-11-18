@@ -4,11 +4,12 @@ import { useParams } from 'next/navigation';
 import { differenceInMinutes, format, isToday, isYesterday } from 'date-fns';
 import { useState } from 'react';
 import { useQuery } from 'convex/react';
+import { Loader2 } from 'lucide-react';
 
 import Message from './Message';
+import ChannelHero from './ChannelHero';
 import { useGetMessages } from '@/features/messages/api/useGetMessages';
 import { Id } from '../../../../../../convex/_generated/dataModel';
-import ChannelHero from './ChannelHero';
 import { api } from '../../../../../../convex/_generated/api';
 
 const formatDateLabel = (dateStr: string) => {
@@ -72,7 +73,7 @@ const MessagesList = ({
             const prevMessage = messages[index - 1];
             const isCompact =
               prevMessage &&
-              prevMessage.member._id === message?.member._id &&
+              prevMessage.user._id === message?.user._id &&
               differenceInMinutes(
                 new Date(message._creationTime),
                 new Date(prevMessage._creationTime)
@@ -83,10 +84,9 @@ const MessagesList = ({
                 key={message._id}
                 id={message._id}
                 teamId={teamId}
-                memberId={message.memberId}
-                isAuthor={message.member._id === user?._id}
-                authorImage={message.member.profileImage}
-                authorName={message.member.fullName}
+                isAuthor={message.user._id === user?._id}
+                authorImage={message.user.profileImage}
+                authorName={message.user.fullName}
                 reactions={message.reactions}
                 body={message.message}
                 image={message.image}
@@ -95,7 +95,6 @@ const MessagesList = ({
                 setEditingId={setEditingId}
                 isCompact={isCompact || false}
                 hideThreadButton={variant === 'thread'}
-                updatedAt={message.updatedAt}
                 createdAt={message._creationTime}
                 threadCount={message.threadCount}
                 threadImage={message.threadImage}
@@ -105,6 +104,31 @@ const MessagesList = ({
           })}
         </div>
       ))}
+      <div
+        className='h-1'
+        ref={el => {
+          if (el) {
+            const observer = new IntersectionObserver(
+              ([entry]) => {
+                if (entry.isIntersecting && status === 'CanLoadMore')
+                  loadMore();
+              },
+              { threshold: 1.0 }
+            );
+
+            observer.observe(el);
+            return () => observer.disconnect();
+          }
+        }}
+      />
+      {status === 'LoadingMore' && (
+        <div className='text-center my-2 relative'>
+          <hr className='absolute top-1/2 left-0 right-0 border-t border-border' />
+          <span className='relative inline-block px-4 py-1 rounded-lg border border-border bg-accent shadow-sm text-xs'>
+            <Loader2 className='size-4 animate-spin' />
+          </span>
+        </div>
+      )}
       {variant === 'channel' && channelName && channelCreationTime && (
         <ChannelHero name={channelName} creationTime={channelCreationTime} />
       )}
