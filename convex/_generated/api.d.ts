@@ -23,6 +23,7 @@ import type * as http from "../http.js";
 import type * as labels from "../labels.js";
 import type * as messages from "../messages.js";
 import type * as projects from "../projects.js";
+import type * as reactions from "../reactions.js";
 import type * as reports from "../reports.js";
 import type * as resources from "../resources.js";
 import type * as subtasks from "../subtasks.js";
@@ -49,6 +50,7 @@ declare const fullApi: ApiFromModules<{
   labels: typeof labels;
   messages: typeof messages;
   projects: typeof projects;
+  reactions: typeof reactions;
   reports: typeof reports;
   resources: typeof resources;
   subtasks: typeof subtasks;
