@@ -22,6 +22,7 @@ type EmojiPopoverProps = {
   side?: 'top' | 'right' | 'bottom' | 'left';
   searchbar?: boolean;
   hint?: string;
+  closeAfterSelection?: boolean;
   onEmojiSelect: (emoji: any) => void;
 };
 
@@ -31,6 +32,7 @@ export const EmojiPopover = ({
   align = 'end',
   side,
   searchbar = false,
+  closeAfterSelection = true,
   onEmojiSelect,
 }: EmojiPopoverProps) => {
   const { theme } = useTheme();
@@ -53,7 +55,9 @@ export const EmojiPopover = ({
           data={data}
           onEmojiSelect={(emoji: any) => {
             onEmojiSelect(emoji);
-            setPopoverOpen(false);
+            if (closeAfterSelection) {
+              setPopoverOpen(false);
+            }
           }}
           searchPosition={searchbar ? 'top' : 'none'}
           previewPosition='none'
