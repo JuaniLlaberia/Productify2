@@ -29,6 +29,7 @@ import type * as subtasks from "../subtasks.js";
 import type * as tasks from "../tasks.js";
 import type * as teams from "../teams.js";
 import type * as templates from "../templates.js";
+import type * as upload from "../upload.js";
 import type * as users from "../users.js";
 
 /**
@@ -54,6 +55,7 @@ declare const fullApi: ApiFromModules<{
   tasks: typeof tasks;
   teams: typeof teams;
   templates: typeof templates;
+  upload: typeof upload;
   users: typeof users;
 }>;
 export declare const api: FilterApi<
