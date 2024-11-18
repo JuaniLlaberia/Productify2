@@ -5,7 +5,7 @@ import ChannelsLinks from './(components)/ChannelsLinks';
 
 const ChannelsLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className='flex'>
+    <div className='flex h-full'>
       <InnerSidebar title='Channels'>
         <ChannelsLinks />
       </InnerSidebar>
