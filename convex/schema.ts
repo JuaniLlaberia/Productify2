@@ -113,15 +113,14 @@ export const ChannelMembers = Table('channelMembers', {
 
 export const Conversations = Table('conversations', {
   teamId: v.id('teams'),
-  memberOneId: v.id('users'),
-  memberTwoId: v.id('users'),
+  userOneId: v.id('users'),
+  userTwoId: v.id('users'),
 });
 
 export const Messages = Table('messages', {
   message: v.string(),
   image: v.optional(v.id('_storage')),
   channelId: v.optional(v.id('channels')),
-  memberId: v.optional(v.id('members')),
   teamId: v.id('teams'),
   userId: v.id('users'),
   isEdited: v.boolean(),
@@ -134,7 +133,6 @@ export const Reactions = Table('reactions', {
   teamId: v.id('teams'),
   messageId: v.id('messages'),
   userId: v.id('users'),
-  memberId: v.id('members'),
   value: v.string(),
 });
 
