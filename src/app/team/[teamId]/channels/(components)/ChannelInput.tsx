@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 
-const Editor = dynamic(() => import('@/components/editor'), {
+const Editor = dynamic(() => import('@/components/Editor'), {
   ssr: false,
   loading: () => <Skeleton className='w-full h-32 mb-3' />,
 });
