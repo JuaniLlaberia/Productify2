@@ -2,10 +2,14 @@
 
 import { useParams } from 'next/navigation';
 import { differenceInMinutes, format, isToday, isYesterday } from 'date-fns';
+import { useState } from 'react';
+import { useQuery } from 'convex/react';
 
 import Message from './Message';
 import { useGetMessages } from '@/features/messages/api/useGetMessages';
 import { Id } from '../../../../../../convex/_generated/dataModel';
+import ChannelHero from './ChannelHero';
+import { api } from '../../../../../../convex/_generated/api';
 
 const formatDateLabel = (dateStr: string) => {
   const date = new Date(`${dateStr}T12:00:00Z`);
@@ -15,14 +19,23 @@ const formatDateLabel = (dateStr: string) => {
 const TIME_THRESHOLD = 5; //5 minutes
 
 type MessageListProps = {
+  channelName?: string;
+  channelCreationTime?: number;
   variant?: 'channel' | 'thread' | 'conversation';
 };
 
-const MessagesList = ({ variant }: MessageListProps) => {
+const MessagesList = ({
+  channelName,
+  channelCreationTime,
+  variant = 'channel',
+}: MessageListProps) => {
   const { teamId, channelId } = useParams<{
     teamId: Id<'teams'>;
     channelId?: Id<'channels'>;
   }>();
+  const [editingId, setEditingId] = useState<Id<'messages'> | null>(null);
+
+  const user = useQuery(api.users.getUser);
 
   const { results, loadMore, status } = useGetMessages({
     teamId,
@@ -69,18 +82,19 @@ const MessagesList = ({ variant }: MessageListProps) => {
               <Message
                 key={message._id}
                 id={message._id}
+                teamId={teamId}
                 memberId={message.memberId}
-                isAuthor={false}
+                isAuthor={message.member._id === user?._id}
                 authorImage={message.member.profileImage}
                 authorName={message.member.fullName}
                 reactions={message.reactions}
                 body={message.message}
                 image={message.image}
                 isEdited={message.isEdited}
-                isEditing={false}
-                setEditingId={() => {}}
+                isEditing={editingId === message._id}
+                setEditingId={setEditingId}
                 isCompact={isCompact || false}
-                hideThreadButton={false}
+                hideThreadButton={variant === 'thread'}
                 updatedAt={message.updatedAt}
                 createdAt={message._creationTime}
                 threadCount={message.threadCount}
@@ -91,7 +105,9 @@ const MessagesList = ({ variant }: MessageListProps) => {
           })}
         </div>
       ))}
-      {/* ADD CHANNEL HERO (like discord) */}
+      {variant === 'channel' && channelName && channelCreationTime && (
+        <ChannelHero name={channelName} creationTime={channelCreationTime} />
+      )}
     </div>
   );
 };
