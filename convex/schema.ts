@@ -177,12 +177,8 @@ export const Resources = Table('resources', {
 });
 
 export default defineSchema({
-  users: Users.table
-    .index('by_clerkId', ['clerkIdentifier'])
-    .index('by_email', ['email']),
-  teams: Teams.table
-    .index('by_createdUserId', ['createdBy'])
-    .index('by_joinCode', ['joinCode']),
+  users: Users.table.index('by_clerkId', ['clerkIdentifier']),
+  teams: Teams.table.index('by_joinCode', ['joinCode']),
   members: Members.table
     .index('by_userId', ['userId'])
     .index('by_teamId', ['teamId'])
@@ -201,14 +197,12 @@ export default defineSchema({
     'teamId',
     'projectId',
   ]),
-  channels: Channels.table.index('by_teamId', ['teamId']),
+  channels: Channels.table,
   channelMembers: ChannelMembers.table
     .index('by_channelId_userId', ['channelId', 'userId'])
     .index('by_teamId_userId', ['teamId', 'userId']),
   conversations: Conversations.table.index('by_teamId', ['teamId']),
   messages: Messages.table
-    .index('by_teamId_channelId', ['teamId', 'channelId'])
-    .index('by_teamId', ['teamId'])
     .index('by_teamId_conversationId', ['teamId', 'conversationId'])
     .index('by_channelId_parentId_conversationId', [
       'channelId',
