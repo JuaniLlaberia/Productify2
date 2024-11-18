@@ -231,6 +231,7 @@ export const updateMessage = mutation({
     await ctx.db.patch(messageId, {
       ...messageData,
       isEdited: true,
+      updatedAt: Date.now(),
     });
   },
 });
