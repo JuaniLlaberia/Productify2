@@ -176,8 +176,8 @@ export const tasksColumns: ColumnDef<PopulatedTask>[] = [
 
       return (
         <div className='flex items-center gap-2 px-2'>
-          <Avatar className='size-5 rounded-lg'>
-            <AvatarFallback className='size-5 rounded-lg'>
+          <Avatar className='size-5'>
+            <AvatarFallback className='size-5'>
               {assignee.fullName.at(0)}
             </AvatarFallback>
             <AvatarImage src={assignee.profileImage} />

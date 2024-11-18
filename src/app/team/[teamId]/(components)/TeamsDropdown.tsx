@@ -28,8 +28,8 @@ const TeamsDropdown = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Hint label={crrTeam?.name || 'T'} side='right'>
-          <Avatar className='rounded-lg size-10'>
-            <AvatarFallback className='rounded-lg size-10'>
+          <Avatar>
+            <AvatarFallback>
               {crrTeam?.name.at(0)?.toUpperCase()}
             </AvatarFallback>
             <AvatarImage src={crrTeam?.imageUrl} />
@@ -41,8 +41,8 @@ const TeamsDropdown = () => {
           {teams.map(team => (
             <DropdownMenuItem key={team?._id} asChild>
               <Link href={`/team/${team?._id}`}>
-                <Avatar className='rounded-lg size-7'>
-                  <AvatarFallback className='rounded-lg size-7'>
+                <Avatar className='size-7'>
+                  <AvatarFallback className='size-7'>
                     {team?.name.at(0)?.toUpperCase()}
                   </AvatarFallback>
                   <AvatarImage src={team?.imageUrl} />

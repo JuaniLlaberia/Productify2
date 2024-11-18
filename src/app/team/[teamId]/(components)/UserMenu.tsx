@@ -27,8 +27,8 @@ const UserMenu = () => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Hint label={user.fullName} side='right'>
-          <Avatar className='rounded-lg size-10'>
-            <AvatarFallback className='rounded-lg size-10'>
+          <Avatar>
+            <AvatarFallback>
               {user.fullName.at(0)?.toUpperCase()}
             </AvatarFallback>
             <AvatarImage src={user.profileImage} />
@@ -37,7 +37,7 @@ const UserMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent side='right' align='end' className='mb-1'>
         <DropdownMenuLabel className='flex items-center gap-3 font-normal'>
-          <Avatar className='rounded-lg size-10'>
+          <Avatar>
             <AvatarFallback>
               {user.fullName.at(0)?.toUpperCase()}
             </AvatarFallback>

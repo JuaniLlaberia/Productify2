@@ -82,8 +82,8 @@ const SelectMembers = ({
           >
             {value ? (
               <>
-                <Avatar className='rounded-lg size-6'>
-                  <AvatarFallback className='rounded-lg size-6'>
+                <Avatar className='size-6'>
+                  <AvatarFallback className='size-6'>
                     {value?.name?.at(0)}
                   </AvatarFallback>
                   <AvatarImage src={value?.img} />
@@ -130,8 +130,8 @@ const SelectMembers = ({
                       setIsOpen(false);
                     }}
                   >
-                    <Avatar className='rounded-lg size-7'>
-                      <AvatarFallback className='rounded-lg size-7'>
+                    <Avatar className='size-7'>
+                      <AvatarFallback className='size-7'>
                         {member?.fullName.at(0)}
                       </AvatarFallback>
                       <AvatarImage src={member?.profileImage} />

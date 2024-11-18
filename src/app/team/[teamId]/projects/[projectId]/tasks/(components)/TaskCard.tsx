@@ -73,8 +73,8 @@ const TaskCard = ({ taskData }: TaskCardProps) => {
           <div className='flex items-center gap-2'>
             {assignee?._id ? (
               <div className='flex items-center gap-2'>
-                <Avatar className='rounded-lg size-6'>
-                  <AvatarFallback className='rounded-lg size-6'>
+                <Avatar className='size-6'>
+                  <AvatarFallback className='size-6'>
                     {assignee?.fullName.at(0)}
                   </AvatarFallback>
                   <AvatarImage src={assignee?.profileImage} />
