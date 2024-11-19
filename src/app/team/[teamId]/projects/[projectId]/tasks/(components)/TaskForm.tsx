@@ -9,6 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
+import Hint from '@/components/ui/hint';
+import InputWrapper from '@/components/ui/input-wrapper';
 import TemplatesPopover from '../../templates/(components)/TemplatesPopover';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,7 +23,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import InputWrapper from '@/components/ui/input-wrapper';
 import {
   Select,
   SelectContent,
@@ -30,17 +31,11 @@ import {
 } from '@/components/ui/select';
 import { api } from '../../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../../convex/_generated/dataModel';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { PriorityEnum, StatusEnum } from '@/lib/enums';
 import { DatePicker } from '@/components/ui/date-picker';
 import { TaskSchema } from '@/lib/validators';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PopulatedTask } from './tasksColumns';
-import Hint from '@/components/ui/hint';
 
 const SelectMembers = dynamic(
   () => import('../../(components)/SelectMembers'),
