@@ -212,7 +212,7 @@ const TasksBoard = ({
       </ul>
 
       <DragOverlay>
-        {activeTask ? <TaskCard taskData={activeTask} isDragging /> : null}
+        {activeTask && <TaskCard taskData={activeTask} isDragging />}
       </DragOverlay>
     </DndContext>
   );

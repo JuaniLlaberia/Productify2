@@ -117,9 +117,9 @@ const Message = ({
             <div className='flex flex-col w-full'>
               <Renderer value={body} />
               <Thumbnail url={image} />
-              {isEdited ? (
+              {isEdited && (
                 <span className='text-xs text-muted-foreground'>(edited)</span>
-              ) : null}
+              )}
               <Reactions data={reactions} onChange={handleReaction} />
             </div>
           )}
@@ -178,9 +178,9 @@ const Message = ({
             </div>
             <Renderer value={body} />
             <Thumbnail url={image} />
-            {isEdited ? (
+            {isEdited && (
               <span className='text-xs text-muted-foreground'>(edited)</span>
-            ) : null}
+            )}
             <Reactions data={reactions} onChange={handleReaction} />
           </div>
         )}

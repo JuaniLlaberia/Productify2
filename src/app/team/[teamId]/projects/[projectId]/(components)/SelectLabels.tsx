@@ -120,9 +120,9 @@ const SelectLabel = ({
                     )}
                   />
                   {label.title}
-                  {selectedLabel?.id === label?._id ? (
+                  {selectedLabel?.id === label?._id && (
                     <Check className='size-4 absolute right-2.5' />
-                  ) : null}
+                  )}
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -88,12 +88,12 @@ const ProjectForm = ({
     <form onSubmit={submitHandler} className='space-y-5'>
       <DialogHeader>
         <DialogTitle>{isEditMode ? 'Edit' : 'Create'} project</DialogTitle>
-        {!isEditMode ? (
+        {!isEditMode && (
           <DialogDescription>
             A projects represents work-spaces, teams, or groups, each with its
             own tasks, templates, labels and features.
           </DialogDescription>
-        ) : null}
+        )}
       </DialogHeader>
       <fieldset className='space-y-4'>
         <div className='flex items-end gap-1.5'>

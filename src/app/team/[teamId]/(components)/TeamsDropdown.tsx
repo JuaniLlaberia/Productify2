@@ -48,9 +48,9 @@ const TeamsDropdown = () => {
                   <AvatarImage src={team?.imageUrl} />
                 </Avatar>
                 <p className='text-sm ml-3'>{team?.name}</p>
-                {team?._id === teamId ? (
+                {team?._id === teamId && (
                   <Check className='size-4 ml-8' strokeWidth={1.5} />
-                ) : null}
+                )}
               </Link>
             </DropdownMenuItem>
           ))}

@@ -24,18 +24,18 @@ const InnerSidebarLink = ({
         href={link}
         className={cn(
           'flex items-center justify-between px-2 py-1.5 rounded-lg text-sm hover:bg-muted/60 group',
-          isActive ? 'bg-muted/60' : null
+          isActive && 'bg-muted/60'
         )}
       >
         <span className='flex items-center gap-2'>
           {icon}
           {label}
         </span>
-        {options ? (
+        {options && (
           <div className='opacity-100 md:opacity-0 md:[&:has([data-state="open"])]:opacity-100 group-hover:opacity-100'>
             {options}
           </div>
-        ) : null}
+        )}
       </Link>
     </li>
   );

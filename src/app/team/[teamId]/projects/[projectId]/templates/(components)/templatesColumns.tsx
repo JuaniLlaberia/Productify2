@@ -48,7 +48,7 @@ export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
             aria-label='Select row'
             className={cn(
               'relative z-10 opacity-0 group-hover:opacity-100',
-              row.getIsSelected() ? 'opacity-100' : null
+              row.getIsSelected() && 'opacity-100'
             )}
           />
         </div>

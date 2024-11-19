@@ -129,7 +129,7 @@ const SubTasksList = ({
                     <p
                       className={cn(
                         'text-sm line-clamp-4 w-full',
-                        task.completed ? 'line-through' : null
+                        task.completed && 'line-through'
                       )}
                     >
                       {task.title}

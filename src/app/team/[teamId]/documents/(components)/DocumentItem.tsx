@@ -107,14 +107,14 @@ const DocumentItem = ({
         active ? 'bg-gray-200 text-primary' : null
       )}
     >
-      {!!id ? (
+      {!!id && (
         <div role='button' className='h-full rounded-sm' onClick={handleExpand}>
           {ChevronIcon}
         </div>
-      ) : null}
+      )}
       {documentIcon ? <div>{documentIcon}</div> : icon}
       <p>{label}</p>
-      {!!id ? (
+      {!!id && (
         <div className='ml-auto flex items-center gap-x-2'>
           <button
             onClick={onCreate}
@@ -129,7 +129,7 @@ const DocumentItem = ({
             <Trash2 className='size-4 text-muted-foreground' />
           </button>
         </div>
-      ) : null}
+      )}
     </button>
   );
 };

@@ -52,12 +52,12 @@ const ProjectSettingsMenu = ({
           <TooltipContent>Project settings</TooltipContent>
         </Tooltip>
         <DropdownMenuContent side='bottom' align='end'>
-          {projectData.private ? (
+          {projectData.private && (
             <DropdownMenuItem onClick={() => setMembersDialog(true)}>
               <Users className='size-4 mr-2' strokeWidth={1.5} />
               Members
             </DropdownMenuItem>
-          ) : null}
+          )}
           <DropdownMenuItem onClick={() => setEditDialog(true)}>
             <Edit className='size-4 mr-2' strokeWidth={1.5} />
             Edit project
@@ -73,13 +73,13 @@ const ProjectSettingsMenu = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {projectData.private ? (
+      {projectData.private && (
         <Dialog open={membersDialog} onOpenChange={setMembersDialog}>
           <DialogContent>
             <ProjectMembers />
           </DialogContent>
         </Dialog>
-      ) : null}
+      )}
 
       <Dialog open={editDialog} onOpenChange={setEditDialog}>
         <DialogContent>

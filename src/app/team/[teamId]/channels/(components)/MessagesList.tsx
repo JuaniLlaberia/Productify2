@@ -79,28 +79,30 @@ const MessagesList = ({
                 new Date(prevMessage._creationTime)
               ) < TIME_THRESHOLD;
 
-            return message ? (
-              <Message
-                key={message._id}
-                id={message._id}
-                teamId={teamId}
-                isAuthor={message.user._id === user?._id}
-                authorImage={message.user.profileImage}
-                authorName={message.user.fullName}
-                reactions={message.reactions}
-                body={message.message}
-                image={message.image}
-                isEdited={message.isEdited}
-                isEditing={editingId === message._id}
-                setEditingId={setEditingId}
-                isCompact={isCompact || false}
-                hideThreadButton={variant === 'thread'}
-                createdAt={message._creationTime}
-                threadCount={message.threadCount}
-                threadImage={message.threadImage}
-                threadTimestampt={message.threadTimestampt}
-              />
-            ) : null;
+            return (
+              message && (
+                <Message
+                  key={message._id}
+                  id={message._id}
+                  teamId={teamId}
+                  isAuthor={message.user._id === user?._id}
+                  authorImage={message.user.profileImage}
+                  authorName={message.user.fullName}
+                  reactions={message.reactions}
+                  body={message.message}
+                  image={message.image}
+                  isEdited={message.isEdited}
+                  isEditing={editingId === message._id}
+                  setEditingId={setEditingId}
+                  isCompact={isCompact || false}
+                  hideThreadButton={variant === 'thread'}
+                  createdAt={message._creationTime}
+                  threadCount={message.threadCount}
+                  threadImage={message.threadImage}
+                  threadTimestampt={message.threadTimestampt}
+                />
+              )
+            );
           })}
         </div>
       ))}

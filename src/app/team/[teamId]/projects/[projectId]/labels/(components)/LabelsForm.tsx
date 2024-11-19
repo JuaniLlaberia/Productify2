@@ -163,9 +163,8 @@ const LabelsForm = ({ labelData, trigger, onClose }: TaskLabelsProps) => {
                             style={{ backgroundColor: color.value }}
                             className={cn(
                               'size-7 rounded-lg hover:ring hover:ring-blue-700',
-                              watch('color')?.label === color.label
-                                ? 'ring ring-blue-700'
-                                : null
+                              watch('color')?.label === color.label &&
+                                'ring ring-blue-700'
                             )}
                           />
                         </TooltipTrigger>

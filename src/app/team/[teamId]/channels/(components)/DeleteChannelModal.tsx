@@ -103,11 +103,11 @@ const DeleteChannelModal = ({
                 },
               })}
             />
-            {errors.name?.message ? (
+            {errors.name?.message && (
               <p className='text-sm text-red-500 px-1'>
                 {errors.name?.message as string}
               </p>
-            ) : null}
+            )}
           </div>
           <Alert variant='destructive'>
             <AlertTitle className='flex items-center gap-2 mb-0'>

@@ -113,7 +113,7 @@ const SelectMembers = ({
             <CommandEmpty>
               <span className='text-muted-foreground'>No member found</span>
             </CommandEmpty>
-            {members ? (
+            {members && (
               <CommandGroup>
                 {members.map(member => (
                   <CommandItem
@@ -137,13 +137,13 @@ const SelectMembers = ({
                       <AvatarImage src={member?.profileImage} />
                     </Avatar>
                     <p className='ml-2'>{member?.fullName}</p>
-                    {value?.id === member?._id ? (
+                    {value?.id === member?._id && (
                       <Check className='size-4 absolute right-2.5' />
-                    ) : null}
+                    )}
                   </CommandItem>
                 ))}
               </CommandGroup>
-            ) : null}
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

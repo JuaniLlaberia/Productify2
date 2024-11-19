@@ -45,7 +45,7 @@ const SidebarExpandItem = ({ title, icon, itemId, links }: ExpandItemProps) => {
           <ChevronDown
             className={cn(
               'size-4 transition-transform',
-              !isOpen ? '-rotate-90' : null
+              !isOpen && '-rotate-90'
             )}
           />
         </div>
@@ -59,9 +59,8 @@ const SidebarExpandItem = ({ title, icon, itemId, links }: ExpandItemProps) => {
                 className={cn(
                   'flex items-center gap-2  pl-4 px-3 py-1.5 rounded-lg text-sm hover:bg-muted',
                   pathname.includes(itemId) &&
-                    link.link.split('/').at(-1) === crrPath
-                    ? 'bg-muted'
-                    : null
+                    link.link.split('/').at(-1) === crrPath &&
+                    'bg-muted'
                 )}
               >
                 {link.icon}

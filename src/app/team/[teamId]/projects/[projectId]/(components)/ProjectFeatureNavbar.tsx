@@ -65,12 +65,12 @@ const ProjectFeatureNavbar = ({
               </PopoverContent>
             </Popover>
           ) : null}
-          {view === 'table' ? (
+          {view === 'table' && (
             <>
               <ColumnVisibilityDropdown />
               <SearchbarFilter />
             </>
-          ) : null}
+          )}
         </div>
 
         {/* VIEW COMPONENT */}
@@ -95,7 +95,7 @@ const ProjectFeatureNavbar = ({
           ) : null}
 
           {/* Create component */}
-          {createModal ? createModal : null}
+          {createModal && createModal}
         </div>
       </div>
     </nav>

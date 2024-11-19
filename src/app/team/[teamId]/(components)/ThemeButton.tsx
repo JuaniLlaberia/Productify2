@@ -22,19 +22,19 @@ const ThemeButton = () => {
       </DropdownMenuSubTrigger>
       <DropdownMenuSubContent className='flex flex-col gap-1 ml-2'>
         <DropdownMenuItem
-          className={cn(theme === 'light' ? 'bg-accent' : '')}
+          className={cn(theme === 'light' && 'bg-accent')}
           onClick={() => setTheme('light')}
         >
           Light
         </DropdownMenuItem>
         <DropdownMenuItem
-          className={cn(theme === 'dark' ? 'bg-accent' : '')}
+          className={cn(theme === 'dark' && 'bg-accent')}
           onClick={() => setTheme('dark')}
         >
           Dark
         </DropdownMenuItem>
         <DropdownMenuItem
-          className={cn(theme === 'system' ? 'bg-accent' : '')}
+          className={cn(theme === 'system' && 'bg-accent')}
           onClick={() => setTheme('system')}
         >
           System

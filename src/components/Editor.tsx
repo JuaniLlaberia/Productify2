@@ -157,11 +157,11 @@ const Editor = ({
       <div
         className={cn(
           'flex flex-col border border-border rounded-lg overflow-hidden focus-within:border-slate-300/20 focus-within:shadow-sm transition',
-          disabled ? 'opacity-60' : null
+          disabled && 'opacity-60'
         )}
       >
         <div ref={containerRef} className='h-full ql-custom' />
-        {!!image ? (
+        {!!image && (
           <div className='p-2'>
             <div className='relative size-[62px] flex items-center justify-center group/image'>
               <Hint label='Remove image'>
@@ -183,7 +183,7 @@ const Editor = ({
               />
             </div>
           </div>
-        ) : null}
+        )}
         <div className='flex px-2 pb-2 z-[5]'>
           <Hint
             label={isToolbarVisible ? 'Hide formatting' : 'Show formatting'}
@@ -271,7 +271,7 @@ const Editor = ({
           )}
         </div>
       </div>
-      {variant === 'create' ? (
+      {variant === 'create' && (
         <div
           className={cn(
             'mt-1 px-2 text-[10px] text-muted-foreground flex justify-end opacity-0',
@@ -282,7 +282,7 @@ const Editor = ({
             <strong>Shift + Return</strong> to add a new line
           </p>
         </div>
-      ) : null}
+      )}
     </div>
   );
 };
