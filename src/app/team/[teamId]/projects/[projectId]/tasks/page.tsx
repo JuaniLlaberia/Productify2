@@ -86,7 +86,7 @@ const ProjectTasksPage = ({
         <ProjectFeatureNavbar
           filters={[FILTERS.priority, FILTERS.status]}
           views={VIEWS}
-          defaultView='board'
+          defaultView='table'
           createButtonLabel='New task'
           createModal={<TaskForm />}
         />
