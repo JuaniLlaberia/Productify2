@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import {
   Blocks,
   Mail,
@@ -46,8 +46,9 @@ const TEAM_SETTINGS_LINKS = [
   },
 ];
 
-const SettingsLinks = ({ teamId }: { teamId: Id<'teams'> }) => {
+const SettingsLinks = () => {
   const pathname = usePathname();
+  const { teamId } = useParams<{ teamId: Id<'teams'> }>();
 
   return (
     <>
