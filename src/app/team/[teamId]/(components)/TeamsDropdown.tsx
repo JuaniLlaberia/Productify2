@@ -37,6 +37,11 @@ const TeamsDropdown = () => {
         </Hint>
       </DropdownMenuTrigger>
       <DropdownMenuContent side='right' align='start'>
+        <div className='p-2'>
+          <h6 className='text-sm font-medium'>{crrTeam?.name}</h6>
+          <p className='text-sm text-muted-foreground'>Active team</p>
+        </div>
+        <DropdownMenuSeparator />
         <ul>
           {teams.map(team => (
             <DropdownMenuItem key={team?._id} asChild>
@@ -54,13 +59,12 @@ const TeamsDropdown = () => {
               </Link>
             </DropdownMenuItem>
           ))}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
+          <DropdownMenuItem asChild className='pr-6'>
             <Link href='/teams/new'>
               <span className='flex items-center justify-center rounded-lg size-7 bg-transparent'>
                 <Plus className='size-4' strokeWidth={1.5} />
               </span>
-              <p className='text-sm ml-3'>New team</p>
+              <p className='text-sm ml-3'>Create a new team</p>
             </Link>
           </DropdownMenuItem>
         </ul>
