@@ -177,7 +177,9 @@ export const Resources = Table('resources', {
 });
 
 export default defineSchema({
-  users: Users.table.index('by_clerkId', ['clerkIdentifier']),
+  users: Users.table
+    .index('by_clerkId', ['clerkIdentifier'])
+    .index('by_email', ['email']),
   teams: Teams.table.index('by_joinCode', ['joinCode']),
   members: Members.table
     .index('by_userId', ['userId'])
