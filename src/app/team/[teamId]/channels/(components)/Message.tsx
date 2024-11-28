@@ -13,6 +13,7 @@ import { MessageToolbar } from './MessageToolbar';
 import { api } from '../../../../../../convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { Reactions } from './Reactions';
+import { useState } from 'react';
 
 const Renderer = dynamic(() => import('@/components/Renderer'), { ssr: false });
 const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
@@ -65,8 +66,10 @@ const Message = ({
   // threadImage,
   // threadTimestampt,
 }: MessageProps) => {
+  const [isPending, setIsPending] = useState<boolean>(false);
   const updateMessage = useMutation(api.messages.updateMessage);
   const handleUpdate = async ({ body }: { body: string }) => {
+    setIsPending(true);
     try {
       await updateMessage({
         teamId,
@@ -77,6 +80,8 @@ const Message = ({
       setEditingId(null);
     } catch {
       toast.error('Failed to update message');
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -107,7 +112,7 @@ const Message = ({
             <div className='w-full h-full'>
               <Editor
                 onSubmit={handleUpdate}
-                disabled={false}
+                disabled={isPending}
                 defaultValue={JSON.parse(body)}
                 onCancel={() => setEditingId(null)}
                 variant='update'
@@ -129,7 +134,7 @@ const Message = ({
             teamId={teamId}
             messageId={id}
             isAuthor={isAuthor}
-            isPending={false}
+            isPending={isPending}
             handleEdit={() => setEditingId(id)}
             handleThread={() => {}}
             handleReaction={handleReaction}
@@ -157,7 +162,7 @@ const Message = ({
           <div className='w-full h-full'>
             <Editor
               onSubmit={handleUpdate}
-              disabled={false}
+              disabled={isPending}
               defaultValue={JSON.parse(body)}
               onCancel={() => setEditingId(null)}
               variant='update'
@@ -190,7 +195,7 @@ const Message = ({
           teamId={teamId}
           messageId={id}
           isAuthor={isAuthor}
-          isPending={false}
+          isPending={isPending}
           handleEdit={() => setEditingId(id)}
           handleThread={() => {}}
           handleReaction={handleReaction}

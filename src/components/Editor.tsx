@@ -10,7 +10,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { CaseSensitive, ImageIcon, Send, Smile, X } from 'lucide-react';
+import {
+  CaseSensitive,
+  ImageIcon,
+  Loader2,
+  Send,
+  Smile,
+  X,
+} from 'lucide-react';
 import 'quill/dist/quill.snow.css';
 
 import { cn } from '@/lib/utils';
@@ -265,7 +272,11 @@ const Editor = ({
                 }
                 disabled={disabled || isEmpty}
               >
-                Save
+                {disabled ? (
+                  <Loader2 className='size-4 animate-spin' strokeWidth={1.5} />
+                ) : (
+                  'Save'
+                )}
               </Button>
             </div>
           )}
