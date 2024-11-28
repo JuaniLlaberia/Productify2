@@ -1,15 +1,22 @@
+'use client';
+
 import {
   FileText,
   Folder,
   Link as LinkIcon,
   MessagesSquare,
+  PanelRightClose,
+  PanelRightOpen,
   Settings,
 } from 'lucide-react';
 
 import UserMenu from './UserMenu';
 import TeamsDropdown from './TeamsDropdown';
 import SidebarLink from './SidebarLink';
+import Hint from '@/components/ui/hint';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { useSidebar } from '../(context)/SidebarContext';
 
 const SIDEBAR_LINKS = [
   {
@@ -50,21 +57,39 @@ const SIDEBAR_LINKS = [
 ];
 
 const Sidebar = ({ teamId }: { teamId: string }) => {
+  const { isOpen, toggleSidebar } = useSidebar();
+
   return (
     <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-muted/25 border-r border-border'>
-      <div className='flex flex-1 flex-col gap-3 items-center'>
+      <div className='space-y-1'>
         <TeamsDropdown />
-
-        <ul className='flex flex-col gap-3'>
-          {SIDEBAR_LINKS.map(link => (
-            <SidebarLink
-              key={link.link}
-              {...link}
-              link={`/team/${teamId}/${link.link}`}
-            />
-          ))}
-        </ul>
+        <Hint label={`${isOpen ? 'Close' : 'Open'} menu`} side='right'>
+          <Button
+            className='flex flex-col items-center size-10 rounded-lg'
+            variant='ghost'
+            size='icon'
+            onClick={toggleSidebar}
+          >
+            {isOpen ? (
+              <PanelRightOpen className='size-5' strokeWidth={1.5} />
+            ) : (
+              <PanelRightClose className='size-5' strokeWidth={1.5} />
+            )}
+          </Button>
+        </Hint>
       </div>
+      <Separator className='my-3' />
+
+      <ul className='flex flex-1 flex-col gap-3 items-center'>
+        {SIDEBAR_LINKS.map(link => (
+          <SidebarLink
+            key={link.link}
+            {...link}
+            link={`/team/${teamId}/${link.link}`}
+          />
+        ))}
+      </ul>
+
       <Separator className='my-3' />
       <UserMenu />
     </aside>
