@@ -60,7 +60,7 @@ const MessagesList = ({
   );
 
   return (
-    <div className='p-4 w-full flex-1 flex flex-col-reverse overflow-y-auto messages-scrollbar'>
+    <div className='p-4 w-full flex-1 flex flex-col-reverse overflow-y-auto scrollbar-none hover:scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
       {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
         <div key={dateKey}>
           <div className='text-center my-2 relative'>

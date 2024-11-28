@@ -179,7 +179,7 @@ const TasksBoard = ({
 
   if (isLoading)
     return (
-      <div className='flex w-full h-full items-start gap-4 px-6 py-2 overflow-auto'>
+      <div className='flex w-full h-full items-start gap-4 px-6 py-2 overflow-auto scrollbar-none'>
         {[1, 2, 3, 4, 5].map((_, index) => (
           <ul
             key={index}
@@ -201,7 +201,7 @@ const TasksBoard = ({
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <ul className='flex w-full h-full items-start gap-4 px-6 py-2 overflow-auto'>
+      <ul className='flex w-full h-[calc(100vh-96px)] items-start gap-4 px-6 py-2 overflow-auto scrollbar-none hover:scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
         {columns.map(column => (
           <TasksColumn
             key={column.id}

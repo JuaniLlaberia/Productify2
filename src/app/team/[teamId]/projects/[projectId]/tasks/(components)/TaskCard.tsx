@@ -48,7 +48,7 @@ const TaskCard = ({ taskData }: TaskCardProps) => {
           style={style}
           {...attributes}
           {...listeners}
-          className='relative w-full min-w-[250px] max-w-[350px] space-y-2 bg-muted/20 p-2.5 mr-3 border border-border rounded-lg shadow-md md:cursor-pointer group touch-none list-none'
+          className='relative w-full min-w-[280px] max-w-[350px] space-y-2 bg-muted/20 p-2.5 mr-3 border border-border rounded-lg shadow-md md:cursor-pointer group touch-none list-none'
         >
           <div className='flex items-center justify-between'>
             <h3 className='font-medium'>{title}</h3>

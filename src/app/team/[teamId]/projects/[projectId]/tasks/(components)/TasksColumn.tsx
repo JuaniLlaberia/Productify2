@@ -27,10 +27,8 @@ const TasksColumn = ({ status, tasks }: TasksColumnType) => {
     },
   });
 
-  if (tasks.length === 0) return;
-
   return (
-    <li className='flex flex-col h-full w-full min-w-[250px] max-w-[350px]'>
+    <li className='flex flex-col h-full w-full min-w-[280px] max-w-[350px]'>
       <header className='flex justify-between items-center py-2 min-h-12 group'>
         <div className='flex items-center gap-2'>
           <Badge

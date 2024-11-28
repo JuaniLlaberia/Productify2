@@ -46,57 +46,55 @@ const ProjectFeatureNavbar = ({
   const view = searchParams.get('view') || 'table';
 
   return (
-    <nav className='w-full p-2 px-4 border-b border-border'>
-      <div className='flex items-center justify-between'>
-        {/* Filters */}
-        <div className='flex items-center space-x-2'>
-          {filters ? (
-            <Popover>
-              <PopoverTrigger>
-                <Hint label='Filters'>
-                  <Button variant='outline' size='sm'>
-                    <ListFilter className='size-4 mr-1.5' strokeWidth={1.5} />
-                    Filters
-                  </Button>
+    <nav className='w-full flex h-12 p-2 px-4  items-center justify-between border-b border-border'>
+      {/* Filters */}
+      <div className='flex items-center space-x-2'>
+        {filters ? (
+          <Popover>
+            <PopoverTrigger>
+              <Hint label='Filters'>
+                <Button variant='outline' size='sm'>
+                  <ListFilter className='size-4 mr-1.5' strokeWidth={1.5} />
+                  Filters
+                </Button>
+              </Hint>
+            </PopoverTrigger>
+            <PopoverContent side='bottom' className='w-auto'>
+              <FiltersForm filters={filters} />
+            </PopoverContent>
+          </Popover>
+        ) : null}
+        {view === 'table' && (
+          <>
+            <ColumnVisibilityDropdown />
+            <SearchbarFilter />
+          </>
+        )}
+      </div>
+
+      {/* VIEW COMPONENT */}
+      <div className='flex items-center justify-center gap-2'>
+        {views.length > 1 ? (
+          <Tabs
+            defaultValue={defaultView}
+            onValueChange={value => {
+              router.push(pathname + '?' + createQueryString('view', value));
+            }}
+          >
+            <TabsList>
+              {views.map(view => (
+                <Hint key={view.id} label={view.label}>
+                  <TabsTrigger value={view.value} className='h-full'>
+                    {view.icon}
+                  </TabsTrigger>
                 </Hint>
-              </PopoverTrigger>
-              <PopoverContent side='bottom' className='w-auto'>
-                <FiltersForm filters={filters} />
-              </PopoverContent>
-            </Popover>
-          ) : null}
-          {view === 'table' && (
-            <>
-              <ColumnVisibilityDropdown />
-              <SearchbarFilter />
-            </>
-          )}
-        </div>
+              ))}
+            </TabsList>
+          </Tabs>
+        ) : null}
 
-        {/* VIEW COMPONENT */}
-        <div className='flex items-center justify-center gap-2'>
-          {views.length > 1 ? (
-            <Tabs
-              defaultValue={defaultView}
-              onValueChange={value => {
-                router.push(pathname + '?' + createQueryString('view', value));
-              }}
-            >
-              <TabsList>
-                {views.map(view => (
-                  <Hint key={view.id} label={view.label}>
-                    <TabsTrigger value={view.value} className='h-full'>
-                      {view.icon}
-                    </TabsTrigger>
-                  </Hint>
-                ))}
-              </TabsList>
-            </Tabs>
-          ) : null}
-
-          {/* Create component */}
-          {createModal && createModal}
-        </div>
+        {/* Create component */}
+        {createModal && createModal}
       </div>
     </nav>
   );

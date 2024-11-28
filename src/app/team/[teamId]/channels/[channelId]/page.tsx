@@ -20,7 +20,7 @@ const ChannelPage = ({
   if (!channel) return <p>LOADING</p>;
 
   return (
-    <section className='w-full h-full flex flex-col'>
+    <section className='w-full h-screen flex flex-col'>
       <ChannelHeader channelName={channel.name} channelIcon={channel?.icon} />
       <MessagesList
         channelName={channel.name}

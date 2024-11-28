@@ -35,7 +35,7 @@ const ProjectNavbar = () => {
     );
 
   return (
-    <div className='flex items-center justify-between w-full p-2 px-4 border-b border-border'>
+    <div className='flex h-12 items-center justify-between w-full p-2 px-4 border-b border-border'>
       <Breadcrumb>
         <BreadcrumbList>
           <div className='p-1 rounded bg-muted text-muted-foreground'>

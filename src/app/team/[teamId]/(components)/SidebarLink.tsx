@@ -47,7 +47,7 @@ const SidebarLink = ({
           <span className='text-center text-xs font-medium'>{label}</span>
         </Link>
       </TooltipTrigger>
-      <TooltipContent side='right' sideOffset={6}>
+      <TooltipContent side='right'>
         <p>{tooltip}</p>
       </TooltipContent>
     </Tooltip>
