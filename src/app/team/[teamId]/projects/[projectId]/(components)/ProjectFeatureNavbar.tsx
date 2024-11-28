@@ -71,7 +71,6 @@ const ProjectFeatureNavbar = ({
           </>
         )}
       </div>
-
       {/* VIEW COMPONENT */}
       <div className='flex items-center justify-center gap-2'>
         {views.length > 1 ? (
@@ -83,11 +82,13 @@ const ProjectFeatureNavbar = ({
           >
             <TabsList>
               {views.map(view => (
-                <Hint key={view.id} label={view.label}>
-                  <TabsTrigger value={view.value} className='h-full'>
-                    {view.icon}
-                  </TabsTrigger>
-                </Hint>
+                <TabsTrigger
+                  key={view.id}
+                  value={view.value}
+                  className='h-full'
+                >
+                  <Hint label={view.label}>{view.icon}</Hint>
+                </TabsTrigger>
               ))}
             </TabsList>
           </Tabs>
