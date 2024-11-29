@@ -10,7 +10,7 @@ import { Doc, Id } from './_generated/dataModel';
 const populateThreads = async (ctx: QueryCtx, messageId: Id<'messages'>) => {
   const messages = await ctx.db
     .query('messages')
-    .withIndex('by_parentId', q => q.eq('parentMessage', messageId))
+    .withIndex('by_parentId', q => q.eq('parentMessageId', messageId))
     .collect();
 
   if (messages.length === 0) {
@@ -98,7 +98,7 @@ export const getMessages = query({
       .withIndex('by_channelId_parentId_conversationId', q =>
         q
           .eq('channelId', channelId)
-          .eq('parentMessage', parentMessageId)
+          .eq('parentMessageId', parentMessageId)
           .eq('conversationId', _conversationId)
       )
       .order('desc')
@@ -162,16 +162,65 @@ export const getMessages = query({
   },
 });
 
+export const getMessageById = query({
+  args: { teamId: v.id('teams'), messageId: v.id('messages') },
+  handler: async (ctx, args) => {
+    const { messageId, teamId } = args;
+    const member = await isMember(ctx, teamId);
+
+    const message = await ctx.db.get(messageId);
+    if (!message) return null;
+
+    const reactions = await populateReactions(ctx, message._id);
+
+    const reactionsWithCounts = reactions.map(reaction => {
+      return {
+        ...reaction,
+        count: reactions.filter(r => r.value === reaction.value).length,
+      };
+    });
+    const dedupedReactions = reactionsWithCounts.reduce<DedupedReaction[]>(
+      (acc, reaction) => {
+        const existingReactions = acc.find(r => r.value === reaction.value);
+        if (existingReactions) {
+          existingReactions.userIds = Array.from(
+            new Set([...existingReactions.userIds, reaction.userId])
+          );
+        } else {
+          // Explicitly construct the deduped reaction object
+          const { userId, ...restReaction } = reaction;
+          acc.push({
+            ...restReaction,
+            userIds: [userId],
+          });
+        }
+
+        return acc;
+      },
+      []
+    );
+
+    return {
+      ...message,
+      image: message.image
+        ? await ctx.storage.getUrl(message.image)
+        : undefined,
+      user: member,
+      reactions: dedupedReactions,
+    };
+  },
+});
+
 export const createMessage = mutation({
   args: omit(Messages.withoutSystemFields, ['userId', 'isEdited', 'updatedAt']),
   handler: async (ctx, args) => {
-    const { conversationId, channelId, parentMessage, teamId } = args;
+    const { conversationId, channelId, parentMessageId, teamId } = args;
     const user = await isMember(ctx, teamId);
 
     let _conversationId = conversationId;
     //Replying in a thread in 1:1 channel (direct messages replies)
-    if (!conversationId && !channelId && parentMessage) {
-      const parentMessageData = await ctx.db.get(parentMessage);
+    if (!conversationId && !channelId && parentMessageId) {
+      const parentMessageData = await ctx.db.get(parentMessageId);
 
       if (!parentMessageData) throw new ConvexError('Parent message not found');
 
@@ -199,7 +248,7 @@ export const updateMessage = mutation({
         'channelId',
         'teamId',
         'isEdited',
-        'parentMessage',
+        'parentMessageId',
         'image',
       ])
     ),
