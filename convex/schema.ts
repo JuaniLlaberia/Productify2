@@ -125,7 +125,7 @@ export const Messages = Table('messages', {
   userId: v.id('users'),
   isEdited: v.boolean(),
   conversationId: v.optional(v.id('conversations')),
-  parentMessage: v.optional(v.id('messages')),
+  parentMessageId: v.optional(v.id('messages')),
   updatedAt: v.optional(v.number()),
 });
 
@@ -208,10 +208,10 @@ export default defineSchema({
     .index('by_teamId_conversationId', ['teamId', 'conversationId'])
     .index('by_channelId_parentId_conversationId', [
       'channelId',
-      'parentMessage',
+      'parentMessageId',
       'conversationId',
     ])
-    .index('by_parentId', ['parentMessage']),
+    .index('by_parentId', ['parentMessageId']),
   reactions: Reactions.table
     .index('by_teamId', ['teamId'])
     .index('by_messageId', ['messageId'])
