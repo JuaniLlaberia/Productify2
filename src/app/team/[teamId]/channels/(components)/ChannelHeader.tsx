@@ -7,7 +7,7 @@ type ChannelHeaderProps = {
 
 const ChannelHeader = ({ channelIcon, channelName }: ChannelHeaderProps) => {
   return (
-    <nav className='flex items-center gap-2.5 w-full p-2 px-4 border-b border-border sticky top-0'>
+    <nav className='h-12 flex items-center gap-2.5 w-full p-2 px-4 border-b border-border sticky top-0'>
       <div className='p-1 rounded bg-muted text-muted-foreground'>
         {channelIcon ? (
           channelIcon
