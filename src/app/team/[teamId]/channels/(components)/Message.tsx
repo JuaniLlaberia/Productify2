@@ -4,16 +4,19 @@ import dynamic from 'next/dynamic';
 import { format, isToday, isYesterday } from 'date-fns';
 import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 import Thumbnail from '@/components/ui/thumbnail';
 import Hint from '@/components/ui/hint';
+import ChannelThread from './ChannelThread';
+import ThreadBar from './ThreadBar';
 import { Doc, Id } from '../../../../../../convex/_generated/dataModel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { MessageToolbar } from './MessageToolbar';
 import { api } from '../../../../../../convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { Reactions } from './Reactions';
-import { useState } from 'react';
+import { usePanel } from '../../(context)/PanelContext';
 
 const Renderer = dynamic(() => import('@/components/Renderer'), { ssr: false });
 const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
@@ -62,10 +65,18 @@ const Message = ({
   isCompact,
   setEditingId,
   hideThreadButton,
-  // threadCount,
-  // threadImage,
-  // threadTimestampt,
+  threadCount,
+  threadImage,
+  threadTimestampt,
 }: MessageProps) => {
+  const { openPanel, closePanel } = usePanel();
+
+  const handleThread = () => {
+    openPanel({
+      content: <ChannelThread messageId={id} onClose={() => closePanel()} />,
+    });
+  };
+
   const [isPending, setIsPending] = useState<boolean>(false);
   const updateMessage = useMutation(api.messages.updateMessage);
   const handleUpdate = async ({ body }: { body: string }) => {
@@ -126,6 +137,12 @@ const Message = ({
                 <span className='text-xs text-muted-foreground'>(edited)</span>
               )}
               <Reactions data={reactions} onChange={handleReaction} />
+              <ThreadBar
+                count={threadCount}
+                image={threadImage}
+                timestamp={threadTimestampt}
+                onClick={handleThread}
+              />
             </div>
           )}
         </div>
@@ -136,7 +153,7 @@ const Message = ({
             isAuthor={isAuthor}
             isPending={isPending}
             handleEdit={() => setEditingId(id)}
-            handleThread={() => {}}
+            handleThread={handleThread}
             handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
           />
@@ -187,6 +204,12 @@ const Message = ({
               <span className='text-xs text-muted-foreground'>(edited)</span>
             )}
             <Reactions data={reactions} onChange={handleReaction} />
+            <ThreadBar
+              count={threadCount}
+              image={threadImage}
+              timestamp={threadTimestampt}
+              onClick={handleThread}
+            />
           </div>
         )}
       </div>
@@ -197,7 +220,7 @@ const Message = ({
           isAuthor={isAuthor}
           isPending={isPending}
           handleEdit={() => setEditingId(id)}
-          handleThread={() => {}}
+          handleThread={handleThread}
           handleReaction={handleReaction}
           hideThreadButton={hideThreadButton}
         />

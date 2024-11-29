@@ -12,12 +12,12 @@ import { useGetMessages } from '@/features/messages/api/useGetMessages';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../convex/_generated/api';
 
-const formatDateLabel = (dateStr: string) => {
+export const formatDateLabel = (dateStr: string) => {
   const date = new Date(`${dateStr}T12:00:00Z`);
   return `${isToday(date) ? 'Today' : isYesterday(date) ? 'Yesturday' : format(date, 'EEEE, MMMM d')}`;
 };
 
-const TIME_THRESHOLD = 5; //5 minutes
+export const TIME_THRESHOLD = 5; //5 minutes
 
 type MessageListProps = {
   channelName?: string;
