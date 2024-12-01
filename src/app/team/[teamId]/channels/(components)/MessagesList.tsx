@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react';
 
 import Message from './Message';
 import ChannelHero from './ChannelHero';
+import MessageLoader from './MessageLoader';
 import { useGetMessages } from '@/features/messages/api/useGetMessages';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../convex/_generated/api';
@@ -17,7 +18,7 @@ export const formatDateLabel = (dateStr: string) => {
   return `${isToday(date) ? 'Today' : isYesterday(date) ? 'Yesturday' : format(date, 'EEEE, MMMM d')}`;
 };
 
-export const TIME_THRESHOLD = 5; //5 minutes
+export const TIME_THRESHOLD = 5;
 
 type MessageListProps = {
   channelName?: string;
@@ -43,7 +44,14 @@ const MessagesList = ({
     channelId,
   });
 
-  if (status === 'LoadingFirstPage') return <div>LOADING</div>;
+  if (status === 'LoadingFirstPage')
+    return (
+      <ul className='flex flex-col-reverse flex-1'>
+        {[1, 2, 3, 4, 5].map((_, index) => (
+          <MessageLoader key={index} />
+        ))}
+      </ul>
+    );
 
   const groupedMessages = results.reduce(
     (groups, message) => {
@@ -60,7 +68,7 @@ const MessagesList = ({
   );
 
   return (
-    <div className='p-4 w-full flex-1 flex flex-col-reverse overflow-y-auto scrollbar-none hover:scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
+    <div className='p-4 w-full flex-1 flex flex-col-reverse overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
       {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
         <div key={dateKey}>
           <div className='text-center my-2 relative'>

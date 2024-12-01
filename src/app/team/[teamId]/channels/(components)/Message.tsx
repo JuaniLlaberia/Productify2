@@ -17,6 +17,7 @@ import { api } from '../../../../../../convex/_generated/api';
 import { cn } from '@/lib/utils';
 import { Reactions } from './Reactions';
 import { usePanel } from '../../(context)/PanelContext';
+import UserPanel from '../../(components)/UserPanel';
 
 const Renderer = dynamic(() => import('@/components/Renderer'), { ssr: false });
 const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
@@ -75,6 +76,10 @@ const Message = ({
     openPanel({
       content: <ChannelThread messageId={id} onClose={() => closePanel()} />,
     });
+  };
+
+  const handleUserPanel = () => {
+    openPanel({ content: <UserPanel onClose={() => closePanel()} /> });
   };
 
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -188,7 +193,10 @@ const Message = ({
         ) : (
           <div className='flex flex-col w-full overflow-hidden'>
             <div className='text-sm'>
-              <button className='font-bold text-primary hover:underline'>
+              <button
+                className='font-bold text-primary hover:underline'
+                onClick={handleUserPanel}
+              >
                 {authorName}
               </button>
               <span>&nbsp;&nbsp;</span>
