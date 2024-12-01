@@ -153,7 +153,84 @@ export const getMessages = query({
               reactions: dedupedReactions,
               threadCount: thread.count,
               threadImage: thread.image,
-              threadTimestampt: thread.timestamp,
+              threadTimestampt: thread.timestampt,
+            };
+          })
+          .filter(message => message !== null)
+      ),
+    };
+  },
+});
+
+export const getThreads = query({
+  args: {
+    teamId: v.id('teams'),
+    threadsOnly: v.optional(v.boolean()),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    const { teamId, threadsOnly, paginationOpts } = args;
+    const user = await isMember(ctx, teamId);
+
+    const results = await ctx.db
+      .query('messages')
+      .withIndex('by_teamId_userId', q =>
+        q.eq('teamId', teamId).eq('userId', user._id)
+      )
+      .filter(q => q.eq(q.field('hasThread'), threadsOnly))
+      .order('desc')
+      .paginate(paginationOpts);
+
+    return {
+      ...results,
+      page: await Promise.all(
+        results.page
+          .map(async message => {
+            if (!user) return null;
+
+            const reactions = await populateReactions(ctx, message._id);
+            const reactionsWithCounts = reactions.map(reaction => {
+              return {
+                ...reaction,
+                count: reactions.filter(r => r.value === reaction.value).length,
+              };
+            });
+
+            const dedupedReactions = reactionsWithCounts.reduce<
+              DedupedReaction[]
+            >((acc, reaction) => {
+              const existingReactions = acc.find(
+                r => r.value === reaction.value
+              );
+              if (existingReactions) {
+                existingReactions.userIds = Array.from(
+                  new Set([...existingReactions.userIds, reaction.userId])
+                );
+              } else {
+                // Explicitly construct the deduped reaction object
+                const { userId, ...restReaction } = reaction;
+                acc.push({
+                  ...restReaction,
+                  userIds: [userId],
+                });
+              }
+
+              return acc;
+            }, []);
+
+            const thread = await populateThreads(ctx, message._id);
+            const image = message.image
+              ? await ctx.storage.getUrl(message.image)
+              : undefined;
+
+            return {
+              ...message,
+              image,
+              user,
+              reactions: dedupedReactions,
+              threadCount: thread.count,
+              threadImage: thread.image,
+              threadTimestampt: thread.timestampt,
             };
           })
           .filter(message => message !== null)
@@ -227,11 +304,20 @@ export const createMessage = mutation({
       _conversationId = parentMessageData.conversationId;
     }
 
+    if (parentMessageId) {
+      const parentMessage = await ctx.db.get(parentMessageId);
+      if (!parentMessage) throw new ConvexError('Parent message not found');
+
+      if (!parentMessage?.hasThread)
+        await ctx.db.patch(parentMessage?._id, { hasThread: true });
+    }
+
     const messageId = await ctx.db.insert('messages', {
       ...args,
       conversationId: _conversationId,
       userId: user._id,
       isEdited: false,
+      hasThread: false,
     });
 
     return messageId;
