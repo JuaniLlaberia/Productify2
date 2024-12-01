@@ -117,6 +117,7 @@ export const Conversations = Table('conversations', {
   teamId: v.id('teams'),
   userOneId: v.id('users'),
   userTwoId: v.id('users'),
+  userPair: v.string(),
 });
 
 export const Messages = Table('messages', {
@@ -206,7 +207,9 @@ export default defineSchema({
   channelMembers: ChannelMembers.table
     .index('by_channelId_userId', ['channelId', 'userId'])
     .index('by_teamId_userId', ['teamId', 'userId']),
-  conversations: Conversations.table.index('by_teamId', ['teamId']),
+  conversations: Conversations.table
+    .index('by_teamId', ['teamId'])
+    .index('by_team_users_unique', ['teamId', 'userPair']),
   messages: Messages.table
     .index('by_teamId_userId', ['teamId', 'userId'])
     .index('by_teamId_conversationId', ['teamId', 'conversationId'])
