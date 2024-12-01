@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 export type ColorsType =
   | 'red'
   | 'green'
@@ -15,7 +17,7 @@ export type ColorsType =
   | 'slate';
 
 type BadgeType = {
-  text: string;
+  text: string | ReactElement;
   color: ColorsType;
   decorated?: boolean;
 };
