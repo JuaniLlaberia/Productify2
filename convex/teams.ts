@@ -68,6 +68,12 @@ export const createTeam = mutation({
       }),
       //Update user onBoardingCompleted to TRUE
       ctx.db.patch(user._id, { onBoardingCompleted: true }),
+      //Create default channel
+      ctx.db.insert('channels', {
+        name: 'General',
+        private: false,
+        teamId,
+      }),
     ]);
 
     return teamId;
