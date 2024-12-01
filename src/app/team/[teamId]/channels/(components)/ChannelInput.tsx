@@ -18,9 +18,10 @@ const Editor = dynamic(() => import('@/components/Editor'), {
 
 type ChatInputProps = {
   placeholder: string;
+  parentMessageId?: Id<'messages'>;
 };
 
-const ChannelInput = ({ placeholder }: ChatInputProps) => {
+const ChannelInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
   const [editorKey, setEditorKey] = useState<number>(0);
   const [isPending, setIsPending] = useState<boolean>(false);
 
@@ -51,10 +52,13 @@ const ChannelInput = ({ placeholder }: ChatInputProps) => {
         channelId: Id<'channels'>;
         message: string;
         image?: Id<'_storage'>;
+
+        parentMessageId?: Id<'messages'>;
       } = {
         teamId,
         channelId,
         message: body,
+        parentMessageId: parentMessageId || undefined,
       };
 
       if (image) {

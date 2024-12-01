@@ -1,8 +1,11 @@
 import { Hash } from 'lucide-react';
+import type { ReactElement } from 'react';
+
+import { Skeleton } from '@/components/ui/skeleton';
 
 type ChannelHeaderProps = {
   channelName?: string;
-  channelIcon?: string;
+  channelIcon?: string | ReactElement;
 };
 
 const ChannelHeader = ({ channelIcon, channelName }: ChannelHeaderProps) => {
@@ -15,7 +18,11 @@ const ChannelHeader = ({ channelIcon, channelName }: ChannelHeaderProps) => {
           <Hash className='size-4' strokeWidth={1.5} />
         )}
       </div>
-      <h1 className='text-sm font-medium'>{channelName}</h1>
+      {channelName ? (
+        <h1 className='text-sm font-medium'>{channelName}</h1>
+      ) : (
+        <Skeleton className='h-full w-32' />
+      )}
     </nav>
   );
 };

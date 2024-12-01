@@ -68,12 +68,6 @@ const ChannelsLinks = () => {
         />
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
-        <InnerSidebarLink
-          label='General'
-          icon={<Hash className='size-4 mr-1.5' strokeWidth={1.5} />}
-          link={`/team/${teamId}/channels/general`}
-          isActive={pathname.includes('/channels/general')}
-        />
         {channels.length > 0
           ? channels.map(channel => (
               <InnerSidebarLink

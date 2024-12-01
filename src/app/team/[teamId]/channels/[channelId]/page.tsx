@@ -17,16 +17,17 @@ const ChannelPage = ({
   };
 }) => {
   const channel = useQuery(api.channels.getChannelById, { teamId, channelId });
-  if (!channel) return <p>LOADING</p>;
 
   return (
     <section className='w-full h-screen flex flex-col'>
-      <ChannelHeader channelName={channel.name} channelIcon={channel?.icon} />
+      <ChannelHeader channelName={channel?.name} channelIcon={channel?.icon} />
       <MessagesList
-        channelName={channel.name}
-        channelCreationTime={channel._creationTime}
+        channelName={channel?.name}
+        channelCreationTime={channel?._creationTime}
       />
-      <ChatInput placeholder={`Send message to # ${channel.name}`} />
+      <ChatInput
+        placeholder={`Send message to # ${channel?.name || 'Channel'}`}
+      />
     </section>
   );
 };
