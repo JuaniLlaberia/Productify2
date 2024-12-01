@@ -21,6 +21,8 @@ export const Users = Table('users', {
   fullName: v.string(),
   email: v.string(),
   profileImage: v.optional(v.string()),
+  location: v.optional(v.string()),
+  description: v.optional(v.string()),
   clerkIdentifier: v.string(),
   onBoardingCompleted: v.boolean(),
 });
@@ -124,6 +126,7 @@ export const Messages = Table('messages', {
   teamId: v.id('teams'),
   userId: v.id('users'),
   isEdited: v.boolean(),
+  hasThread: v.optional(v.boolean()),
   conversationId: v.optional(v.id('conversations')),
   parentMessageId: v.optional(v.id('messages')),
   updatedAt: v.optional(v.number()),
@@ -199,12 +202,13 @@ export default defineSchema({
     'teamId',
     'projectId',
   ]),
-  channels: Channels.table,
+  channels: Channels.table.index('by_teamId', ['teamId']),
   channelMembers: ChannelMembers.table
     .index('by_channelId_userId', ['channelId', 'userId'])
     .index('by_teamId_userId', ['teamId', 'userId']),
   conversations: Conversations.table.index('by_teamId', ['teamId']),
   messages: Messages.table
+    .index('by_teamId_userId', ['teamId', 'userId'])
     .index('by_teamId_conversationId', ['teamId', 'conversationId'])
     .index('by_channelId_parentId_conversationId', [
       'channelId',
