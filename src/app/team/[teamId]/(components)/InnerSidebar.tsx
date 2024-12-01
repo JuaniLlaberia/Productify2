@@ -17,6 +17,7 @@ const SIDEBAR_CONTENT: {
 } = {
   projects: { title: 'Projects', content: <ProjectsLinks /> },
   channels: { title: 'Channels', content: <ChannelsLinks /> },
+  conversations: { title: 'Channels', content: <ChannelsLinks /> },
   documents: { title: 'Documents', content: <DocumentsLinks /> },
   assets: { title: 'Assets', content: <AssetsLinks /> },
   settings: { title: 'Settings', content: <SettingsLinks /> },

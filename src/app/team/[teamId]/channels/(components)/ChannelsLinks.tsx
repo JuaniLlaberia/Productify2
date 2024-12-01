@@ -13,18 +13,24 @@ import { useQuery } from 'convex/react';
 import SidebarLoader from '../../(components)/SidebarLoader';
 import ChannelActions from './ChannelActions';
 import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
+import ConversationActions from '../../conversations/(components)/ConversationActions';
+import ConversationLink from '../../conversations/(components)/ConversationLink';
 import ChannelForm from './ChannelForm';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 
 const ChannelsLinks = () => {
   const pathname = usePathname();
-  const { teamId } = useParams();
+  const { teamId } = useParams<{ teamId: Id<'teams'> }>();
 
   const channels = useQuery(api.channels.getChannels, {
-    teamId: teamId as Id<'teams'>,
+    teamId,
   });
-  if (!channels) return <SidebarLoader />;
+  const conversations = useQuery(api.conversations.getConversations, {
+    teamId,
+  });
+
+  if (!channels || !conversations) return <SidebarLoader />;
 
   return (
     <>
@@ -57,6 +63,7 @@ const ChannelsLinks = () => {
           isActive={pathname.includes('/channels/browse')}
         />
       </ul>
+
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
         <span className='py-0.5'>Your channels</span>
         <ChannelForm
@@ -68,26 +75,57 @@ const ChannelsLinks = () => {
         />
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
-        {channels.length > 0
-          ? channels.map(channel => (
-              <InnerSidebarLink
-                key={channel?._id}
-                label={channel?.name as string}
-                icon={
-                  channel?.icon ? (
-                    <span className='size-4 mr-1.5'>{channel.icon}</span>
-                  ) : (
-                    <Hash className='size-4 mr-1.5' strokeWidth={1.5} />
-                  )
-                }
-                link={`/team/${teamId}/channels/${channel?._id}`}
-                isActive={pathname.includes(channel?._id as string)}
-                options={
-                  channel ? <ChannelActions data={channel} /> : undefined
-                }
-              />
-            ))
-          : null}
+        {channels.length > 0 ? (
+          channels.map(channel => (
+            <InnerSidebarLink
+              key={channel?._id}
+              label={channel?.name as string}
+              icon={
+                channel?.icon ? (
+                  <span className='size-4 mr-1.5'>{channel.icon}</span>
+                ) : (
+                  <Hash className='size-4 mr-1.5' strokeWidth={1.5} />
+                )
+              }
+              link={`/team/${teamId}/channels/${channel?._id}`}
+              isActive={pathname.includes(channel?._id as string)}
+              options={channel ? <ChannelActions data={channel} /> : undefined}
+            />
+          ))
+        ) : (
+          <p className='text-muted-foreground text-sm px-2'>No channels</p>
+        )}
+      </ul>
+
+      <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
+        <span className='py-0.5'>Your conversations</span>
+        {/* <ChannelForm
+          trigger={
+            <span className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
+              <Plus className='size-4' />
+            </span>
+          }
+        /> */}
+      </h3>
+      <ul className='flex flex-col gap-0.5 mb-4'>
+        {conversations.length > 0 ? (
+          conversations.map(({ conversationId, otherUser }) => (
+            <ConversationLink
+              key={conversationId}
+              user={otherUser}
+              link={`/team/${teamId}/conversations/${conversationId}`}
+              isActive={pathname.includes(conversationId as string)}
+              options={
+                <ConversationActions
+                  teamId={teamId}
+                  conversationId={conversationId}
+                />
+              }
+            />
+          ))
+        ) : (
+          <p className='text-muted-foreground text-sm px-2'>No conversations</p>
+        )}
       </ul>
     </>
   );
