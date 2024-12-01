@@ -10,6 +10,14 @@ export const getChannels = query({
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
 
+    //Get public channels
+    const allTeamPublicChannels = await ctx.db
+      .query('channels')
+      .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
+      .filter(q => q.eq(q.field('private'), false))
+      .collect();
+
+    //Get private channels
     const channelMembers = await ctx.db
       .query('channelMembers')
       .withIndex('by_teamId_userId', q =>
@@ -19,9 +27,12 @@ export const getChannels = query({
     const channelIds = channelMembers.map(
       channelMember => channelMember.channelId
     );
-    const channels = await Promise.all(channelIds.map(id => ctx.db.get(id)));
+    const userChannels = await Promise.all(
+      channelIds.map(id => ctx.db.get(id))
+    );
+    const channels = [...allTeamPublicChannels, ...userChannels];
 
-    return channels;
+    return channels.sort((a, b) => b!._creationTime - a!._creationTime);
   },
 });
 
@@ -58,11 +69,12 @@ export const createChannel = mutation({
       teamId,
     });
 
-    await ctx.db.insert('channelMembers', {
-      userId: user._id,
-      teamId,
-      channelId,
-    });
+    if (channelData.private)
+      await ctx.db.insert('channelMembers', {
+        userId: user._id,
+        teamId,
+        channelId,
+      });
 
     return channelId;
   },
