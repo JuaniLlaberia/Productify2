@@ -1,33 +1,25 @@
 'use state';
 
-import Quill from 'quill';
-import dynamic from 'next/dynamic';
 import { AlertTriangle, Loader2, X } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useRef, useState } from 'react';
-import { useMutation, useQuery } from 'convex/react';
-import { toast } from 'sonner';
+import { useState } from 'react';
+import { useQuery } from 'convex/react';
 import { differenceInMinutes, format } from 'date-fns';
 
 import Message from './Message';
+import ChannelInput from './ChannelInput';
+import MessageLoader from './MessageLoader';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
 import { api } from '../../../../../../convex/_generated/api';
 import { useGetMessages } from '@/features/messages/api/useGetMessages';
 import { formatDateLabel, TIME_THRESHOLD } from './MessagesList';
-
-const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
+import { Skeleton } from '@/components/ui/skeleton';
 
 type ChannelThreadProps = {
   messageId: Id<'messages'>;
   onClose: () => void;
 };
-
-/*
-NOTE: TODO/TO-CHECK
- - Fetch or pass props from message
- - Reusability with message and with message list
-*/
 
 const ChannelThread = ({ onClose, messageId }: ChannelThreadProps) => {
   const { teamId, channelId } = useParams<{
@@ -36,13 +28,6 @@ const ChannelThread = ({ onClose, messageId }: ChannelThreadProps) => {
   }>();
 
   const [editingId, setEditingId] = useState<Id<'messages'> | null>(null);
-  const [editorKey, setEditorKey] = useState<number>(0);
-  const [isPending, setIsPending] = useState<boolean>(false);
-
-  const editorRef = useRef<Quill | null>(null);
-
-  const createMsg = useMutation(api.messages.createMessage);
-  const getUploadUrl = useMutation(api.upload.generateUploadUrl);
 
   const message = useQuery(api.messages.getMessageById, { teamId, messageId });
   const user = useQuery(api.users.getUser);
@@ -61,65 +46,16 @@ const ChannelThread = ({ onClose, messageId }: ChannelThreadProps) => {
             <X className='size-4' strokeWidth={1.5} />
           </Button>
         </div>
-        <div className='flex items-center justify-center h-full'>
-          <Loader2 className='size-6 animate-spin' strokeWidth={1.5} />
+        <div className='flex flex-col-reverse h-full'>
+          <div className='px-5'>
+            <Skeleton className='w-full h-32 mb-3' />
+          </div>
+          {[1, 2, 3, 4, 5].map((_, index) => (
+            <MessageLoader key={index} />
+          ))}
         </div>
       </div>
     );
-
-  const handleSubmit = async ({
-    body,
-    image,
-  }: {
-    body: string;
-    image: File | null;
-  }) => {
-    try {
-      setIsPending(true);
-      editorRef?.current?.enable(false);
-
-      //Image upload
-      const message: {
-        teamId: Id<'teams'>;
-        channelId: Id<'channels'>;
-        parentMessageId: Id<'messages'>;
-        message: string;
-        image?: Id<'_storage'>;
-      } = {
-        teamId,
-        channelId,
-        parentMessageId: messageId,
-        message: body,
-      };
-
-      if (image) {
-        const uploadUrl = await getUploadUrl();
-        if (!uploadUrl) throw new Error('Url not found');
-
-        const response = await fetch(uploadUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': image.type },
-          body: image,
-        });
-
-        if (!response.ok) throw new Error('Failed to upload image');
-
-        const { storageId } = await response.json();
-        message.image = storageId;
-      }
-
-      //Create message
-      await createMsg(message);
-
-      //Check if this trick is efficient or not
-      setEditorKey(prev => prev + 1);
-    } catch {
-      toast.error('Failed to send message');
-    } finally {
-      setIsPending(false);
-      editorRef?.current?.enable(true);
-    }
-  };
 
   const groupedMessages = results.reduce(
     (groups, message) => {
@@ -138,12 +74,12 @@ const ChannelThread = ({ onClose, messageId }: ChannelThreadProps) => {
   return (
     <div className='h-full flex flex-col space-y-2'>
       <div className='h-12 flex justify-between items-center p-4 border-b'>
-        <p>Thread</p>
+        <p className='text-sm'>Thread</p>
         <Button onClick={onClose} variant='ghost' size='icon'>
           <X className='size-4' strokeWidth={1.5} />
         </Button>
       </div>
-      <div className='px-4 w-full flex-1 flex flex-col-reverse overflow-y-auto scrollbar-none hover:scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
+      <div className='px-4 w-full flex-1 flex flex-col-reverse overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
         {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => (
           <div key={dateKey}>
             <div className='text-center my-2 relative'>
@@ -241,15 +177,7 @@ const ChannelThread = ({ onClose, messageId }: ChannelThreadProps) => {
           </div>
         )}
       </div>
-      <div className='px-4'>
-        <Editor
-          key={editorKey}
-          innerRef={editorRef}
-          onSubmit={handleSubmit}
-          disabled={isPending}
-          placeholder='Reply...'
-        />
-      </div>
+      <ChannelInput placeholder='Reply...' parentMessageId={messageId} />
     </div>
   );
 };
