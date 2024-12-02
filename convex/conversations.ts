@@ -63,6 +63,7 @@ export const getConversationById = query({
     return {
       conversationId: conversation._id,
       otherUser,
+      _creationTime: conversation._creationTime,
     };
   },
 });
@@ -90,12 +91,14 @@ export const createConversation = mutation({
         'A conversation between these users already exists in this team'
       );
 
-    await ctx.db.insert('conversations', {
+    const conversationId = await ctx.db.insert('conversations', {
       teamId,
       userOneId: user._id,
       userTwoId: otherUserId,
       userPair,
     });
+
+    return conversationId;
   },
 });
 
