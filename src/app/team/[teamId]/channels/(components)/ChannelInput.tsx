@@ -27,9 +27,10 @@ const ChannelInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
 
   const editorRef = useRef<Quill | null>(null);
 
-  const { teamId, channelId } = useParams<{
+  const { teamId, channelId, conversationId } = useParams<{
     teamId: Id<'teams'>;
-    channelId: Id<'channels'>;
+    channelId?: Id<'channels'>;
+    conversationId?: Id<'conversations'>;
   }>();
 
   const createMsg = useMutation(api.messages.createMessage);
@@ -49,7 +50,8 @@ const ChannelInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
       //Image upload
       const message: {
         teamId: Id<'teams'>;
-        channelId: Id<'channels'>;
+        channelId?: Id<'channels'>;
+        conversationId?: Id<'conversations'>;
         message: string;
         image?: Id<'_storage'>;
 
@@ -57,8 +59,9 @@ const ChannelInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
       } = {
         teamId,
         channelId,
+        conversationId,
         message: body,
-        parentMessageId: parentMessageId || undefined,
+        parentMessageId,
       };
 
       if (image) {
@@ -77,10 +80,8 @@ const ChannelInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
         message.image = storageId;
       }
 
-      //Create message
       await createMsg(message);
 
-      //Check if this trick is efficient or not
       setEditorKey(prev => prev + 1);
     } catch {
       toast.error('Failed to send message');

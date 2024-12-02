@@ -31,9 +31,10 @@ const MessagesList = ({
   channelCreationTime,
   variant = 'channel',
 }: MessageListProps) => {
-  const { teamId, channelId } = useParams<{
+  const { teamId, channelId, conversationId } = useParams<{
     teamId: Id<'teams'>;
     channelId?: Id<'channels'>;
+    conversationId?: Id<'conversations'>;
   }>();
   const [editingId, setEditingId] = useState<Id<'messages'> | null>(null);
 
@@ -42,6 +43,7 @@ const MessagesList = ({
   const { results, loadMore, status } = useGetMessages({
     teamId,
     channelId,
+    conversationId,
   });
 
   if (status === 'LoadingFirstPage')
@@ -139,7 +141,7 @@ const MessagesList = ({
           </span>
         </div>
       )}
-      {variant === 'channel' && channelName && channelCreationTime && (
+      {channelName && channelCreationTime && (
         <ChannelHero name={channelName} creationTime={channelCreationTime} />
       )}
     </div>

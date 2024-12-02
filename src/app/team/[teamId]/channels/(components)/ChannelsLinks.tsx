@@ -12,6 +12,7 @@ import { useQuery } from 'convex/react';
 
 import SidebarLoader from '../../(components)/SidebarLoader';
 import ChannelActions from './ChannelActions';
+import ConversationForm from '../../conversations/(components)/ConversationForm';
 import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
 import ConversationActions from '../../conversations/(components)/ConversationActions';
 import ConversationLink from '../../conversations/(components)/ConversationLink';
@@ -99,13 +100,13 @@ const ChannelsLinks = () => {
 
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
         <span className='py-0.5'>Your conversations</span>
-        {/* <ChannelForm
+        <ConversationForm
           trigger={
             <span className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
               <Plus className='size-4' />
             </span>
           }
-        /> */}
+        />
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
         {conversations.length > 0 ? (
