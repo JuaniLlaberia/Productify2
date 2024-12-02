@@ -81,3 +81,7 @@ export const TemplatesSchema = z.object({
   label: z.string().optional(),
   assignee: z.string().optional(),
 });
+
+export const ConversationSchema = z.object({
+  memberId: z.string().min(1, { message: 'Please select a member' }),
+});
