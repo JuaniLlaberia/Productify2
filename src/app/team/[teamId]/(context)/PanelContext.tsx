@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from 'react';
-import { usePathname } from 'next/navigation';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 type PanelContextType = {
   isOpen: boolean;
@@ -27,9 +20,6 @@ export const PanelProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState<ReactNode | null>(null);
 
-  const pathname = usePathname();
-  const [lastPathname, setLastPathname] = useState(pathname);
-
   const openPanel = ({ content: panelContent }: { content: ReactNode }) => {
     if (isOpen) {
       closePanel();
@@ -43,13 +33,6 @@ export const PanelProvider = ({ children }: { children: ReactNode }) => {
     setIsOpen(false);
     setContent(null);
   };
-
-  useEffect(() => {
-    if (pathname !== lastPathname) {
-      closePanel();
-      setLastPathname(pathname);
-    }
-  }, [pathname, lastPathname]);
 
   return (
     <PanelContext.Provider
