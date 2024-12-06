@@ -11,7 +11,7 @@ type ThreadBarProps = {
 };
 
 const ThreadBar = ({ count, image, timestamp, onClick }: ThreadBarProps) => {
-  if (!count) return null; //What to do with the timestamp
+  if (!count) return null;
 
   return (
     <button

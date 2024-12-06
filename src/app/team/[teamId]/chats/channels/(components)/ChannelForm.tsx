@@ -2,14 +2,15 @@
 
 import { useMutation } from 'convex/react';
 import { useForm, Controller } from 'react-hook-form';
-import { api } from '../../../../../../convex/_generated/api';
+import { api } from '../../../../../../../convex/_generated/api';
 import { useParams, useRouter } from 'next/navigation';
 import { AlertCircle, Loader2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type ReactNode, useState } from 'react';
 
 import InputWrapper from '@/components/ui/input-wrapper';
-import { Doc, Id } from '../../../../../../convex/_generated/dataModel';
+import { Doc, Id } from '../../../../../../../convex/_generated/dataModel';
 import { ChannelSchema } from '@/lib/validators';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,7 +28,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { EmojiPopover } from '@/components/ui/emoji-popover';
-import { type ReactNode, useState } from 'react';
 
 type ChannelFormProps = {
   channelData?: Doc<'channels'>;
@@ -82,7 +82,7 @@ const ChannelForm = ({ channelData, trigger, onClose }: ChannelFormProps) => {
       setIsOpen(false);
       onClose?.();
 
-      router.push(`/team/${teamId}/channels/${channelId}`);
+      router.push(`/team/${teamId}/chats/channels/${channelId}`);
       toast.success(
         `Channel ${isEditMode ? 'updated' : 'created'} successfully`
       );

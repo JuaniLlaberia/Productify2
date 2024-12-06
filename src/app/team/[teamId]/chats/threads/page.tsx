@@ -1,6 +1,6 @@
 import { MessageSquareText } from 'lucide-react';
 
-import ChannelHeader from '../(components)/ChannelHeader';
+import ChannelHeader from '../(components)/ChatHeader';
 import ThreadsList from './(components)/ThreadsList';
 
 const ThreadsPage = () => {

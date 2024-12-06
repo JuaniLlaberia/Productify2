@@ -17,8 +17,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Id } from '../../../../../../convex/_generated/dataModel';
-import { api } from '../../../../../../convex/_generated/api';
+import { Id } from '../../../../../../../convex/_generated/dataModel';
+import { api } from '../../../../../../../convex/_generated/api';
 
 type DeleteConversationProps = {
   teamId: Id<'teams'>;

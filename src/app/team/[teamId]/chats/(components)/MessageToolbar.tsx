@@ -1,9 +1,9 @@
 import { MessageSquareText, Pencil, Smile, Trash2 } from 'lucide-react';
 
 import Hint from '@/components/ui/hint';
+import DeleteMessageModal from './DeleteMessageModal';
 import { Button } from '@/components/ui/button';
 import { EmojiPopover } from '@/components/ui/emoji-popover';
-import DeleteMessageModal from './DeleteMessageModal';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 
 type ToolbarProps = {

@@ -7,7 +7,7 @@ import { useQuery } from 'convex/react';
 import { differenceInMinutes, format } from 'date-fns';
 
 import Message from './Message';
-import ChannelInput from './ChannelInput';
+import ChannelInput from './ChatInput';
 import MessageLoader from './MessageLoader';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
@@ -16,12 +16,12 @@ import { useGetMessages } from '@/features/messages/api/useGetMessages';
 import { formatDateLabel, TIME_THRESHOLD } from './MessagesList';
 import { Skeleton } from '@/components/ui/skeleton';
 
-type ChannelThreadProps = {
+type ChatThreadProps = {
   messageId: Id<'messages'>;
   onClose: () => void;
 };
 
-const ChannelThread = ({ onClose, messageId }: ChannelThreadProps) => {
+const ChatThread = ({ onClose, messageId }: ChatThreadProps) => {
   const { teamId, channelId } = useParams<{
     teamId: Id<'teams'>;
     channelId: Id<'channels'>;
@@ -182,4 +182,4 @@ const ChannelThread = ({ onClose, messageId }: ChannelThreadProps) => {
   );
 };
 
-export default ChannelThread;
+export default ChatThread;

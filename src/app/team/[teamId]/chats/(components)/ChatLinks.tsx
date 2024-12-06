@@ -1,26 +1,21 @@
 'use client';
 
-import {
-  PlusCircle,
-  Hash,
-  Plus,
-  MessageSquareText,
-  Search,
-} from 'lucide-react';
+import { Hash, Plus, MessageSquareText, Search } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { useQuery } from 'convex/react';
 
 import SidebarLoader from '../../(components)/SidebarLoader';
-import ChannelActions from './ChannelActions';
-import ConversationForm from '../../conversations/(components)/ConversationForm';
+import ChannelActions from '../channels/(components)/ChannelActions';
+import ConversationForm from '../conversations/(components)/ConversationForm';
 import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
-import ConversationActions from '../../conversations/(components)/ConversationActions';
-import ConversationLink from '../../conversations/(components)/ConversationLink';
-import ChannelForm from './ChannelForm';
+import ConversationActions from '../conversations/(components)/ConversationActions';
+import NewChatBtn from './NewChatBtn';
+import ConversationLink from '../conversations/(components)/ConversationLink';
+import ChannelForm from '../channels/(components)/ChannelForm';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 
-const ChannelsLinks = () => {
+const ChatLinks = () => {
   const pathname = usePathname();
   const { teamId } = useParams<{ teamId: Id<'teams'> }>();
 
@@ -35,36 +30,31 @@ const ChannelsLinks = () => {
 
   return (
     <>
+      {/* GENERAL CHATS LINKS */}
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2'>
         <span className='py-0.5'>General</span>
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
         <li>
-          <ChannelForm
-            trigger={
-              <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-muted/60'>
-                <PlusCircle className='size-4 mr-1.5' strokeWidth={1.5} />
-                New channel
-              </button>
-            }
-          />
+          <NewChatBtn />
         </li>
         <InnerSidebarLink
           label='Threads'
           icon={
             <MessageSquareText className='size-4 mr-1.5' strokeWidth={1.5} />
           }
-          link={`/team/${teamId}/channels/threads`}
-          isActive={pathname.includes('/channels/threads')}
+          link={`/team/${teamId}/chats/threads`}
+          isActive={pathname.includes('/chats/threads')}
         />
         <InnerSidebarLink
           label='Browse'
           icon={<Search className='size-4 mr-1.5' strokeWidth={1.5} />}
-          link={`/team/${teamId}/channels/browse`}
-          isActive={pathname.includes('/channels/browse')}
+          link={`/team/${teamId}/chats/browse`}
+          isActive={pathname.includes('/chats/browse')}
         />
       </ul>
 
+      {/* CHANNELS LINKS */}
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
         <span className='py-0.5'>Your channels</span>
         <ChannelForm
@@ -88,7 +78,7 @@ const ChannelsLinks = () => {
                   <Hash className='size-4 mr-1.5' strokeWidth={1.5} />
                 )
               }
-              link={`/team/${teamId}/channels/${channel?._id}`}
+              link={`/team/${teamId}/chats/channels/${channel?._id}`}
               isActive={pathname.includes(channel?._id as string)}
               options={channel ? <ChannelActions data={channel} /> : undefined}
             />
@@ -98,6 +88,7 @@ const ChannelsLinks = () => {
         )}
       </ul>
 
+      {/* CONVERSATIONS LINKS */}
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
         <span className='py-0.5'>Your conversations</span>
         <ConversationForm
@@ -114,7 +105,7 @@ const ChannelsLinks = () => {
             <ConversationLink
               key={conversationId}
               user={otherUser}
-              link={`/team/${teamId}/conversations/${conversationId}`}
+              link={`/team/${teamId}/chats/conversations/${conversationId}`}
               isActive={pathname.includes(conversationId as string)}
               options={
                 <ConversationActions
@@ -132,4 +123,4 @@ const ChannelsLinks = () => {
   );
 };
 
-export default ChannelsLinks;
+export default ChatLinks;

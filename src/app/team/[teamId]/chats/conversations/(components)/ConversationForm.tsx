@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery } from 'convex/react';
 import { useForm, Controller } from 'react-hook-form';
-import { api } from '../../../../../../convex/_generated/api';
+import { api } from '../../../../../../../convex/_generated/api';
 import { useParams, useRouter } from 'next/navigation';
 import { Plus, Search, Check, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type ReactNode, useState } from 'react';
 import { ConvexError } from 'convex/values';
 
-import { Id } from '../../../../../../convex/_generated/dataModel';
+import { Id } from '../../../../../../../convex/_generated/dataModel';
 import { Input } from '@/components/ui/input';
 import {
   Dialog,
@@ -71,11 +71,10 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
       setIsOpen(false);
       onClose?.();
 
-      router.push(`/team/${teamId}/conversations/${conversationId}`);
+      router.push(`/team/${teamId}/chats/conversations/${conversationId}`);
       toast.success(`Conversation created successfully`);
       reset();
     } catch (error) {
-      // Check for specific Convex error
       if (error instanceof ConvexError) {
         const errorMessage = error.message;
 

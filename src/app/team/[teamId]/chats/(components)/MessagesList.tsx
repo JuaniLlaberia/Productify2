@@ -7,7 +7,7 @@ import { useQuery } from 'convex/react';
 import { Loader2 } from 'lucide-react';
 
 import Message from './Message';
-import ChannelHero from './ChannelHero';
+import ChatHero from './ChatHero';
 import MessageLoader from './MessageLoader';
 import { useGetMessages } from '@/features/messages/api/useGetMessages';
 import { Id } from '../../../../../../convex/_generated/dataModel';
@@ -24,17 +24,19 @@ type MessageListProps = {
   channelName?: string;
   channelCreationTime?: number;
   variant?: 'channel' | 'thread' | 'conversation';
+  channelId?: Id<'channels'>;
+  conversationId?: Id<'conversations'>;
 };
 
 const MessagesList = ({
   channelName,
   channelCreationTime,
+  conversationId,
+  channelId,
   variant = 'channel',
 }: MessageListProps) => {
-  const { teamId, channelId, conversationId } = useParams<{
+  const { teamId } = useParams<{
     teamId: Id<'teams'>;
-    channelId?: Id<'channels'>;
-    conversationId?: Id<'conversations'>;
   }>();
   const [editingId, setEditingId] = useState<Id<'messages'> | null>(null);
 
@@ -142,7 +144,7 @@ const MessagesList = ({
         </div>
       )}
       {channelName && channelCreationTime && (
-        <ChannelHero name={channelName} creationTime={channelCreationTime} />
+        <ChatHero name={channelName} creationTime={channelCreationTime} />
       )}
     </div>
   );

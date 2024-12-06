@@ -4,6 +4,8 @@ import { CircleAlert, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 import {
   Dialog,
@@ -16,10 +18,8 @@ import {
 } from '@/components/ui/dialog';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { api } from '../../../../../../convex/_generated/api';
-import { Id } from '../../../../../../convex/_generated/dataModel';
-import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+import { api } from '../../../../../../../convex/_generated/api';
+import { Id } from '../../../../../../../convex/_generated/dataModel';
 import { Input } from '@/components/ui/input';
 
 type DeleteChannelModalProps = {
@@ -55,7 +55,7 @@ const DeleteChannelModal = ({
       onSuccess?.();
       setIsOpen(false);
 
-      router.push(`/team/${teamId}/channels/general`);
+      router.push(`/team/${teamId}/chats/channels/general`);
       toast.success('Channel deleted successfully');
     } catch {
       toast.error('Failed to delete channel');

@@ -21,7 +21,7 @@ type ChatInputProps = {
   parentMessageId?: Id<'messages'>;
 };
 
-const ChannelInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
+const ChatInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
   const [editorKey, setEditorKey] = useState<number>(0);
   const [isPending, setIsPending] = useState<boolean>(false);
 
@@ -104,4 +104,4 @@ const ChannelInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
   );
 };
 
-export default ChannelInput;
+export default ChatInput;

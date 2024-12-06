@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 import Thumbnail from '@/components/ui/thumbnail';
 import Hint from '@/components/ui/hint';
-import ChannelThread from './ChannelThread';
+import ChannelThread from './ChatThread';
 import ThreadBar from './ThreadBar';
 import { Doc, Id } from '../../../../../../convex/_generated/dataModel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

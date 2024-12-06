@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { ReactElement } from 'react';
 
 import { cn } from '@/lib/utils';
-import { Doc } from '../../../../../../convex/_generated/dataModel';
+import { Doc } from '../../../../../../../convex/_generated/dataModel';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 type ConversationLinkProps = {

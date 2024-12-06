@@ -1,11 +1,20 @@
 'use client';
 
-import { Edit, LogOut, MoreHorizontal, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import {
+  Edit,
+  Expand,
+  LogOut,
+  MoreHorizontal,
+  PanelRight,
+  Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 
 import ChannelForm from './ChannelForm';
 import DeleteChannelModal from './DeleteChannelModal';
-import LeaveChannelModal from './LeaveChannelModal';
+import LeaveChannelModal from '../../(components)/LeaveChannelModal';
+import Channel from './Channel';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,10 +23,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Doc } from '../../../../../../convex/_generated/dataModel';
+import { Doc } from '../../../../../../../convex/_generated/dataModel';
+import { usePanel } from '../../../(context)/PanelContext';
 
 const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const { openPanel, closePanel } = usePanel();
+
+  const handleChannelSidebar = () => {
+    openPanel({
+      content: (
+        <Channel
+          key={data._id}
+          teamId={data.teamId}
+          channelId={data._id}
+          onClose={closePanel}
+        />
+      ),
+    });
+  };
 
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
@@ -40,11 +64,20 @@ const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
           e.stopPropagation();
         }}
       >
+        <DropdownMenuItem className='text-sm' asChild>
+          <Link href={`/team/${data.teamId}/chats/channels/${data._id}`}>
+            <Expand className='size-3.5 mr-2' strokeWidth={1.5} /> Open
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className='text-sm' onClick={handleChannelSidebar}>
+          <PanelRight className='size-3.5 mr-2' strokeWidth={1.5} />
+          View in sidebar
+        </DropdownMenuItem>
         <ChannelForm
           channelData={data}
           trigger={
             <DropdownMenuItem
-              className='text-xs'
+              className='text-sm'
               onSelect={e => e.preventDefault()}
             >
               <Edit className='size-3.5 mr-2' strokeWidth={1.5} />
@@ -59,7 +92,7 @@ const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
           channelId={data._id}
           trigger={
             <DropdownMenuItem
-              className='text-xs'
+              className='text-sm'
               onSelect={e => e.preventDefault()}
             >
               <LogOut className='size-3.5 mr-2' strokeWidth={1.5} />
@@ -74,7 +107,7 @@ const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
           channelName={data.name}
           trigger={
             <DropdownMenuItem
-              className='text-xs'
+              className='text-sm'
               onSelect={e => e.preventDefault()}
             >
               <Trash2 className='size-3.5 mr-2' strokeWidth={1.5} />
