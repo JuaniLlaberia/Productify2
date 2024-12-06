@@ -1,6 +1,6 @@
 'use client';
 
-import { Hash, Plus, MessageSquareText, Search } from 'lucide-react';
+import { Hash, Plus, MessageSquareText } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { useQuery } from 'convex/react';
 
@@ -45,12 +45,6 @@ const ChatLinks = () => {
           }
           link={`/team/${teamId}/chats/threads`}
           isActive={pathname.includes('/chats/threads')}
-        />
-        <InnerSidebarLink
-          label='Browse'
-          icon={<Search className='size-4 mr-1.5' strokeWidth={1.5} />}
-          link={`/team/${teamId}/chats/browse`}
-          isActive={pathname.includes('/chats/browse')}
         />
       </ul>
 
