@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
 import ProjectsLinks from '../projects/(components)/ProjectsLinks';
-import ChannelsLinks from '../channels/(components)/ChannelsLinks';
 import DocumentsLinks from '../documents/(components)/DocumentsLinks';
 import AssetsLinks from '../assets/(components)/AssetsLinks';
+import ChatLinks from '../chats/(components)/ChatLinks';
 import SettingsLinks from '../settings/(components)/SettingsLinks';
 import { useSidebar } from '../(context)/SidebarContext';
 import { cn } from '@/lib/utils';
@@ -16,8 +16,7 @@ const SIDEBAR_CONTENT: {
   [key: string]: { title: string; content: ReactNode };
 } = {
   projects: { title: 'Projects', content: <ProjectsLinks /> },
-  channels: { title: 'Channels', content: <ChannelsLinks /> },
-  conversations: { title: 'Channels', content: <ChannelsLinks /> },
+  chats: { title: 'Chats', content: <ChatLinks /> },
   documents: { title: 'Documents', content: <DocumentsLinks /> },
   assets: { title: 'Assets', content: <AssetsLinks /> },
   settings: { title: 'Settings', content: <SettingsLinks /> },

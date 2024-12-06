@@ -27,10 +27,10 @@ const SIDEBAR_LINKS = [
     icon: <Folder className='size-5' strokeWidth={1.5} />,
   },
   {
-    label: 'Channels',
-    tooltip: 'Channels',
-    link: 'channels',
-    activeKey: 'channels',
+    label: 'Chats',
+    tooltip: 'Chats',
+    link: 'chats',
+    activeKey: 'chats',
     icon: <MessagesSquare className='size-5' strokeWidth={1.5} />,
   },
   {
