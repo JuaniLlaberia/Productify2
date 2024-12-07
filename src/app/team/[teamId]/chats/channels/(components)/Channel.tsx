@@ -23,7 +23,7 @@ const Channel = ({ teamId, channelId, onClose }: ChannelProps) => {
       <ChatHeader
         chatName={channel?.name}
         chatIcon={channel?.icon}
-        menu={<ChannelHeaderMenu channelId={channelId} />}
+        menu={<ChannelHeaderMenu data={channel!} />}
         onClose={onClose}
       />
       <MessagesList
@@ -32,6 +32,7 @@ const Channel = ({ teamId, channelId, onClose }: ChannelProps) => {
         channelCreationTime={channel?._creationTime}
       />
       <ChatInput
+        channelId={channelId}
         placeholder={`Send message to # ${channel?.name || 'Channel'}`}
       />
     </section>

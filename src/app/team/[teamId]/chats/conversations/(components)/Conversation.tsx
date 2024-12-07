@@ -48,6 +48,7 @@ const Conversation = ({
         channelCreationTime={conversation?._creationTime}
       />
       <ChatInput
+        conversationId={conversationId}
         placeholder={`Send message to # ${conversation?.otherUser?.fullName || 'Conversation'}`}
       />
     </section>

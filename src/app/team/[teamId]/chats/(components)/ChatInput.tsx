@@ -19,18 +19,23 @@ const Editor = dynamic(() => import('@/components/Editor'), {
 type ChatInputProps = {
   placeholder: string;
   parentMessageId?: Id<'messages'>;
+  channelId?: Id<'channels'>;
+  conversationId?: Id<'conversations'>;
 };
 
-const ChatInput = ({ placeholder, parentMessageId }: ChatInputProps) => {
+const ChatInput = ({
+  placeholder,
+  parentMessageId,
+  channelId,
+  conversationId,
+}: ChatInputProps) => {
   const [editorKey, setEditorKey] = useState<number>(0);
   const [isPending, setIsPending] = useState<boolean>(false);
 
   const editorRef = useRef<Quill | null>(null);
 
-  const { teamId, channelId, conversationId } = useParams<{
+  const { teamId } = useParams<{
     teamId: Id<'teams'>;
-    channelId?: Id<'channels'>;
-    conversationId?: Id<'conversations'>;
   }>();
 
   const createMsg = useMutation(api.messages.createMessage);
