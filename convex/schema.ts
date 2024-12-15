@@ -29,7 +29,7 @@ export const Users = Table('users', {
 
 export const Teams = Table('teams', {
   name: v.string(),
-  imageUrl: v.optional(v.string()),
+  imageId: v.optional(v.id('_storage')),
   status: v.union(
     v.literal('active'),
     v.literal('inactive'),
@@ -37,6 +37,12 @@ export const Teams = Table('teams', {
   ),
   joinCode: v.optional(v.number()),
   createdBy: v.id('users'),
+});
+
+export const InviteCodes = Table('inviteCodes', {
+  token: v.string(),
+  isActive: v.boolean(),
+  teamId: v.id('teams'),
 });
 
 export const Members = Table('members', {
@@ -185,6 +191,9 @@ export default defineSchema({
     .index('by_clerkId', ['clerkIdentifier'])
     .index('by_email', ['email']),
   teams: Teams.table.index('by_joinCode', ['joinCode']),
+  inviteCodes: InviteCodes.table
+    .index('by_teamId', ['teamId'])
+    .index('by_token', ['token']),
   members: Members.table
     .index('by_userId', ['userId'])
     .index('by_teamId', ['teamId'])

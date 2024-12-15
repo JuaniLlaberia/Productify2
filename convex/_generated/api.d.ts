@@ -21,6 +21,7 @@ import type * as conversations from "../conversations.js";
 import type * as documents from "../documents.js";
 import type * as helpers from "../helpers.js";
 import type * as http from "../http.js";
+import type * as inviteCodes from "../inviteCodes.js";
 import type * as labels from "../labels.js";
 import type * as messages from "../messages.js";
 import type * as projects from "../projects.js";
@@ -49,6 +50,7 @@ declare const fullApi: ApiFromModules<{
   documents: typeof documents;
   helpers: typeof helpers;
   http: typeof http;
+  inviteCodes: typeof inviteCodes;
   labels: typeof labels;
   messages: typeof messages;
   projects: typeof projects;

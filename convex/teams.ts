@@ -3,6 +3,8 @@ import { ConvexError, v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { isAdmin, isAuth, isMember } from './auth';
 import { Members, Teams } from './schema';
+import { generateCode } from './inviteCodes';
+import { internal } from './_generated/api';
 
 export const getUserTeams = query({
   handler: async ctx => {
@@ -14,9 +16,20 @@ export const getUserTeams = query({
       .withIndex('by_userId', q => q.eq('userId', user._id))
       .collect();
     const teamsIds = teams.map(team => team.teamId);
+
     const teamsData = await Promise.all(teamsIds.map(id => ctx.db.get(id)));
 
-    return teamsData;
+    const teamsDataWithImage = await Promise.all(
+      teamsData.map(async team => {
+        const image = team?.imageId
+          ? await ctx.storage.getUrl(team.imageId)
+          : undefined;
+
+        return { ...team, imageUrl: image };
+      })
+    );
+
+    return teamsDataWithImage;
   },
 });
 
@@ -26,7 +39,13 @@ export const getTeam = query({
     await isMember(ctx, args.teamId);
 
     const team = await ctx.db.get(args.teamId);
-    return team;
+    if (!team) throw new ConvexError('Team does not exist');
+
+    const image = team.imageId
+      ? await ctx.storage.getUrl(team.imageId)
+      : undefined;
+
+    return { ...team, imageUrl: image };
   },
 });
 
@@ -39,10 +58,18 @@ export const getTeamMembers = query({
       .query('members')
       .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
       .collect();
-    const membersIds = members.map(member => member.userId);
-    const membersData = await Promise.all(membersIds.map(id => ctx.db.get(id)));
+    const membersWithData = await Promise.all(
+      members.map(async member => {
+        const userData = await ctx.db.get(member.userId);
+        return {
+          ...userData,
+          role: member.role,
+          memberId: member._id,
+        };
+      })
+    );
 
-    return membersData;
+    return membersWithData;
   },
 });
 
@@ -74,6 +101,8 @@ export const createTeam = mutation({
         private: false,
         teamId,
       }),
+      //Generate invite link
+      ctx.runMutation(internal.inviteCodes.generateCode, { teamId }),
     ]);
 
     return teamId;
@@ -96,7 +125,7 @@ export const updateTeam = mutation({
     teamData: v.object({
       name: v.optional(Teams.withoutSystemFields.name),
       status: v.optional(Teams.withoutSystemFields.status),
-      imageUrl: v.optional(Teams.withoutSystemFields.imageUrl),
+      imageId: v.optional(Teams.withoutSystemFields.imageId),
     }),
   },
   handler: async (ctx, args) => {
@@ -126,26 +155,30 @@ export const deleteTeam = mutation({
   },
 });
 
-export const deleteMember = mutation({
-  args: { teamId: v.id('teams'), userToDelete: v.id('users') },
+export const leaveTeam = mutation({
+  args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
-    const user = await isAdmin(ctx, args.teamId);
+    const member = await isMember(ctx, args.teamId);
+
+    await ctx.db.delete(member.memberId);
+  },
+});
+
+export const deleteMember = mutation({
+  args: { teamId: v.id('teams'), memberToDelete: v.id('members') },
+  handler: async (ctx, args) => {
+    const { teamId, memberToDelete } = args;
+    const user = await isAdmin(ctx, teamId);
     if (!user?.role)
       throw new ConvexError(
         'User does not have permissions to perform this action.'
       );
 
-    const memberToDelete = await ctx.db
-      .query('members')
-      .withIndex('by_teamId_userId', q =>
-        q.eq('teamId', args.teamId).eq('userId', args.userToDelete)
-      )
-      .first();
-    if (!memberToDelete)
-      throw new ConvexError('User is not a member of this team.');
+    const member = await ctx.db.get(memberToDelete);
+    if (member?.teamId !== teamId)
+      throw new ConvexError('This is not a member from this team.');
 
-    await ctx.db.delete(memberToDelete._id);
-    //Should I delete user messages or how to show user where it interacted in the past
+    await ctx.db.delete(member._id);
   },
 });
 
