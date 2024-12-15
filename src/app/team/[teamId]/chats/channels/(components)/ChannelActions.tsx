@@ -25,10 +25,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Doc } from '../../../../../../../convex/_generated/dataModel';
 import { usePanel } from '../../../(context)/PanelContext';
+import { useMemberRole } from '@/features/auth/api/useMemberRole';
 
 const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const { openPanel, closePanel } = usePanel();
+
+  const { isAdmin } = useMemberRole(data.teamId);
+  const hasPermissions = isAdmin;
 
   const handleChannelSidebar = () => {
     openPanel({
@@ -73,19 +77,21 @@ const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
           <PanelRight className='size-3.5 mr-2' strokeWidth={1.5} />
           View in sidebar
         </DropdownMenuItem>
-        <ChannelForm
-          channelData={data}
-          trigger={
-            <DropdownMenuItem
-              className='text-sm'
-              onSelect={e => e.preventDefault()}
-            >
-              <Edit className='size-3.5 mr-2' strokeWidth={1.5} />
-              Edit channel
-            </DropdownMenuItem>
-          }
-          onClose={() => setIsDropdownOpen(false)}
-        />
+        {hasPermissions && (
+          <ChannelForm
+            channelData={data}
+            trigger={
+              <DropdownMenuItem
+                className='text-sm'
+                onSelect={e => e.preventDefault()}
+              >
+                <Edit className='size-3.5 mr-2' strokeWidth={1.5} />
+                Edit channel
+              </DropdownMenuItem>
+            }
+            onClose={() => setIsDropdownOpen(false)}
+          />
+        )}
         <DropdownMenuSeparator />
         <LeaveChannelModal
           teamId={data.teamId}
@@ -101,21 +107,26 @@ const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
           }
           onSuccess={() => setIsDropdownOpen(false)}
         />
-        <DeleteChannelModal
-          teamId={data.teamId}
-          channelId={data._id}
-          channelName={data.name}
-          trigger={
-            <DropdownMenuItem
-              className='text-sm'
-              onSelect={e => e.preventDefault()}
-            >
-              <Trash2 className='size-3.5 mr-2' strokeWidth={1.5} />
-              Delete channel
-            </DropdownMenuItem>
-          }
-          onSuccess={() => setIsDropdownOpen(false)}
-        />
+        {hasPermissions && (
+          <>
+            <DropdownMenuSeparator />
+            <DeleteChannelModal
+              teamId={data.teamId}
+              channelId={data._id}
+              channelName={data.name}
+              trigger={
+                <DropdownMenuItem
+                  className='text-sm'
+                  onSelect={e => e.preventDefault()}
+                >
+                  <Trash2 className='size-3.5 mr-2' strokeWidth={1.5} />
+                  Delete channel
+                </DropdownMenuItem>
+              }
+              onSuccess={() => setIsDropdownOpen(false)}
+            />
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -2,6 +2,7 @@
 
 import { Hash, MessagesSquare, PlusCircle } from 'lucide-react';
 import { useState } from 'react';
+import { useParams } from 'next/navigation';
 
 import ChannelForm from '../channels/(components)/ChannelForm';
 import ConversationForm from '../conversations/(components)/ConversationForm';
@@ -11,9 +12,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useMemberRole } from '@/features/auth/api/useMemberRole';
+import { Id } from '../../../../../../convex/_generated/dataModel';
 
 const NewChatBtn = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { teamId } = useParams<{ teamId: Id<'teams'> }>();
+  const { isAdmin } = useMemberRole(teamId);
+
+  const hasPermissions = isAdmin;
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
@@ -24,18 +31,20 @@ const NewChatBtn = () => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side='right' align='start'>
-        <ChannelForm
-          onClose={() => setIsOpen(false)}
-          trigger={
-            <DropdownMenuItem
-              onSelect={e => e.preventDefault()}
-              className='data-[state=open]:bg-muted/60'
-            >
-              <Hash className='size-4 mr-2' />
-              New channel
-            </DropdownMenuItem>
-          }
-        />
+        {hasPermissions && (
+          <ChannelForm
+            onClose={() => setIsOpen(false)}
+            trigger={
+              <DropdownMenuItem
+                onSelect={e => e.preventDefault()}
+                className='data-[state=open]:bg-muted/60'
+              >
+                <Hash className='size-4 mr-2' />
+                New channel
+              </DropdownMenuItem>
+            }
+          />
+        )}
         <ConversationForm
           onClose={() => setIsOpen(false)}
           trigger={

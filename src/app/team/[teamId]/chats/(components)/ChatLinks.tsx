@@ -1,6 +1,6 @@
 'use client';
 
-import { Hash, Plus, MessageSquareText } from 'lucide-react';
+import { Hash, Plus, MessageSquareText, Database } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 import { useQuery } from 'convex/react';
 
@@ -14,6 +14,7 @@ import ConversationLink from '../conversations/(components)/ConversationLink';
 import ChannelForm from '../channels/(components)/ChannelForm';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
+import { useMemberRole } from '@/features/auth/api/useMemberRole';
 
 const ChatLinks = () => {
   const pathname = usePathname();
@@ -26,7 +27,10 @@ const ChatLinks = () => {
     teamId,
   });
 
-  if (!channels || !conversations) return <SidebarLoader />;
+  const { isLoading, isAdmin } = useMemberRole(teamId);
+  const hasPermissions = isAdmin;
+
+  if (!channels || !conversations || isLoading) return <SidebarLoader />;
 
   return (
     <>
@@ -46,18 +50,26 @@ const ChatLinks = () => {
           link={`/team/${teamId}/chats/threads`}
           isActive={pathname.includes('/chats/threads')}
         />
+        <InnerSidebarLink
+          label='Channels'
+          icon={<Database className='size-4 mr-1.5' strokeWidth={1.5} />}
+          link={`/team/${teamId}/chats/channels`}
+          isActive={/^\/team\/[^/]+\/chats\/channels$/.test(pathname)}
+        />
       </ul>
 
       {/* CHANNELS LINKS */}
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
         <span className='py-0.5'>Your channels</span>
-        <ChannelForm
-          trigger={
-            <span className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
-              <Plus className='size-4' />
-            </span>
-          }
-        />
+        {hasPermissions && (
+          <ChannelForm
+            trigger={
+              <span className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
+                <Plus className='size-4' />
+              </span>
+            }
+          />
+        )}
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
         {channels.length > 0 ? (
