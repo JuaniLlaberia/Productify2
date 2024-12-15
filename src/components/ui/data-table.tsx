@@ -42,7 +42,7 @@ interface DataTableProps<TData extends DeletableItem, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading?: boolean;
-  DeleteModal: ComponentType<DeleteModalProps>;
+  DeleteModal?: ComponentType<DeleteModalProps>;
 }
 
 export function DataTable<TData extends DeletableItem, TValue>({
@@ -165,50 +165,52 @@ export function DataTable<TData extends DeletableItem, TValue>({
           </TableBody>
         </Table>
       </div>
-      <footer className='flex items-center justify-between p-1'>
-        <div>
-          {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-            <p className='flex-1 text-sm text-muted-foreground p-1'>
-              {table.getFilteredSelectedRowModel().rows.length} of{' '}
-              {table.getFilteredRowModel().rows.length} row(s) selected.
-            </p>
-          ) : null}
-        </div>
-        <div className='m-1'>
-          {table.getFilteredSelectedRowModel().rows.length > 0 ? (
-            <DeleteModal
-              teamId={table.getSelectedRowModel().rows[0].original.teamId}
-              ids={table
-                .getSelectedRowModel()
-                .rows.map(row => row.original._id)}
-              onSuccess={() => setRowSelection({})}
-            />
-          ) : (
-            <div className='flex items-center justify-end space-x-2'>
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className='text-muted-foreground'
-              >
-                <ChevronLeft className='mr-1.5 size-4' strokeWidth={1.5} />
-                Previous
-              </Button>
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className='text-muted-foreground'
-              >
-                Next
-                <ChevronRight className='ml-1.5 size-4' strokeWidth={1.5} />
-              </Button>
-            </div>
-          )}
-        </div>
-      </footer>
+      {DeleteModal && (
+        <footer className='flex items-center justify-between p-1'>
+          <div>
+            {table.getFilteredSelectedRowModel().rows.length > 0 ? (
+              <p className='flex-1 text-sm text-muted-foreground p-1'>
+                {table.getFilteredSelectedRowModel().rows.length} of{' '}
+                {table.getFilteredRowModel().rows.length} row(s) selected.
+              </p>
+            ) : null}
+          </div>
+          <div className='m-1'>
+            {table.getFilteredSelectedRowModel().rows.length > 0 ? (
+              <DeleteModal
+                teamId={table.getSelectedRowModel().rows[0].original.teamId}
+                ids={table
+                  .getSelectedRowModel()
+                  .rows.map(row => row.original._id)}
+                onSuccess={() => setRowSelection({})}
+              />
+            ) : (
+              <div className='flex items-center justify-end space-x-2'>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  onClick={() => table.previousPage()}
+                  disabled={!table.getCanPreviousPage()}
+                  className='text-muted-foreground'
+                >
+                  <ChevronLeft className='mr-1.5 size-4' strokeWidth={1.5} />
+                  Previous
+                </Button>
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  onClick={() => table.nextPage()}
+                  disabled={!table.getCanNextPage()}
+                  className='text-muted-foreground'
+                >
+                  Next
+                  <ChevronRight className='ml-1.5 size-4' strokeWidth={1.5} />
+                </Button>
+              </div>
+            )}
+          </div>
+        </footer>
+      )}
     </div>
   );
 }
