@@ -80,6 +80,16 @@ export const createTeam = mutation({
   },
 });
 
+export const getMemberRole = query({
+  args: { teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    const member = await isMember(ctx, args.teamId);
+    const memberData = await ctx.db.get(member.memberId);
+
+    return memberData?.role;
+  },
+});
+
 export const updateTeam = mutation({
   args: {
     teamId: v.id('teams'),
