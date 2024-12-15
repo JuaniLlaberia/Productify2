@@ -1,4 +1,4 @@
-import { PriorityEnum, StatusEnum } from './enums';
+import { PriorityEnum, RolesEnum, StatusEnum, TeamStatusEnum } from './enums';
 
 export const COLORS = [
   { label: 'red', value: '#ef4444' },
@@ -48,4 +48,16 @@ export const PRIORITY_COLORS = {
   [PriorityEnum.MEDIUM]: 'yellow',
   [PriorityEnum.HIGH]: 'orange',
   [PriorityEnum.URGENT]: 'red',
+};
+
+export const TEAM_STATUS_COLORS = {
+  [TeamStatusEnum.ACTIVE]: 'green',
+  [TeamStatusEnum.INACTIVE]: 'yellow',
+  [TeamStatusEnum.MANTAINANCE]: 'red',
+};
+
+export const ROLE_COLORS = {
+  [RolesEnum.OWNER]: 'red',
+  [RolesEnum.ADMIN]: 'yellow',
+  [RolesEnum.MEMBER]: 'blue',
 };
