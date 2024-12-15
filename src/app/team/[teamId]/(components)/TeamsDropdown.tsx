@@ -20,39 +20,50 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 const TeamsDropdown = () => {
   const { teamId } = useParams();
   const teams = useQuery(api.teams.getUserTeams);
+
   if (!teams) return <Skeleton className='size-10' />;
 
   const crrTeam = teams.find(team => team?._id === teamId);
 
+  const getFirstLetter = (name?: string) => name?.at(0)?.toUpperCase() || 'T';
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Hint label={crrTeam?.name || 'T'} side='right'>
+        <Hint label={crrTeam?.name || 'Team'} side='right'>
           <Avatar>
-            <AvatarFallback>
-              {crrTeam?.name.at(0)?.toUpperCase()}
-            </AvatarFallback>
-            <AvatarImage src={crrTeam?.imageUrl} />
+            <AvatarFallback>{getFirstLetter(crrTeam?.name)}</AvatarFallback>
+            {crrTeam?.imageUrl && (
+              <AvatarImage
+                src={crrTeam.imageUrl}
+                alt={crrTeam.name || 'Team'}
+              />
+            )}
           </Avatar>
         </Hint>
       </DropdownMenuTrigger>
       <DropdownMenuContent side='right' align='start'>
         <div className='p-2'>
-          <h6 className='text-sm font-medium'>{crrTeam?.name}</h6>
+          <h6 className='text-sm font-medium'>{crrTeam?.name || 'Team'}</h6>
           <p className='text-sm text-muted-foreground'>Active team</p>
         </div>
         <DropdownMenuSeparator />
         <ul>
           {teams.map(team => (
-            <DropdownMenuItem key={team?._id} asChild>
-              <Link href={`/team/${team?._id}`}>
+            <DropdownMenuItem key={team?._id || 'team-item'} asChild>
+              <Link href={`/team/${team?._id || ''}`}>
                 <Avatar className='size-7'>
                   <AvatarFallback className='size-7'>
-                    {team?.name.at(0)?.toUpperCase()}
+                    {getFirstLetter(team?.name)}
                   </AvatarFallback>
-                  <AvatarImage src={team?.imageUrl} />
+                  {team?.imageUrl && (
+                    <AvatarImage
+                      src={team.imageUrl}
+                      alt={team.name || 'Team'}
+                    />
+                  )}
                 </Avatar>
-                <p className='text-sm ml-3'>{team?.name}</p>
+                <p className='text-sm ml-3'>{team?.name || 'Unnamed Team'}</p>
                 {team?._id === teamId && (
                   <Check className='size-4 ml-8' strokeWidth={1.5} />
                 )}
