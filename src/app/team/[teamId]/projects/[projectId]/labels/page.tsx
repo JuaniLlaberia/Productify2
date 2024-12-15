@@ -3,7 +3,7 @@
 import { Sheet } from 'lucide-react';
 
 import DeleteLabelsModal from './(components)/DeleteLabelsModal';
-import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
+import ProjectNavbar from '../(components)/ProjectNavbar';
 import LabelsForm from './(components)/LabelsForm';
 import { TableProvider } from '@/components/TableContext';
 import { DataTable } from '@/components/ui/data-table';
@@ -38,7 +38,7 @@ const ProjectLabelsPage = ({
   return (
     <TableProvider>
       <section className='w-full'>
-        <ProjectFeatureNavbar
+        <ProjectNavbar
           views={VIEWS}
           defaultView='table'
           createButtonLabel='New label'

@@ -7,7 +7,6 @@ import { useParams } from 'next/navigation';
 import ProjectForm from '../../(components)/ProjectForm';
 import DeleteProjectModal from './DeleteProjectModal';
 import LeaveProjectModal from './LeaveProjectModal';
-import ProjectMembers from './ProjectMembers';
 import {
   Tooltip,
   TooltipContent,
@@ -17,11 +16,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Doc, Id } from '../../../../../../../convex/_generated/dataModel';
+import { useMemberRole } from '@/features/auth/api/useMemberRole';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ProjectSettingsMenu = ({
   projectData,
@@ -29,80 +30,82 @@ const ProjectSettingsMenu = ({
   projectData: Doc<'projects'>;
 }) => {
   const { teamId } = useParams<{ teamId: Id<'teams'> }>();
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
-  const [membersDialog, setMembersDialog] = useState<boolean>(false);
-  const [editDialog, setEditDialog] = useState<boolean>(false);
-  const [removeDialog, setRemoveDialog] = useState<boolean>(false);
-  const [leaveDialog, setLeaveDialog] = useState<boolean>(false);
+  const { isLoading, isAdmin } = useMemberRole(teamId);
+  const hasPermissions = isAdmin;
 
-  console.log(projectData);
+  if (isLoading) return <Skeleton className='h-7 w-32' />;
 
   return (
-    <>
-      <DropdownMenu>
-        <Tooltip>
-          <DropdownMenuTrigger asChild>
-            <TooltipTrigger>
-              <Button size='sm' variant='outline'>
-                <Settings className='size-4 mr-1.5' strokeWidth={1.5} />
-                Settings
-              </Button>
-            </TooltipTrigger>
-          </DropdownMenuTrigger>
-          <TooltipContent>Project settings</TooltipContent>
-        </Tooltip>
-        <DropdownMenuContent side='bottom' align='end'>
-          {projectData.private && (
-            <DropdownMenuItem onClick={() => setMembersDialog(true)}>
-              <Users className='size-4 mr-2' strokeWidth={1.5} />
-              Members
-            </DropdownMenuItem>
-          )}
-          <DropdownMenuItem onClick={() => setEditDialog(true)}>
-            <Edit className='size-4 mr-2' strokeWidth={1.5} />
-            Edit project
+    <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+      <Tooltip>
+        <DropdownMenuTrigger asChild>
+          <TooltipTrigger>
+            <Button size='sm' variant='outline'>
+              <Settings className='size-4 mr-1.5' strokeWidth={1.5} />
+              Settings
+            </Button>
+          </TooltipTrigger>
+        </DropdownMenuTrigger>
+        <TooltipContent>Project settings</TooltipContent>
+      </Tooltip>
+      <DropdownMenuContent side='bottom' align='end'>
+        {projectData.private && (
+          <DropdownMenuItem>
+            <Users className='size-4 mr-2' strokeWidth={1.5} />
+            Members
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setRemoveDialog(true)}>
-            <Trash2 className='size-4 mr-2' strokeWidth={1.5} />
-            Delete project
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setLeaveDialog(true)}>
-            <LogOut className='size-4 mr-2' strokeWidth={1.5} />
-            Leave project
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        )}
 
-      {projectData.private && (
-        <Dialog open={membersDialog} onOpenChange={setMembersDialog}>
-          <DialogContent>
-            <ProjectMembers />
-          </DialogContent>
-        </Dialog>
-      )}
+        {hasPermissions && (
+          <>
+            <ProjectForm
+              teamId={teamId}
+              projectData={projectData}
+              trigger={
+                <DropdownMenuItem onSelect={e => e.preventDefault()}>
+                  <Edit className='size-4 mr-2' strokeWidth={1.5} />
+                  Edit project
+                </DropdownMenuItem>
+              }
+              onClose={() => setIsDropdownOpen(false)}
+            />
+            <DropdownMenuSeparator />
+          </>
+        )}
 
-      <Dialog open={editDialog} onOpenChange={setEditDialog}>
-        <DialogContent>
-          <ProjectForm
-            teamId={teamId}
-            projectData={projectData}
-            onSuccess={() => setEditDialog(false)}
-          />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={removeDialog} onOpenChange={setRemoveDialog}>
-        <DeleteProjectModal
+        <LeaveProjectModal
           teamId={teamId}
           projectId={projectData._id}
-          projectName={projectData.name}
+          trigger={
+            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+              <LogOut className='size-4 mr-2' strokeWidth={1.5} />
+              Leave project
+            </DropdownMenuItem>
+          }
+          onSuccess={() => setIsDropdownOpen(false)}
         />
-      </Dialog>
 
-      <Dialog open={leaveDialog} onOpenChange={setLeaveDialog}>
-        <LeaveProjectModal teamId={teamId} projectId={projectData._id} />
-      </Dialog>
-    </>
+        {hasPermissions && (
+          <>
+            <DropdownMenuSeparator />
+            <DeleteProjectModal
+              teamId={teamId}
+              projectId={projectData._id}
+              projectName={projectData.name}
+              trigger={
+                <DropdownMenuItem onSelect={e => e.preventDefault()}>
+                  <Trash2 className='size-4 mr-2' strokeWidth={1.5} />
+                  Delete project
+                </DropdownMenuItem>
+              }
+              onSuccess={() => setIsDropdownOpen(false)}
+            />
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

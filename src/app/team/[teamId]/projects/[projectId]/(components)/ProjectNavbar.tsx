@@ -1,57 +1,103 @@
 'use client';
 
-import { useParams, usePathname } from 'next/navigation';
-import { useQuery } from 'convex/react';
+import { ListFilter } from 'lucide-react';
+import type { ReactElement, ReactNode } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import SearchbarFilter from './SearchbarFilter';
+import FiltersForm, { Filter } from './FiltersForm';
+import Hint from '@/components/ui/hint';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { api } from '../../../../../../../convex/_generated/api';
-import { Id } from '../../../../../../../convex/_generated/dataModel';
-import ProjectSettingsMenu from '../(settings)/ProjectSettingsMenu';
-import { Skeleton } from '@/components/ui/skeleton';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { useCreateQueryString } from '@/hooks/useCreateQueryString';
+import { ColumnVisibilityDropdown } from '@/components/TableContext';
 
-const ProjectNavbar = () => {
+type View = {
+  id: string;
+  label: string;
+  value: string;
+  icon: ReactElement;
+};
+
+type ProjectNavbarProps = {
+  filters?: Filter[];
+  views?: View[];
+  defaultView?: View['value'];
+  createModal?: ReactNode;
+  createButtonLabel?: string;
+};
+
+const ProjectNavbar = ({
+  filters,
+  views = [],
+  defaultView,
+  createModal,
+}: ProjectNavbarProps) => {
   const pathname = usePathname();
-  const { teamId, projectId } = useParams<{
-    teamId: Id<'teams'>;
-    projectId: Id<'projects'>;
-  }>();
+  const router = useRouter();
+  const createQueryString = useCreateQueryString();
 
-  const projectData = useQuery(api.projects.getProjectById, {
-    teamId,
-    projectId,
-  });
-
-  if (!projectData)
-    return (
-      <div className='flex items-center justify-between w-full p-2 px-4 border-b border-border'>
-        <Skeleton className='h-8 w-32' />
-        <Skeleton className='h-8 w-32' />
-      </div>
-    );
+  const searchParams = useSearchParams();
+  const view = searchParams.get('view') || 'table';
 
   return (
-    <div className='flex h-12 items-center justify-between w-full p-2 px-4 border-b border-border'>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <div className='p-1 rounded bg-muted text-muted-foreground'>
-            {projectData?.icon}
-          </div>
-          <BreadcrumbItem>Projects</BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>{projectData?.name}</BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem className='capitalize'>
-            {pathname.split('/').at(-1)}
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <ProjectSettingsMenu projectData={projectData} />
-    </div>
+    <nav className='w-full flex h-12 p-2 px-4 items-center justify-between border-b border-border'>
+      {/* Filters */}
+      <div className='flex items-center space-x-2'>
+        {filters ? (
+          <Popover>
+            <PopoverTrigger>
+              <Hint label='Filters'>
+                <Button variant='outline' size='sm'>
+                  <ListFilter className='size-4 mr-1.5' strokeWidth={1.5} />
+                  Filters
+                </Button>
+              </Hint>
+            </PopoverTrigger>
+            <PopoverContent side='bottom' className='w-auto'>
+              <FiltersForm filters={filters} />
+            </PopoverContent>
+          </Popover>
+        ) : null}
+        {view === 'table' && (
+          <>
+            <ColumnVisibilityDropdown />
+            <SearchbarFilter field='title' />
+          </>
+        )}
+      </div>
+      {/* VIEW COMPONENT */}
+      <div className='flex items-center justify-center gap-2'>
+        {views.length > 1 ? (
+          <Tabs
+            defaultValue={defaultView}
+            onValueChange={value => {
+              router.push(pathname + '?' + createQueryString('view', value));
+            }}
+          >
+            <TabsList>
+              {views.map(view => (
+                <TabsTrigger
+                  key={view.id}
+                  value={view.value}
+                  className='h-full'
+                >
+                  <Hint label={view.label}>{view.icon}</Hint>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        ) : null}
+
+        {/* Create component */}
+        {createModal && createModal}
+      </div>
+    </nav>
   );
 };
 

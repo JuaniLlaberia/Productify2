@@ -68,11 +68,8 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
         <TaskSheet
           taskData={data}
           trigger={
-            <DropdownMenuItem
-              className='text-xs'
-              onSelect={e => e.preventDefault()}
-            >
-              <PanelLeftClose className='size-3 mr-2' strokeWidth={1.5} />
+            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+              <PanelLeftClose className='size-3.5 mr-2' strokeWidth={1.5} />
               Open task
             </DropdownMenuItem>
           }
@@ -81,29 +78,23 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
         <TaskForm
           taskData={data}
           trigger={
-            <DropdownMenuItem
-              className='text-xs'
-              onSelect={e => e.preventDefault()}
-            >
-              <Edit className='size-3 mr-2' strokeWidth={1.5} />
+            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+              <Edit className='size-3.5 mr-2' strokeWidth={1.5} />
               Edit task
             </DropdownMenuItem>
           }
           onClose={() => setIsDropdownOpen(false)}
         />
-        <DropdownMenuItem className='text-xs' onClick={handleDuplicateTask}>
-          <Copy className='size-3 mr-2' strokeWidth={1.5} />
+        <DropdownMenuItem onClick={handleDuplicateTask}>
+          <Copy className='size-3.5 mr-2' strokeWidth={1.5} />
           Duplicate
         </DropdownMenuItem>
         <DeleteTasksModal
           teamId={data.teamId}
           ids={[data._id]}
           trigger={
-            <DropdownMenuItem
-              className='text-xs'
-              onSelect={e => e.preventDefault()}
-            >
-              <Trash2 className='size-3 mr-2' strokeWidth={1.5} />
+            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+              <Trash2 className='size-3.5 mr-2' strokeWidth={1.5} />
               Delete task
             </DropdownMenuItem>
           }

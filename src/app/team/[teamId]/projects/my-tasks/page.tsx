@@ -3,7 +3,7 @@
 import { Columns3, Sheet, SquareCheckBig } from 'lucide-react';
 
 import TasksBoard from '../[projectId]/tasks/(components)/TasksBoard';
-import ProjectFeatureNavbar from '../[projectId]/(components)/ProjectFeatureNavbar';
+import ProjectNavbar from '../[projectId]/(components)/ProjectNavbar';
 import DeleteTasksModal from '../[projectId]/tasks/(components)/DeleteTasksModal';
 import { api } from '../../../../../../convex/_generated/api';
 import { PriorityEnum, StatusEnum } from '@/lib/enums';
@@ -58,16 +58,16 @@ const MyTasksPage = ({
   return (
     <TableProvider>
       <section className='w-full'>
-        <div className='flex items-center gap-2.5 w-full p-2 px-4 border-b border-border'>
-          <div className='p-1 rounded bg-muted text-muted-foreground'>
+        <div className='w-full flex items-center gap-2 h-12 p-2 px-4 border-b border-border'>
+          <div>
             <SquareCheckBig className='size-4' strokeWidth={1.5} />
           </div>
           <h1 className='text-sm font-medium'>My Tasks</h1>
         </div>
-        <ProjectFeatureNavbar
+        <ProjectNavbar
           filters={[FILTERS.priority, FILTERS.status]}
           views={VIEWS}
-          defaultView='board'
+          defaultView='table'
         />
         <>
           {view === 'board' ? (

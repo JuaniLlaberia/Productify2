@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { useTable } from '@/components/TableContext';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
-export default function SearchbarFilter() {
+export default function SearchbarFilter({ field }: { field: string }) {
   const { table } = useTable();
   const [isOpen, setIsOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,7 +25,7 @@ export default function SearchbarFilter() {
   useClickOutside(containerRef, () => {
     if (isOpen && !inputRef.current?.value) {
       setIsOpen(false);
-      table?.getColumn('title')?.setFilterValue(null);
+      table?.getColumn(field)?.setFilterValue(null);
     }
   });
 
@@ -33,7 +33,7 @@ export default function SearchbarFilter() {
     setIsOpen(prev => {
       if (prev && inputRef.current) {
         inputRef.current.value = '';
-        table?.getColumn('title')?.setFilterValue(null);
+        table?.getColumn(field)?.setFilterValue(null);
       }
       return !prev;
     });
@@ -73,9 +73,9 @@ export default function SearchbarFilter() {
         >
           <Input
             ref={inputRef}
-            value={table.getColumn('title')?.getFilterValue() as string}
+            value={table.getColumn(field)?.getFilterValue() as string}
             onChange={event =>
-              table.getColumn('title')?.setFilterValue(event.target.value)
+              table.getColumn(field)?.setFilterValue(event.target.value)
             }
             placeholder='Search'
             className={cn(

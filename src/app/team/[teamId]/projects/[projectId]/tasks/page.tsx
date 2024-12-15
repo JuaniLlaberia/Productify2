@@ -3,7 +3,7 @@
 import { Columns3, Sheet } from 'lucide-react';
 
 import DeleteTasksModal from './(components)/DeleteTasksModal';
-import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
+import ProjectNavbar from '../(components)/ProjectNavbar';
 import TasksBoard from './(components)/TasksBoard';
 import TaskForm from './(components)/TaskForm';
 import { api } from '../../../../../../../convex/_generated/api';
@@ -83,7 +83,7 @@ const ProjectTasksPage = ({
   return (
     <TableProvider>
       <section className='w-full'>
-        <ProjectFeatureNavbar
+        <ProjectNavbar
           filters={[FILTERS.priority, FILTERS.status]}
           views={VIEWS}
           defaultView='table'

@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import ProjectNavbar from './(components)/ProjectNavbar';
+import ProjectHeader from './(components)/ProjectHeader';
 
 const ProjectsLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div className='w-full'>
-      <ProjectNavbar />
+      <ProjectHeader />
       {children}
     </div>
   );

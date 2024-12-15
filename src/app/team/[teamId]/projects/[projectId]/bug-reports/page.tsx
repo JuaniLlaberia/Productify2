@@ -3,7 +3,7 @@
 import { Sheet } from 'lucide-react';
 
 import DeleteReportsModal from './(components)/DeleteReportsModal';
-import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
+import ProjectNavbar from '../(components)/ProjectNavbar';
 import ReportsForm from './(components)/ReportsForm';
 import { TableProvider } from '@/components/TableContext';
 import { PriorityEnum, ReportTypeEnum } from '@/lib/enums';
@@ -50,7 +50,7 @@ const ProjectBugReportsPage = ({
   return (
     <TableProvider>
       <section className='w-full'>
-        <ProjectFeatureNavbar
+        <ProjectNavbar
           filters={[FILTERS.priority, FILTERS.type]}
           views={VIEWS}
           defaultView='table'

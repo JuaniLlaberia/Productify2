@@ -2,7 +2,7 @@
 
 import { Sheet } from 'lucide-react';
 
-import ProjectFeatureNavbar from '../(components)/ProjectFeatureNavbar';
+import ProjectNavbar from '../(components)/ProjectNavbar';
 import DeleteTemplatesModal from './(components)/DeleteTemplatesModal';
 import TemplatesForm from './(components)/TemplatesForm';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
@@ -50,7 +50,7 @@ const ProjectTemplatesPage = ({
   return (
     <TableProvider>
       <section className='w-full'>
-        <ProjectFeatureNavbar
+        <ProjectNavbar
           filters={[FILTERS.priority, FILTERS.status]}
           views={VIEWS}
           defaultView='table'
