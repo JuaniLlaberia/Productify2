@@ -64,7 +64,7 @@ const ConversationActions = ({
         }}
       >
         <DropdownMenuItem className='text-sm' asChild>
-          <Link href={`/team/${teamId}/conversations/${conversationId}`}>
+          <Link href={`/team/${teamId}/chats/conversations/${conversationId}`}>
             <Expand className='size-3.5 mr-2' strokeWidth={1.5} />
             Open
           </Link>

@@ -4,6 +4,7 @@ import { AlertCircle, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 import {
   Dialog,
@@ -33,6 +34,7 @@ const LeaveChannelModal = ({
   onSuccess,
   trigger,
 }: LeaveChannelProps) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const leaveChannel = useMutation(api.channels.leaveChannel);
@@ -46,6 +48,7 @@ const LeaveChannelModal = ({
       onSuccess?.();
       setIsOpen(false);
       toast.success('Channel left successfully');
+      router.push(`/team/${teamId}/chats/channels`);
     } catch {
       toast.error('Failed to leave channel');
     } finally {

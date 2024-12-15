@@ -4,6 +4,7 @@ import { AlertCircle, Loader2, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
@@ -33,6 +34,7 @@ const DeleteConversationModal = ({
   onSuccess,
   trigger,
 }: DeleteConversationProps) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const deleteConversation = useMutation(api.conversations.deleteConversation);
@@ -46,6 +48,7 @@ const DeleteConversationModal = ({
       onSuccess?.();
       toast.success('Conversation deleted successfully');
       setIsOpen(false);
+      router.push(`/team/${teamId}/chats/channels`);
     } catch {
       toast.error('Failed to delete conversation');
     } finally {

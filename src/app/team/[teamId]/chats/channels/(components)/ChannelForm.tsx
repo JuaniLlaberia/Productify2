@@ -82,7 +82,8 @@ const ChannelForm = ({ channelData, trigger, onClose }: ChannelFormProps) => {
       setIsOpen(false);
       onClose?.();
 
-      router.push(`/team/${teamId}/chats/channels/${channelId}`);
+      if (!isEditMode)
+        router.push(`/team/${teamId}/chats/channels/${channelId}`);
       toast.success(
         `Channel ${isEditMode ? 'updated' : 'created'} successfully`
       );

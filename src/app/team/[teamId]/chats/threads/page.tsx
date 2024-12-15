@@ -7,8 +7,8 @@ const ThreadsPage = () => {
   return (
     <section className='w-full h-screen flex flex-col'>
       <ChannelHeader
-        channelName='Threads'
-        channelIcon={<MessageSquareText className='size-4' strokeWidth={1.5} />}
+        chatName='Threads'
+        chatIcon={<MessageSquareText className='size-4' strokeWidth={1.5} />}
       />
       <ThreadsList />
     </section>

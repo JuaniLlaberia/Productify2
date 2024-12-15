@@ -25,7 +25,7 @@ import { Input } from '@/components/ui/input';
 type DeleteChannelModalProps = {
   teamId: Id<'teams'>;
   channelId: Id<'channels'>;
-  channelName: string;
+  channelName?: string;
   onSuccess?: () => void;
   trigger?: React.ReactNode;
 };
@@ -55,7 +55,7 @@ const DeleteChannelModal = ({
       onSuccess?.();
       setIsOpen(false);
 
-      router.push(`/team/${teamId}/chats/channels/general`);
+      router.push(`/team/${teamId}/chats/channels`);
       toast.success('Channel deleted successfully');
     } catch {
       toast.error('Failed to delete channel');
@@ -87,7 +87,9 @@ const DeleteChannelModal = ({
               className='text-sm text-muted-foreground mb-1.5'
             >
               Enter the channel name{' '}
-              <span className='text-primary font-semibold'>{channelName}</span>{' '}
+              <span className='text-primary font-semibold'>
+                {channelName || 'channel'}
+              </span>{' '}
               to continue:
             </label>
             <Input
@@ -97,7 +99,7 @@ const DeleteChannelModal = ({
               {...register('name', {
                 validate: {
                   validator: (fieldVal: string) =>
-                    fieldVal === channelName
+                    fieldVal === channelName || 'channel'
                       ? true
                       : 'Please confirm project name',
                 },

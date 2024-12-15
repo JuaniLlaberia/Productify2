@@ -4,10 +4,10 @@ import { useQuery } from 'convex/react';
 
 import ChatInput from '../../(components)/ChatInput';
 import ChatHeader from '../../(components)/ChatHeader';
+import ChannelSettingsMenu from './ChannelSettingsMenu';
 import MessagesList from '../../(components)/MessagesList';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
-import ChannelHeaderMenu from './ChannelHeaderMenu';
 
 type ChannelProps = {
   teamId: Id<'teams'>;
@@ -23,7 +23,7 @@ const Channel = ({ teamId, channelId, onClose }: ChannelProps) => {
       <ChatHeader
         chatName={channel?.name}
         chatIcon={channel?.icon}
-        menu={<ChannelHeaderMenu data={channel!} />}
+        menu={<ChannelSettingsMenu data={channel!} />}
         onClose={onClose}
       />
       <MessagesList

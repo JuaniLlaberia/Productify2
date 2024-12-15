@@ -19,7 +19,7 @@ const ChatHeader = ({ chatIcon, chatName, menu, onClose }: ChatHeaderProps) => {
         {chatName ? (
           <h1 className='text-sm font-medium'>{chatName}</h1>
         ) : (
-          <Skeleton className='h-full w-32' />
+          <Skeleton className='h-7 w-32' />
         )}
       </div>
       {onClose ? (
