@@ -4,6 +4,42 @@ import { omit } from 'convex-helpers';
 import { mutation, query } from './_generated/server';
 import { isAdmin, isMember } from './auth';
 import { Channels } from './schema';
+import { paginationOptsValidator } from 'convex/server';
+
+export const getAllChannels = query({
+  args: { teamId: v.id('teams'), paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    const { teamId, paginationOpts } = args;
+    const member = await isMember(ctx, args.teamId);
+
+    const paginatedChannels = await ctx.db
+      .query('channels')
+      .withIndex('by_teamId', q => q.eq('teamId', teamId))
+      .paginate(paginationOpts);
+
+    if (paginatedChannels.page.length === 0) return paginatedChannels;
+
+    const memberChannels = await ctx.db
+      .query('channelMembers')
+      .withIndex('by_teamId_userId', q =>
+        q.eq('teamId', args.teamId).eq('userId', member._id)
+      )
+      .collect();
+    const memberChannelsIds = new Set(
+      memberChannels.map(channel => channel.channelId)
+    );
+
+    const channels = paginatedChannels.page.map(channel => ({
+      ...channel,
+      isMember: channel.private ? memberChannelsIds.has(channel._id) : true,
+    }));
+
+    return {
+      ...paginatedChannels,
+      page: channels,
+    };
+  },
+});
 
 export const getChannels = query({
   args: { teamId: v.id('teams') },
@@ -160,6 +196,7 @@ export const leaveChannel = mutation({
     const { teamId, channelId } = args;
     const member = await isMember(ctx, teamId);
 
+    const channel = await ctx.db.get(channelId);
     const channelMemberId = (
       await ctx.db
         .query('channelMembers')
@@ -169,9 +206,9 @@ export const leaveChannel = mutation({
         .first()
     )?._id;
 
-    if (!channelMemberId)
+    if (channel?.private && !channelMemberId)
       throw new ConvexError('You are not a member of this channel.');
 
-    await ctx.db.delete(channelMemberId);
+    if (channelMemberId) await ctx.db.delete(channelMemberId);
   },
 });
