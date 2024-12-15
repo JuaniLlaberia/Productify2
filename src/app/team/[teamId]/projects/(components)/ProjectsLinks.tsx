@@ -18,11 +18,9 @@ import SidebarLoader from '../../(components)/SidebarLoader';
 import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useMemberRole } from '@/features/auth/api/useMemberRole';
 
 const ProjectsLinks = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const { teamId } = useParams<{
     teamId: Id<'teams'>;
@@ -30,22 +28,31 @@ const ProjectsLinks = () => {
   const projects = useQuery(api.projects.getProjects, {
     teamId,
   });
-  if (!projects) return <SidebarLoader />;
+
+  const { isLoading, isAdmin } = useMemberRole(teamId);
+  const hasPermissions = isAdmin;
+
+  if (!projects || isLoading) return <SidebarLoader />;
 
   const reUsableUrl = `/team/${teamId}/projects`;
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <>
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2'>
         <span className='py-0.5'>General</span>
       </h3>
       <ul className='flex flex-col gap-0.5 mb-4'>
-        <DialogTrigger asChild>
-          <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-muted'>
-            <PlusCircle className='size-4 mr-1.5' strokeWidth={1.5} />
-            New project
-          </button>
-        </DialogTrigger>
+        {hasPermissions && (
+          <ProjectForm
+            teamId={teamId}
+            trigger={
+              <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-muted'>
+                <PlusCircle className='size-4 mr-1.5' strokeWidth={1.5} />
+                New project
+              </button>
+            }
+          />
+        )}
         <InnerSidebarLink
           label='My taks'
           icon={<SquareCheckBig className='size-4 mr-1.5' strokeWidth={1.5} />}
@@ -56,11 +63,16 @@ const ProjectsLinks = () => {
 
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2 group'>
         <span className='py-0.5'>Your projects</span>
-        <DialogTrigger asChild>
-          <span className='hover:bg-muted hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
-            <Plus className='size-4' />
-          </span>
-        </DialogTrigger>
+        {hasPermissions && (
+          <ProjectForm
+            teamId={teamId}
+            trigger={
+              <button className='hover:bg-muted hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'>
+                <Plus className='size-4' />
+              </button>
+            }
+          />
+        )}
       </h3>
       <ul className='space-y-2.5'>
         {projects.length > 0 ? (
@@ -109,22 +121,21 @@ const ProjectsLinks = () => {
             <p className='text-muted-foreground text-sm text-center py-1'>
               No projects found
             </p>
-            <DialogTrigger asChild>
-              <Button variant='outline' size='sm' className='mt-1'>
-                <Plus className='size-3 mr-1.5' strokeWidth={2} />
-                Create project
-              </Button>
-            </DialogTrigger>
+            {hasPermissions && (
+              <ProjectForm
+                teamId={teamId}
+                trigger={
+                  <Button variant='outline' size='sm' className='mt-1'>
+                    <Plus className='size-3 mr-1.5' strokeWidth={2} />
+                    Create project
+                  </Button>
+                }
+              />
+            )}
           </div>
         )}
       </ul>
-      <DialogContent>
-        <ProjectForm
-          teamId={teamId as Id<'teams'>}
-          onSuccess={() => setIsOpen(false)}
-        />
-      </DialogContent>
-    </Dialog>
+    </>
   );
 };
 
