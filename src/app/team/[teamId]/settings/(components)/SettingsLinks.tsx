@@ -1,14 +1,7 @@
 'use client';
 
 import { useParams, usePathname } from 'next/navigation';
-import {
-  Blocks,
-  Mail,
-  Settings,
-  TriangleAlert,
-  Users,
-  Workflow,
-} from 'lucide-react';
+import { Mail, Settings, TriangleAlert, Users } from 'lucide-react';
 
 import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
 import { Id } from '../../../../../../convex/_generated/dataModel';
@@ -28,16 +21,6 @@ const TEAM_SETTINGS_LINKS = [
     label: 'Invitations',
     link: 'invitations',
     icon: <Mail className='size-4' strokeWidth={1.5} />,
-  },
-  {
-    label: 'Integrations',
-    link: 'integrations',
-    icon: <Blocks className='size-4' strokeWidth={1.5} />,
-  },
-  {
-    label: 'Automations',
-    link: 'automations',
-    icon: <Workflow className='size-4' strokeWidth={1.5} />,
   },
   {
     label: 'Danger Zone',
