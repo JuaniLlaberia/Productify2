@@ -33,6 +33,13 @@ const ThreadsList = () => {
       </ul>
     );
 
+  if (messages.length === 0)
+    return (
+      <section className='h-full w-full flex items-center justify-center text-muted-foreground'>
+        No threads
+      </section>
+    );
+
   return (
     <div className='p-4 w-full flex-1 flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
       {messages.map(message => {
