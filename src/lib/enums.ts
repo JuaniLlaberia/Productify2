@@ -20,3 +20,15 @@ export enum ReportTypeEnum {
   SECURITY = 'security',
   OTHER = 'other',
 }
+
+export enum TeamStatusEnum {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  MANTAINANCE = 'mantainance',
+}
+
+export enum RolesEnum {
+  OWNER = 'owner',
+  ADMIN = 'admin',
+  MEMBER = 'member',
+}
