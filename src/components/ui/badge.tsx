@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { ReactElement } from 'react';
 
 export type ColorsType =
@@ -20,6 +21,7 @@ type BadgeType = {
   text: string | ReactElement;
   color: ColorsType;
   decorated?: boolean;
+  className?: string;
 };
 
 export const getColorClass = (color: ColorsType) => {
@@ -51,12 +53,15 @@ export const getColorClass = (color: ColorsType) => {
   return colorClasses[color] || colorClasses.gray;
 };
 
-const Badge = ({ text, color, decorated = false }: BadgeType) => {
+const Badge = ({ text, color, decorated = false, className }: BadgeType) => {
   return (
     <span
-      className={`inline-flex capitalize items-center rounded-lg px-2.5 py-1 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-nowrap ${getColorClass(
-        color
-      )}`}
+      className={cn(
+        `inline-flex capitalize items-center rounded-lg px-2.5 py-1 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-nowrap ${getColorClass(
+          color
+        )}`,
+        className
+      )}
     >
       {decorated && (
         <span
