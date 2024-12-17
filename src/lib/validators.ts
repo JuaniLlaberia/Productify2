@@ -85,3 +85,12 @@ export const TemplatesSchema = z.object({
 export const ConversationSchema = z.object({
   memberId: z.string().min(1, { message: 'Please select a member' }),
 });
+
+export const StorageSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: 'Must be at least 1 character.' })
+    .max(25, 'Must be less than 25 characters.'),
+  private: z.boolean(),
+  icon: z.string().optional(),
+});
