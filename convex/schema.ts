@@ -174,14 +174,26 @@ export const Documents = Table('documents', {
   teamId: v.id('teams'),
 });
 
-export const Resources = Table('resources', {
-  title: v.string(),
-  type: v.union(v.literal('link'), v.literal('file')),
-  category: v.union(
-    v.literal('documentation'),
-    v.literal('reference'),
-    v.literal('article')
-  ),
+export const Storages = Table('storages', {
+  name: v.string(),
+  icon: v.string(),
+  teamId: v.id('teams'),
+  private: v.boolean(),
+});
+
+export const StoragesMembers = Table('storagesMembers', {
+  userId: v.id('users'),
+  storageId: v.id('storages'),
+  teamId: v.id('teams'),
+});
+
+export const Assets = Table('assets', {
+  name: v.string(),
+  size: v.number(),
+  type: v.string(),
+  lastModified: v.number(),
+  storageId: v.id('storages'),
+  fileId: v.id('_storage'),
   teamId: v.id('teams'),
   createdBy: v.id('users'),
 });
@@ -238,5 +250,10 @@ export default defineSchema({
     .index('by_userId_parentId', ['createdBy', 'parentDocument'])
     .index('by_teamId', ['teamId'])
     .index('by_teamId_parentId', ['teamId', 'parentDocument']),
-  resources: Resources.table.index('by_teamId', ['teamId']),
+  storages: Storages.table.index('by_teamId', ['teamId']),
+  storagesMembers: StoragesMembers.table
+    .index('by_storageId_userId', ['storageId', 'userId'])
+    .index('by_teamId', ['teamId'])
+    .index('by_teamId_userId', ['teamId', 'userId']),
+  assets: Assets.table.index('by_teamId_storageId', ['teamId', 'storageId']),
 });

@@ -15,6 +15,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as assets from "../assets.js";
 import type * as auth from "../auth.js";
 import type * as channels from "../channels.js";
 import type * as conversations from "../conversations.js";
@@ -27,7 +28,7 @@ import type * as messages from "../messages.js";
 import type * as projects from "../projects.js";
 import type * as reactions from "../reactions.js";
 import type * as reports from "../reports.js";
-import type * as resources from "../resources.js";
+import type * as storages from "../storages.js";
 import type * as subtasks from "../subtasks.js";
 import type * as tasks from "../tasks.js";
 import type * as teams from "../teams.js";
@@ -44,6 +45,7 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  assets: typeof assets;
   auth: typeof auth;
   channels: typeof channels;
   conversations: typeof conversations;
@@ -56,7 +58,7 @@ declare const fullApi: ApiFromModules<{
   projects: typeof projects;
   reactions: typeof reactions;
   reports: typeof reports;
-  resources: typeof resources;
+  storages: typeof storages;
   subtasks: typeof subtasks;
   tasks: typeof tasks;
   teams: typeof teams;
