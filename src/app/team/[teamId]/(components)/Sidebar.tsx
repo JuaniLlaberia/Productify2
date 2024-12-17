@@ -3,10 +3,10 @@
 import {
   FileText,
   Folder,
-  Link as LinkIcon,
   MessagesSquare,
   PanelRightClose,
   PanelRightOpen,
+  Server,
   Settings,
 } from 'lucide-react';
 
@@ -41,11 +41,11 @@ const SIDEBAR_LINKS = [
     icon: <FileText className='size-5' strokeWidth={1.5} />,
   },
   {
-    label: 'Assets',
-    tooltip: 'Assents & Links',
-    link: 'assets',
-    activeKey: 'assets',
-    icon: <LinkIcon className='size-5' strokeWidth={1.5} />,
+    label: 'Storages',
+    tooltip: 'Storages & Assets',
+    link: 'storages',
+    activeKey: 'storages',
+    icon: <Server className='size-5' strokeWidth={1.5} />,
   },
   {
     label: 'Settings',

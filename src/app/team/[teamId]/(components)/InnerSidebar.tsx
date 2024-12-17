@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 
 import ProjectsLinks from '../projects/(components)/ProjectsLinks';
 import DocumentsLinks from '../documents/(components)/DocumentsLinks';
-import AssetsLinks from '../assets/(components)/AssetsLinks';
+import StoragesLinks from '../storages/(components)/StoragesLinks';
 import ChatLinks from '../chats/(components)/ChatLinks';
 import SettingsLinks from '../settings/(components)/SettingsLinks';
 import { useSidebar } from '../(context)/SidebarContext';
@@ -18,7 +18,7 @@ const SIDEBAR_CONTENT: {
   projects: { title: 'Projects', content: <ProjectsLinks /> },
   chats: { title: 'Chats', content: <ChatLinks /> },
   documents: { title: 'Documents', content: <DocumentsLinks /> },
-  assets: { title: 'Assets', content: <AssetsLinks /> },
+  storages: { title: 'Storages', content: <StoragesLinks /> },
   settings: { title: 'Settings', content: <SettingsLinks /> },
 };
 
