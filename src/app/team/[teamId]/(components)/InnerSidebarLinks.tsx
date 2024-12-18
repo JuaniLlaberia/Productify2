@@ -23,8 +23,8 @@ const InnerSidebarLink = ({
       <Link
         href={link}
         className={cn(
-          'flex items-center justify-between px-2 py-1.5 rounded-lg text-sm hover:bg-muted/60 group',
-          isActive && 'bg-muted/60'
+          'flex items-center justify-between px-2 py-1.5 rounded-lg text-sm hover:bg-primary/5 dark:hover:bg-muted/60 group',
+          isActive && 'bg-primary/5 dark:bg-muted'
         )}
       >
         <span className='flex items-center gap-2'>

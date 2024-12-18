@@ -114,7 +114,7 @@ const Message = ({
     return (
       <div
         className={cn(
-          'flex flex-col gap-2 p-1.5 px-5 hover:bg-muted/20 group relative rounded-md',
+          'flex flex-col gap-2 p-1.5 px-5 hover:bg-primary/[3%] dark:hover:bg-muted/20 group relative rounded-md',
           isEditing && 'hover:bg-muted/15'
         )}
       >
@@ -169,7 +169,7 @@ const Message = ({
   return (
     <div
       className={cn(
-        'flex flex-col gap-2 p-1.5 px-5 hover:bg-muted/20 group relative rounded-md',
+        'flex flex-col gap-2 p-1.5 px-5 hover:bg-primary/[3%] dark:hover:bg-muted/20 group relative rounded-md',
         isEditing && 'hover:bg-muted/15'
       )}
     >

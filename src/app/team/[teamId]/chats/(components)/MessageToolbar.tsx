@@ -29,7 +29,7 @@ export const MessageToolbar = ({
 }: ToolbarProps) => {
   return (
     <div className='absolute top-0 right-5'>
-      <div className='group-hover:opacity-100 opacity-0 transition-opacity border border-border rounded-lg p-0.5 bg-muted/20 shadow-sm'>
+      <div className='group-hover:opacity-100 opacity-0 transition-opacity border border-border rounded-lg p-0.5 bg-background shadow-sm'>
         <EmojiPopover
           onEmojiSelect={emoji => handleReaction(emoji.native)}
           hint='Add reaction'

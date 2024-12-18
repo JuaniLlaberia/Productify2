@@ -38,8 +38,8 @@ const SidebarLink = ({
         >
           <span
             className={cn(
-              'size-10 flex items-center justify-center rounded-lg group-hover:bg-muted transition-all',
-              isActive && 'bg-muted'
+              'size-10 flex items-center justify-center rounded-lg group-hover:bg-primary/5 dark:group-hover:bg-muted transition-all',
+              isActive && 'bg-primary/5 dark:bg-muted'
             )}
           >
             {icon}

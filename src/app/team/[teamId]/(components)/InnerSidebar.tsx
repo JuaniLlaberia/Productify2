@@ -37,7 +37,10 @@ const InnerSidebar = () => {
   return (
     <>
       <ResizablePanel
-        className={cn('bg-muted/25 h-screen p-4 py-5', !isOpen ? 'hidden' : '')}
+        className={cn(
+          'bg-muted/50 dark:bg-muted/25 h-screen p-4 py-5',
+          !isOpen ? 'hidden' : ''
+        )}
         defaultSize={18}
         maxSize={30}
         minSize={12}

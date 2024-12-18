@@ -60,7 +60,7 @@ const Sidebar = ({ teamId }: { teamId: string }) => {
   const { isOpen, toggleSidebar } = useSidebar();
 
   return (
-    <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-muted/25 border-r border-border'>
+    <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-muted/50 dark:bg-muted/25 border-r border-border'>
       <div className='space-y-1'>
         <TeamsDropdown />
         <Hint label={`${isOpen ? 'Close' : 'Open'} menu`} side='right'>
