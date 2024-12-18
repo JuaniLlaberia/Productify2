@@ -6,7 +6,6 @@ import {
   FileText,
   HardDrive,
   ImageIcon,
-  MoreHorizontal,
   Save,
   User,
 } from 'lucide-react';
@@ -21,12 +20,12 @@ import { cn } from '@/lib/utils';
 import { formatFileSize } from '../../(components)/UploadAssetModal';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export const assetsColumns: ColumnDef<
-  Doc<'assets'> & {
-    fileUrl?: string;
-    createdBy: Doc<'users'>;
-  }
->[] = [
+export type PopulatedAssets = Omit<Doc<'assets'>, 'createdBy'> & {
+  fileUrl: string | null;
+  createdBy: Doc<'users'> | null;
+};
+
+export const assetsColumns: ColumnDef<PopulatedAssets>[] = [
   // Select
   {
     id: 'select',
@@ -82,6 +81,20 @@ export const assetsColumns: ColumnDef<
       const type = values.type;
 
       const isImage = type.includes('image');
+
+      if (!url)
+        return (
+          <p>
+            <span className='flex items-center justify-start px-2 gap-2 hover:underline hover:cursor-pointer'>
+              {isImage ? (
+                <ImageIcon className='size-4' strokeWidth={1.5} />
+              ) : (
+                <FileText className='size-4' strokeWidth={1.5} />
+              )}
+            </span>
+            {name}
+          </p>
+        );
 
       return (
         <a

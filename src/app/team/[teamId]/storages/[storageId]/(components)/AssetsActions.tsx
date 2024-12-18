@@ -2,6 +2,7 @@
 
 import { Download, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import DeleteAssetsModal from './DeleteAssetsModal';
 import AssetForm from './AssetForm';
@@ -13,16 +14,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Doc } from '../../../../../../../convex/_generated/dataModel';
+import { PopulatedAssets } from './assetsColumns';
 
-const AssetsActions = ({
-  data,
-}: {
-  data: Doc<'assets'> & {
-    fileUrl?: string;
-    createdBy: Doc<'users'>;
-  };
-}) => {
+const AssetsActions = ({ data }: { data: PopulatedAssets }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   return (
@@ -45,7 +39,11 @@ const AssetsActions = ({
         <DropdownMenuItem
           onSelect={e => e.preventDefault()}
           onClick={() => {
-            window.open(data.fileUrl, '_blank');
+            if (data.fileUrl) {
+              window.open(data.fileUrl, '_blank');
+            } else {
+              toast.error('Failed to load file URL');
+            }
           }}
         >
           <Download className='size-3.5 mr-2' strokeWidth={1.5} />
