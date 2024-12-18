@@ -8,9 +8,27 @@ import { RolesEnum } from '@/lib/enums';
 import { Doc, Id } from '../../../../../../../convex/_generated/dataModel';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
-export const membersColumns: ColumnDef<
-  Doc<'users'> & { role: RolesEnum; memberId: Id<'members'> }
->[] = [
+type MemberDataType = Doc<'users'> & {
+  role: RolesEnum;
+  memberId: Id<'members'>;
+  teamId: Id<'teams'>;
+};
+
+export const membersColumns: ColumnDef<MemberDataType>[] = [
+  {
+    id: 'select',
+    enableResizing: false,
+    size: 10,
+    cell: ({ row }) => (
+      <div className='flex justify-center items-center'>
+        <span className='flex items-center justify-center group-hover:opacity-0 pointer-events-none text-muted-foreground/75 text-xs font-medium'>
+          {row.index + 1}
+        </span>
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   // Full anme
   {
     accessorKey: 'fullName',
