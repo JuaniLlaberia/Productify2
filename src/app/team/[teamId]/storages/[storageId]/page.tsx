@@ -6,6 +6,7 @@ import { useQuery } from 'convex/react';
 import Header from '@/components/Header';
 import SearchbarFilter from '../../projects/[projectId]/(components)/SearchbarFilter';
 import UploadAssetModal from '../(components)/UploadAssetModal';
+import DeleteAssetsModal from './(components)/DeleteAssetsModal';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../convex/_generated/api';
@@ -71,7 +72,12 @@ const StoragePage = ({
           </>
         }
       />
-      <DataTable data={results} isLoading={isLoading} columns={assetsColumns} />
+      <DataTable
+        data={results}
+        isLoading={isLoading}
+        columns={assetsColumns}
+        DeleteModal={DeleteAssetsModal}
+      />
     </TableProvider>
   );
 };

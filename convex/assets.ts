@@ -89,24 +89,31 @@ export const updateAsset = mutation({
 export const deleteAssets = mutation({
   args: {
     teamId: v.id('teams'),
-    assets: v.array(
-      v.object({
-        assetId: v.id('assets'),
-        fileIdInStorage: v.id('_storage'),
-      })
-    ),
+    assetsIds: v.array(v.id('assets')),
   },
   handler: async (ctx, args) => {
-    const { teamId, assets } = args;
+    const { teamId, assetsIds } = args;
     await isMember(ctx, teamId);
 
     await Promise.all(
-      assets.map(async asset => {
+      assetsIds.map(async assetId => {
+        const asset = await ctx.db.get(assetId);
+        if (!asset) return;
+
         await Promise.all([
-          ctx.storage.delete(asset.fileIdInStorage),
-          ctx.db.delete(asset.assetId),
+          ctx.storage.delete(asset?.fileId),
+          ctx.db.delete(assetId),
         ]);
       })
     );
+
+    // await Promise.all(
+    //   assets.map(async asset => {
+    //     await Promise.all([
+    //       ctx.storage.delete(asset.fileIdInStorage),
+    //       ctx.db.delete(asset.assetId),
+    //     ]);
+    //   })
+    // );
   },
 });

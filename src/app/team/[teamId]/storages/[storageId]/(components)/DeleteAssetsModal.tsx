@@ -22,17 +22,14 @@ import { api } from '../../../../../../../convex/_generated/api';
 
 type DeleteAssetsModalProps = {
   teamId: Id<'teams'>;
-  assets: {
-    assetId: Id<'assets'>;
-    fileIdInStorage: Id<'_storage'>;
-  }[];
+  ids: Id<'assets'>[];
   onSuccess?: () => void;
   trigger?: React.ReactNode;
 };
 
 const DeleteAssetsModal = ({
   teamId,
-  assets,
+  ids,
   onSuccess,
   trigger,
 }: DeleteAssetsModalProps) => {
@@ -40,13 +37,13 @@ const DeleteAssetsModal = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const deleteAssets = useMutation(api.assets.deleteAssets);
 
-  const assetsLength = assets.length;
+  const assetsLength = ids.length;
 
   const handleDeletion = async () => {
     setIsLoading(true);
 
     try {
-      await deleteAssets({ teamId, assets });
+      await deleteAssets({ teamId, assetsIds: ids });
 
       onSuccess?.();
       setIsOpen(false);
