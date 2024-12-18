@@ -159,7 +159,7 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
                             <Avatar>
                               <AvatarImage
                                 src={member?.profileImage}
-                                alt={member?.fullName}
+                                alt='Profile photo'
                               />
                               <AvatarFallback>
                                 {member?.fullName?.charAt(0).toUpperCase()}

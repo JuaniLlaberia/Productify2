@@ -31,7 +31,7 @@ const UserMenu = () => {
             <AvatarFallback>
               {user.fullName.at(0)?.toUpperCase()}
             </AvatarFallback>
-            <AvatarImage src={user.profileImage} />
+            <AvatarImage src={user.profileImage} alt='Profile photo' />
           </Avatar>
         </Hint>
       </DropdownMenuTrigger>
@@ -41,7 +41,7 @@ const UserMenu = () => {
             <AvatarFallback>
               {user.fullName.at(0)?.toUpperCase()}
             </AvatarFallback>
-            <AvatarImage src={user.profileImage} />
+            <AvatarImage src={user.profileImage} alt='Profile photo' />
           </Avatar>
           <div>
             <p className='font-semibold'>{user.fullName}</p>

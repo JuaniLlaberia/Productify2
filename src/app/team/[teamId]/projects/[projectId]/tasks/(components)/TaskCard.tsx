@@ -77,7 +77,10 @@ const TaskCard = ({ taskData }: TaskCardProps) => {
                   <AvatarFallback className='size-6'>
                     {assignee?.fullName.at(0)}
                   </AvatarFallback>
-                  <AvatarImage src={assignee?.profileImage} />
+                  <AvatarImage
+                    src={assignee?.profileImage}
+                    alt='Profile photo'
+                  />
                 </Avatar>
                 <p className='text-sm'>{assignee?.fullName}</p>
               </div>

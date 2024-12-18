@@ -20,7 +20,7 @@ const ThreadBar = ({ count, image, timestamp, onClick }: ThreadBarProps) => {
     >
       <div className='flex items-center gap-2 overflow-hidden'>
         <Avatar className='size-6 shrink-0'>
-          <AvatarImage src={image} />
+          <AvatarImage src={image} alt='Profile photo' />
           <AvatarFallback>M</AvatarFallback>
         </Avatar>
         <span className='text-xs text-sky-700 hover:underline font-bold truncate'>

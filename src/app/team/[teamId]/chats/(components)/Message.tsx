@@ -176,7 +176,7 @@ const Message = ({
       <div className='flex items-start gap-2'>
         <button>
           <Avatar>
-            <AvatarImage src={authorImage} />
+            <AvatarImage src={authorImage} alt='Author photo' />
             <AvatarFallback>{authorName.at(0)?.toUpperCase()}</AvatarFallback>
           </Avatar>
         </button>

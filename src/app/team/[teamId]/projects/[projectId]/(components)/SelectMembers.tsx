@@ -86,7 +86,7 @@ const SelectMembers = ({
                   <AvatarFallback className='size-6'>
                     {value?.name?.at(0)}
                   </AvatarFallback>
-                  <AvatarImage src={value?.img} />
+                  <AvatarImage src={value?.img} alt='Profile photo' />
                 </Avatar>
                 <p className='ml-2'>{value?.name}</p>
               </>

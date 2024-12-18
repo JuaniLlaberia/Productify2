@@ -160,7 +160,7 @@ const TeamImageForm = ({
           )}
           onClick={() => imageElementRef.current?.click()}
         >
-          <AvatarImage src={initialImageUrl} />
+          <AvatarImage src={initialImageUrl} alt='Team photo' />
           <AvatarFallback className='size-12'>
             {teamName ? teamName[0].toUpperCase() : 'T'}
           </AvatarFallback>

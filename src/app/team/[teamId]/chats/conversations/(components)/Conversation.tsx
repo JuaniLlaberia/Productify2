@@ -33,7 +33,10 @@ const Conversation = ({
         chatName={conversation?.otherUser?.fullName}
         chatIcon={
           <Avatar className='size-7 mr-1 shrink-0'>
-            <AvatarImage src={conversation?.otherUser?.profileImage} />
+            <AvatarImage
+              src={conversation?.otherUser?.profileImage}
+              alt='Profile photo'
+            />
             <AvatarFallback asChild>
               <Skeleton className='size-7' />
             </AvatarFallback>

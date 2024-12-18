@@ -229,7 +229,7 @@ export const assetsColumns: ColumnDef<PopulatedAssets>[] = [
             <AvatarFallback className='size-5'>
               {assignee.fullName.at(0)}
             </AvatarFallback>
-            <AvatarImage src={assignee.profileImage} />
+            <AvatarImage src={assignee.profileImage} alt='Profile photo' />
           </Avatar>
           <p>{assignee.fullName}</p>
         </div>

@@ -62,7 +62,7 @@ const UserPanel = ({ onClose }: UserPanelProps) => {
         <div className='flex flex-row items-center gap-4 pb-2'>
           <Avatar className='size-20'>
             <AvatarFallback>{fullName.at(0)?.toUpperCase()}</AvatarFallback>
-            <AvatarImage src={profileImage} />
+            <AvatarImage src={profileImage} alt='Profile photo' />
           </Avatar>
           <div className='flex flex-col gap-1'>
             <h2 className='text-xl'>{fullName}</h2>

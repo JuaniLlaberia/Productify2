@@ -32,7 +32,7 @@ const ConversationLink = ({
             <AvatarFallback className='size-6 mr-1.5'>
               {user?.fullName.at(0)?.toUpperCase() || 'M'}
             </AvatarFallback>
-            <AvatarImage src={user?.profileImage} />
+            <AvatarImage src={user?.profileImage} alt='Profile photo' />
           </Avatar>
           {user?.fullName || 'Member'}
         </span>
