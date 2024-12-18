@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { useForm, Controller } from 'react-hook-form';
 import { api } from '../../../../../../../convex/_generated/api';
 import { useParams, useRouter } from 'next/navigation';
@@ -26,6 +26,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ConversationSchema } from '@/lib/validators';
+import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 
 type ConversationFormProps = {
   trigger?: ReactNode;
@@ -41,7 +42,11 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
     teamId: Id<'teams'>;
   }>();
 
-  const members = useQuery(api.teams.getTeamMembers, { teamId });
+  const { results, isLoading } = useStablePaginatedQuery(
+    api.teams.getTeamMembers,
+    { teamId },
+    { initialNumItems: 10000000 }
+  );
   const createConversation = useMutation(api.conversations.createConversation);
 
   const {
@@ -56,9 +61,11 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
     },
   });
 
+  if (isLoading) return <Skeleton className='w-full h-32' />;
+
   const filteredMembers =
-    members?.filter(member =>
-      member?.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
+    results.filter(member =>
+      member.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
 
   const onSubmit = handleSubmit(async data => {
@@ -131,15 +138,7 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
               control={control}
               render={({ field }) => (
                 <>
-                  {!members ? (
-                    <ul className='space-y-1.5'>
-                      {[1, 2, 3].map(key => (
-                        <li key={key}>
-                          <Skeleton className='h-16 w-full' />
-                        </li>
-                      ))}
-                    </ul>
-                  ) : filteredMembers.length > 0 ? (
+                  {filteredMembers.length > 0 ? (
                     <ul className='space-y-2'>
                       {filteredMembers.map(member => (
                         <li
