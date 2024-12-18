@@ -16,16 +16,22 @@ import { DataTable } from '@/components/ui/data-table';
 import { storagesColumns } from './(components)/storagesColumns';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
+import { INITIAL_NUM_ITEMS } from '@/lib/consts';
 
 const AssetsPage = ({
   params: { teamId },
 }: {
   params: { teamId: Id<'teams'> };
 }) => {
-  const { results, isLoading } = useStablePaginatedQuery(
+  const {
+    results,
+    isLoading,
+    status: queryStatus,
+    loadMore,
+  } = useStablePaginatedQuery(
     api.storages.getAllStorages,
     { teamId },
-    { initialNumItems: 10 }
+    { initialNumItems: INITIAL_NUM_ITEMS }
   );
 
   return (
@@ -58,6 +64,10 @@ const AssetsPage = ({
         data={results}
         isLoading={isLoading}
         columns={storagesColumns}
+        paginationOpts={{
+          canLoadMore: queryStatus === 'CanLoadMore',
+          loadMore: () => loadMore(INITIAL_NUM_ITEMS),
+        }}
       />
       <div className='bg-muted/20 p-1 px-4 border-b flex items-center'>
         <p className='text-sm text-muted-foreground'>Total: {results.length}</p>

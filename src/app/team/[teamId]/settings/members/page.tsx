@@ -9,16 +9,22 @@ import { api } from '../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { TableProvider } from '@/components/TableContext';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
+import { INITIAL_NUM_ITEMS } from '@/lib/consts';
 
 const MembersSettingsPage = ({
   params: { teamId },
 }: {
   params: { teamId: Id<'teams'> };
 }) => {
-  const { results, isLoading } = useStablePaginatedQuery(
+  const {
+    results,
+    isLoading,
+    status: queryStatus,
+    loadMore,
+  } = useStablePaginatedQuery(
     api.teams.getTeamMembers,
     { teamId },
-    { initialNumItems: 10 }
+    { initialNumItems: INITIAL_NUM_ITEMS }
   );
 
   return (
@@ -34,6 +40,10 @@ const MembersSettingsPage = ({
           // @ts-expect-error No idea what this typescript error is
           columns={membersColumns}
           isLoading={isLoading}
+          paginationOpts={{
+            canLoadMore: queryStatus === 'CanLoadMore',
+            loadMore: () => loadMore(INITIAL_NUM_ITEMS),
+          }}
         />
       </section>
     </TableProvider>

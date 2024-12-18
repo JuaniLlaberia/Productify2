@@ -17,6 +17,8 @@ export const COLORS = [
   { label: 'slate', value: '#94a3b8' },
 ];
 
+export const INITIAL_NUM_ITEMS = 10;
+
 export const FILTERS = {
   priority: {
     label: 'Priority',

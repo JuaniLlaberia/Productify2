@@ -12,7 +12,7 @@ import { api } from '../../../../../../../convex/_generated/api';
 import { DataTable } from '@/components/ui/data-table';
 import { reportsColumns } from './(components)/reportsColumns';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
-import { FILTERS } from '@/lib/consts';
+import { FILTERS, INITIAL_NUM_ITEMS } from '@/lib/consts';
 
 const VIEWS = [
   {
@@ -37,14 +37,19 @@ const ProjectBugReportsPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const { results, isLoading } = useStablePaginatedQuery(
+  const {
+    results,
+    isLoading,
+    status: queryStatus,
+    loadMore,
+  } = useStablePaginatedQuery(
     api.reports.getProjectReports,
     {
       teamId,
       projectId,
       filters: { priority, type },
     },
-    { initialNumItems: 10 }
+    { initialNumItems: INITIAL_NUM_ITEMS }
   );
 
   return (
@@ -62,6 +67,10 @@ const ProjectBugReportsPage = ({
           data={results}
           isLoading={isLoading}
           DeleteModal={DeleteReportsModal}
+          paginationOpts={{
+            canLoadMore: queryStatus === 'CanLoadMore',
+            loadMore: () => loadMore(INITIAL_NUM_ITEMS),
+          }}
         />
       </section>
     </TableProvider>

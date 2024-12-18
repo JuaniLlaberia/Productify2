@@ -16,16 +16,22 @@ import { channelColumns } from './ChannelsColumns';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
+import { INITIAL_NUM_ITEMS } from '@/lib/consts';
 
 type ChannelsListProps = {
   teamId: Id<'teams'>;
 };
 
 const ChannelsList = ({ teamId }: ChannelsListProps) => {
-  const { results, isLoading } = useStablePaginatedQuery(
+  const {
+    results,
+    isLoading,
+    status: queryStatus,
+    loadMore,
+  } = useStablePaginatedQuery(
     api.channels.getAllChannels,
     { teamId },
-    { initialNumItems: 10 }
+    { initialNumItems: INITIAL_NUM_ITEMS }
   );
 
   return (
@@ -54,6 +60,10 @@ const ChannelsList = ({ teamId }: ChannelsListProps) => {
         columns={channelColumns}
         data={results}
         isLoading={isLoading}
+        paginationOpts={{
+          canLoadMore: queryStatus === 'CanLoadMore',
+          loadMore: () => loadMore(INITIAL_NUM_ITEMS),
+        }}
       />
       <div className='bg-muted/20 p-1 px-4 border-b flex items-center'>
         <p className='text-sm text-muted-foreground'>Total: {results.length}</p>

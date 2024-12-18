@@ -11,6 +11,7 @@ import { labelsColumns } from './(components)/labelsColumns';
 import { api } from '../../../../../../../convex/_generated/api';
 import { Id } from '../../../../../../../convex/_generated/dataModel';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
+import { INITIAL_NUM_ITEMS } from '@/lib/consts';
 
 const VIEWS = [
   {
@@ -29,10 +30,15 @@ const ProjectLabelsPage = ({
     projectId: Id<'projects'>;
   };
 }) => {
-  const { results, isLoading } = useStablePaginatedQuery(
+  const {
+    results,
+    isLoading,
+    status: queryStatus,
+    loadMore,
+  } = useStablePaginatedQuery(
     api.labels.getLabels,
     { teamId, projectId },
-    { initialNumItems: 10 }
+    { initialNumItems: INITIAL_NUM_ITEMS }
   );
 
   return (
@@ -49,6 +55,10 @@ const ProjectLabelsPage = ({
           data={results}
           isLoading={isLoading}
           DeleteModal={DeleteLabelsModal}
+          paginationOpts={{
+            canLoadMore: queryStatus === 'CanLoadMore',
+            loadMore: () => loadMore(INITIAL_NUM_ITEMS),
+          }}
         />
       </section>
     </TableProvider>

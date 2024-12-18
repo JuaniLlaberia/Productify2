@@ -13,7 +13,7 @@ import { tasksColumns } from '../[projectId]/tasks/(components)/tasksColumns';
 import { DataTable } from '@/components/ui/data-table';
 import { TableProvider } from '@/components/TableContext';
 import { COLUMNS } from '../[projectId]/tasks/page';
-import { FILTERS } from '@/lib/consts';
+import { FILTERS, INITIAL_NUM_ITEMS } from '@/lib/consts';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 
 const VIEWS = [
@@ -44,7 +44,12 @@ const MyTasksPage = ({
     view: 'board' | 'table';
   };
 }) => {
-  const { results, isLoading } = useStablePaginatedQuery(
+  const {
+    results,
+    isLoading,
+    status: queryStatus,
+    loadMore,
+  } = useStablePaginatedQuery(
     api.tasks.getUserTasksInTeam,
     {
       teamId,
@@ -53,7 +58,7 @@ const MyTasksPage = ({
         status: status || undefined,
       },
     },
-    { initialNumItems: 2 }
+    { initialNumItems: INITIAL_NUM_ITEMS }
   );
 
   return (
@@ -87,6 +92,10 @@ const MyTasksPage = ({
               data={results}
               isLoading={isLoading}
               DeleteModal={DeleteTasksModal}
+              paginationOpts={{
+                canLoadMore: queryStatus === 'CanLoadMore',
+                loadMore: () => loadMore(INITIAL_NUM_ITEMS),
+              }}
             />
           )}
         </>
