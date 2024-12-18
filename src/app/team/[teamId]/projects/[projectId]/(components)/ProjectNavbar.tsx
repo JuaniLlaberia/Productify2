@@ -5,8 +5,9 @@ import type { ReactElement, ReactNode } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import SearchbarFilter from './SearchbarFilter';
-import FiltersForm, { Filter } from './FiltersForm';
+import Header from '@/components/Header';
 import Hint from '@/components/ui/hint';
+import FiltersForm, { Filter } from './FiltersForm';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Popover,
@@ -46,58 +47,60 @@ const ProjectNavbar = ({
   const view = searchParams.get('view') || 'table';
 
   return (
-    <nav className='w-full flex h-12 p-2 px-4 items-center justify-between border-b border-border'>
-      {/* Filters */}
-      <div className='flex items-center space-x-2'>
-        {filters ? (
-          <Popover>
-            <PopoverTrigger>
-              <Hint label='Filters'>
-                <Button variant='outline' size='sm'>
-                  <ListFilter className='size-4 mr-1.5' strokeWidth={1.5} />
-                  Filters
-                </Button>
-              </Hint>
-            </PopoverTrigger>
-            <PopoverContent side='bottom' className='w-auto'>
-              <FiltersForm filters={filters} />
-            </PopoverContent>
-          </Popover>
-        ) : null}
-        {view === 'table' && (
-          <>
-            <ColumnVisibilityDropdown />
-            <SearchbarFilter field='title' />
-          </>
-        )}
-      </div>
-      {/* VIEW COMPONENT */}
-      <div className='flex items-center justify-center gap-2'>
-        {views.length > 1 ? (
-          <Tabs
-            defaultValue={defaultView}
-            onValueChange={value => {
-              router.push(pathname + '?' + createQueryString('view', value));
-            }}
-          >
-            <TabsList>
-              {views.map(view => (
-                <TabsTrigger
-                  key={view.id}
-                  value={view.value}
-                  className='h-full'
-                >
-                  <Hint label={view.label}>{view.icon}</Hint>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        ) : null}
+    <Header
+      leftContent={
+        <div className='flex items-center space-x-2'>
+          {filters ? (
+            <Popover>
+              <PopoverTrigger>
+                <Hint label='Filters'>
+                  <Button variant='outline' size='sm'>
+                    <ListFilter className='size-4 mr-1.5' strokeWidth={1.5} />
+                    Filters
+                  </Button>
+                </Hint>
+              </PopoverTrigger>
+              <PopoverContent side='bottom' className='w-auto'>
+                <FiltersForm filters={filters} />
+              </PopoverContent>
+            </Popover>
+          ) : null}
+          {view === 'table' && (
+            <>
+              <ColumnVisibilityDropdown />
+              <SearchbarFilter field='title' />
+            </>
+          )}
+        </div>
+      }
+      rightContent={
+        <div className='flex items-center justify-center gap-2'>
+          {views.length > 1 ? (
+            <Tabs
+              defaultValue={defaultView}
+              onValueChange={value => {
+                router.push(pathname + '?' + createQueryString('view', value));
+              }}
+            >
+              <TabsList>
+                {views.map(view => (
+                  <TabsTrigger
+                    key={view.id}
+                    value={view.value}
+                    className='h-full'
+                  >
+                    <Hint label={view.label}>{view.icon}</Hint>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          ) : null}
 
-        {/* Create component */}
-        {createModal && createModal}
-      </div>
-    </nav>
+          {/* Create component */}
+          {createModal && createModal}
+        </div>
+      }
+    />
   );
 };
 
