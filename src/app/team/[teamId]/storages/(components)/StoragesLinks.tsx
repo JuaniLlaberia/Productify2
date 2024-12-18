@@ -11,13 +11,18 @@ import UploadAssetModal from './UploadAssetModal';
 import SidebarLoader from '../../(components)/SidebarLoader';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../convex/_generated/api';
+import { Button } from '@/components/ui/button';
+import { useMemberRole } from '@/features/auth/api/useMemberRole';
 
 const StoragesLinks = () => {
   const pathname = usePathname();
   const { teamId } = useParams<{ teamId: Id<'teams'> }>();
 
+  const { isLoading, isAdmin } = useMemberRole(teamId);
+  const hasPermissions = isAdmin;
+
   const storages = useQuery(api.storages.getUserStorages, { teamId });
-  if (!storages) return <SidebarLoader />;
+  if (!storages || isLoading) return <SidebarLoader />;
 
   return (
     <>
@@ -73,7 +78,21 @@ const StoragesLinks = () => {
             />
           ))
         ) : (
-          <p>Empty</p>
+          <div className='flex flex-col items-center'>
+            <p className='text-muted-foreground text-sm text-center py-1'>
+              No storages found
+            </p>
+            {hasPermissions && (
+              <StorageForm
+                trigger={
+                  <Button variant='outline' size='sm' className='mt-1'>
+                    <Plus className='size-3 mr-1.5' strokeWidth={2} />
+                    Create storage
+                  </Button>
+                }
+              />
+            )}
+          </div>
         )}
       </ul>
     </>
