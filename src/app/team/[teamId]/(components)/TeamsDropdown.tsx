@@ -71,7 +71,7 @@ const TeamsDropdown = () => {
             </DropdownMenuItem>
           ))}
           <DropdownMenuItem asChild className='pr-6'>
-            <Link href='/teams/new'>
+            <Link href='/team/new'>
               <span className='flex items-center justify-center rounded-lg size-7 bg-transparent'>
                 <Plus className='size-4' strokeWidth={1.5} />
               </span>
