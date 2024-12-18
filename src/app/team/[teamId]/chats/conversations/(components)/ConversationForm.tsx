@@ -58,7 +58,7 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
 
   const filteredMembers =
     members?.filter(member =>
-      member?.fullName.toLowerCase().includes(searchTerm.toLowerCase())
+      member?.fullName?.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
 
   const onSubmit = handleSubmit(async data => {
@@ -162,7 +162,7 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
                                 alt={member?.fullName}
                               />
                               <AvatarFallback>
-                                {member?.fullName.charAt(0).toUpperCase()}
+                                {member?.fullName?.charAt(0).toUpperCase()}
                               </AvatarFallback>
                             </Avatar>
                             <div>

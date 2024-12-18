@@ -53,7 +53,6 @@ const SelectLabel = ({
     { initialNumItems: 1000000 }
   );
 
-  // Find and set the default label when labels are loaded
   useEffect(() => {
     if (labels.results && defaultValue) {
       const defaultLabel = labels.results.find(

@@ -38,9 +38,7 @@ const CreateTeamForm = () => {
         router.push(`/team/${teamId}`);
         toast.success('Team created successfully');
       }
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
+    } catch {
       toast.error('Failed to create team');
     }
   });

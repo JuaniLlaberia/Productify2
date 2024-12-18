@@ -3,7 +3,6 @@ import { ConvexError, v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { isAdmin, isAuth, isMember } from './auth';
 import { Members, Teams } from './schema';
-import { generateCode } from './inviteCodes';
 import { internal } from './_generated/api';
 
 export const getUserTeams = query({
