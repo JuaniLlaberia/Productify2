@@ -65,9 +65,6 @@ const ChannelsList = ({ teamId }: ChannelsListProps) => {
           loadMore: () => loadMore(INITIAL_NUM_ITEMS),
         }}
       />
-      <div className='bg-muted/20 p-1 px-4 border-b flex items-center'>
-        <p className='text-sm text-muted-foreground'>Total: {results.length}</p>
-      </div>
     </TableProvider>
   );
 };
