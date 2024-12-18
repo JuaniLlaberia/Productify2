@@ -4,6 +4,7 @@ import { mutation, query } from './_generated/server';
 import { isAdmin, isAuth, isMember } from './auth';
 import { Members, Teams } from './schema';
 import { internal } from './_generated/api';
+import { paginationOptsValidator } from 'convex/server';
 
 export const getUserTeams = query({
   handler: async ctx => {
@@ -49,26 +50,32 @@ export const getTeam = query({
 });
 
 export const getTeamMembers = query({
-  args: { teamId: v.id('teams') },
+  args: { teamId: v.id('teams'), paginationOpts: paginationOptsValidator },
   handler: async (ctx, args) => {
     await isMember(ctx, args.teamId);
 
-    const members = await ctx.db
+    const results = await ctx.db
       .query('members')
       .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
-      .collect();
+      .paginate(args.paginationOpts);
+
     const membersWithData = await Promise.all(
-      members.map(async member => {
+      results.page.map(async member => {
         const userData = await ctx.db.get(member.userId);
+
         return {
           ...userData,
           role: member.role,
           memberId: member._id,
+          teamId: member.teamId,
         };
       })
     );
 
-    return membersWithData;
+    return {
+      ...results,
+      page: membersWithData,
+    };
   },
 });
 
