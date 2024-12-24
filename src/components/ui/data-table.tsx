@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
 } from '@tanstack/react-table';
 import { type ComponentType, useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Loader2, Plus } from 'lucide-react';
 
 import {
   Table,
@@ -45,6 +45,7 @@ interface DataTableProps<TData extends DeletableItem, TValue> {
   paginationOpts: {
     loadMore: () => void;
     canLoadMore: boolean;
+    isLoadingMore: boolean;
   };
   DeleteModal?: ComponentType<DeleteModalProps>;
 }
@@ -62,7 +63,7 @@ export function DataTable<TData extends DeletableItem, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnSizing, setColumnSizing] = useState({});
 
-  const { loadMore, canLoadMore } = paginationOpts;
+  const { loadMore, canLoadMore, isLoadingMore } = paginationOpts;
 
   const table = useReactTable({
     data,
@@ -197,11 +198,18 @@ export function DataTable<TData extends DeletableItem, TValue>({
               <Button
                 variant='ghost'
                 size='sm'
+                className='min-w-24'
                 onClick={loadMore}
-                disabled={!canLoadMore}
+                disabled={!canLoadMore || isLoadingMore || isLoading}
               >
-                Load more
-                <Plus className='ml-1.5 size-4' strokeWidth={2} />
+                {isLoadingMore ? (
+                  <Loader2 className='size-4 animate-spin' />
+                ) : (
+                  <span className='flex items-center'>
+                    Load more
+                    <Plus className='ml-1.5 size-4' strokeWidth={2} />
+                  </span>
+                )}
               </Button>
             </div>
           )}
