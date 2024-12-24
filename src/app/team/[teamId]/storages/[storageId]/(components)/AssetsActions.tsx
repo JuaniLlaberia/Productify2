@@ -63,7 +63,7 @@ const AssetsActions = ({ data }: { data: PopulatedAssets }) => {
         <DropdownMenuSeparator />
         <DeleteAssetsModal
           teamId={data.teamId}
-          assets={[{ assetId: data._id, fileIdInStorage: data.fileId }]}
+          ids={[data._id]}
           trigger={
             <DropdownMenuItem onSelect={e => e.preventDefault()}>
               <Trash2 className='size-3.5 mr-2' strokeWidth={1.5} />
