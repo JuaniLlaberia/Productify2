@@ -14,6 +14,7 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { useMutation } from 'convex/react';
+import { useParams } from 'next/navigation';
 
 import TasksColumn from './TasksColumn';
 import TaskCard from './TaskCard';
@@ -21,6 +22,7 @@ import { StatusEnum } from '@/lib/enums';
 import { PopulatedTask } from './tasksColumns';
 import { api } from '../../../../../../../../convex/_generated/api';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Id } from '../../../../../../../../convex/_generated/dataModel';
 
 type GroupedTasks = {
   [K in StatusEnum]?: PopulatedTask[];
@@ -44,6 +46,8 @@ const TasksBoard = ({
 }: TasksBoardProps) => {
   const [tasks, setTasks] = useState<PopulatedTask[]>(initialTasks);
   const [activeTask, setActiveTask] = useState<PopulatedTask | null>(null);
+
+  const { projectId } = useParams<{ projectId: Id<'projects'> }>();
 
   const updateTask = useMutation(api.tasks.updateTask);
 
@@ -207,6 +211,7 @@ const TasksBoard = ({
             key={column.id}
             status={column.id}
             tasks={groupedTasks[column.id] || []}
+            projectId={projectId}
           />
         ))}
       </ul>

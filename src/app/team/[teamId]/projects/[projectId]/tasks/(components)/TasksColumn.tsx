@@ -12,13 +12,15 @@ import { Button } from '@/components/ui/button';
 import { StatusEnum } from '@/lib/enums';
 import { STATUS_COLORS } from '@/lib/consts';
 import { PopulatedTask } from './tasksColumns';
+import { Id } from '../../../../../../../../convex/_generated/dataModel';
 
 type TasksColumnType = {
   status: StatusEnum;
   tasks: PopulatedTask[];
+  projectId?: Id<'projects'>;
 };
 
-const TasksColumn = ({ status, tasks }: TasksColumnType) => {
+const TasksColumn = ({ status, tasks, projectId }: TasksColumnType) => {
   const { setNodeRef } = useDroppable({
     id: status,
     data: {
@@ -40,37 +42,39 @@ const TasksColumn = ({ status, tasks }: TasksColumnType) => {
             {tasks.length || 0}
           </p>
         </div>
-        <TaskForm
-          taskData={{ status } as PopulatedTask}
-          trigger={
-            <Button
-              variant='ghost'
-              size='icon'
-              className='md:hidden md:group-hover:flex'
-            >
-              <Plus className='size-4' />
-            </Button>
-          }
-        />
+        {projectId && (
+          <TaskForm
+            taskData={{ status } as PopulatedTask}
+            trigger={
+              <Button
+                variant='ghost'
+                size='icon'
+                className='md:hidden md:group-hover:flex'
+              >
+                <Plus className='size-4' />
+              </Button>
+            }
+          />
+        )}
       </header>
       <SortableContext
         items={tasks.map(task => task._id)}
         strategy={verticalListSortingStrategy}
       >
         <ul ref={setNodeRef} className='flex flex-col gap-2 min-h-[200px] p-1'>
-          {tasks.length > 0 ? (
-            tasks.map(task => <TaskCard taskData={task} key={task._id} />)
-          ) : (
-            <TaskForm
-              trigger={
-                <Button variant='ghost' size='sm' className='justify-start'>
-                  <Plus className='size-4 mr-1.5' />
-                  Add task
-                </Button>
-              }
-              taskData={{ status } as PopulatedTask}
-            />
-          )}
+          {tasks.length > 0
+            ? tasks.map(task => <TaskCard taskData={task} key={task._id} />)
+            : projectId && (
+                <TaskForm
+                  trigger={
+                    <Button variant='ghost' size='sm' className='justify-start'>
+                      <Plus className='size-4 mr-1.5' />
+                      Add task
+                    </Button>
+                  }
+                  taskData={{ status } as PopulatedTask}
+                />
+              )}
         </ul>
       </SortableContext>
     </li>
