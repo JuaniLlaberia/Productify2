@@ -1,6 +1,6 @@
 'use client';
 
-import { Edit, LogOut, Settings, Trash2, Users } from 'lucide-react';
+import { Edit, LogOut, Settings2, Trash2, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 
@@ -23,6 +23,8 @@ import { Button } from '@/components/ui/button';
 import { Doc, Id } from '../../../../../../../convex/_generated/dataModel';
 import { useMemberRole } from '@/features/auth/api/useMemberRole';
 import { Skeleton } from '@/components/ui/skeleton';
+import ProjectMembers from './ProjectMembers';
+import { usePanel } from '../../../(context)/PanelContext';
 
 const ProjectSettingsMenu = ({
   projectData,
@@ -31,9 +33,18 @@ const ProjectSettingsMenu = ({
 }) => {
   const { teamId } = useParams<{ teamId: Id<'teams'> }>();
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const { openPanel, closePanel } = usePanel();
 
   const { isLoading, isAdmin } = useMemberRole(teamId);
   const hasPermissions = isAdmin;
+
+  const handleMembersSidebar = () => {
+    openPanel({
+      content: (
+        <ProjectMembers projectId={projectData._id} onClose={closePanel} />
+      ),
+    });
+  };
 
   if (isLoading) return <Skeleton className='h-7 w-32' />;
 
@@ -42,9 +53,8 @@ const ProjectSettingsMenu = ({
       <Tooltip>
         <DropdownMenuTrigger asChild>
           <TooltipTrigger>
-            <Button size='sm' variant='outline'>
-              <Settings className='size-4 mr-1.5' strokeWidth={1.5} />
-              Settings
+            <Button size='icon' variant='ghost'>
+              <Settings2 className='size-5' strokeWidth={1.5} />
             </Button>
           </TooltipTrigger>
         </DropdownMenuTrigger>
@@ -52,7 +62,7 @@ const ProjectSettingsMenu = ({
       </Tooltip>
       <DropdownMenuContent side='bottom' align='end'>
         {projectData.private && (
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={handleMembersSidebar}>
             <Users className='size-4 mr-2' strokeWidth={1.5} />
             Members
           </DropdownMenuItem>
