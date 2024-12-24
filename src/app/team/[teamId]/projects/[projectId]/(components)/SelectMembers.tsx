@@ -25,19 +25,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
+type SelectMembersProps = {
+  teamId: Id<'teams'>;
+  projectId: Id<'projects'>;
+  setField: UseFormSetValue<any>;
+  defaultValue?: string;
+  borderHidden?: boolean;
+};
+
 const SelectMembers = ({
   teamId,
   projectId,
   setField,
   defaultValue,
   borderHidden,
-}: {
-  teamId: Id<'teams'>;
-  projectId: Id<'projects'>;
-  setField: UseFormSetValue<any>;
-  defaultValue?: string;
-  borderHidden?: boolean;
-}) => {
+}: SelectMembersProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<
     | {
@@ -47,10 +49,17 @@ const SelectMembers = ({
       }
     | undefined
   >(undefined);
-  const members = useQuery(api.projects.getProjectMembers, {
-    teamId,
-    projectId,
-  });
+
+  const project = useQuery(api.projects.getProjectById, { teamId, projectId });
+  const isPrivate = project?.private;
+
+  // Only query the needed members based on privacy status
+  const members = useQuery(
+    isPrivate
+      ? api.projects.getProjectMembers
+      : api.teams.getTeamMembersNoPagination,
+    isPrivate ? { teamId, projectId } : { teamId }
+  );
 
   useEffect(() => {
     if (defaultValue && members) {
@@ -132,7 +141,7 @@ const SelectMembers = ({
                   >
                     <Avatar className='size-7'>
                       <AvatarFallback className='size-7'>
-                        {member?.fullName.at(0)}
+                        {member.fullName?.charAt(0)}
                       </AvatarFallback>
                       <AvatarImage src={member?.profileImage} />
                     </Avatar>
