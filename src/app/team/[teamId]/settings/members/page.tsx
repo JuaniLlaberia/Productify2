@@ -42,6 +42,7 @@ const MembersSettingsPage = ({
           isLoading={isLoading}
           paginationOpts={{
             canLoadMore: queryStatus === 'CanLoadMore',
+            isLoadingMore: queryStatus === 'LoadingMore',
             loadMore: () => loadMore(INITIAL_NUM_ITEMS),
           }}
         />

@@ -66,6 +66,7 @@ const AssetsPage = ({
         columns={storagesColumns}
         paginationOpts={{
           canLoadMore: queryStatus === 'CanLoadMore',
+          isLoadingMore: queryStatus === 'LoadingMore',
           loadMore: () => loadMore(INITIAL_NUM_ITEMS),
         }}
       />

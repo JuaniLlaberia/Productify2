@@ -57,6 +57,7 @@ const ProjectLabelsPage = ({
           DeleteModal={DeleteLabelsModal}
           paginationOpts={{
             canLoadMore: queryStatus === 'CanLoadMore',
+            isLoadingMore: queryStatus === 'LoadingMore',
             loadMore: () => loadMore(INITIAL_NUM_ITEMS),
           }}
         />

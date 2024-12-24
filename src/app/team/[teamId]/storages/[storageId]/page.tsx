@@ -87,6 +87,7 @@ const StoragePage = ({
         DeleteModal={DeleteAssetsModal}
         paginationOpts={{
           canLoadMore: queryStatus === 'CanLoadMore',
+          isLoadingMore: queryStatus === 'LoadingMore',
           loadMore: () => loadMore(INITIAL_NUM_ITEMS),
         }}
       />
