@@ -4,7 +4,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 import TasksActions from './TasksActions';
-import TaskSheet from './TaskSheet';
+import TaskForm from './TaskForm';
 import Badge, { ColorsType } from '@/components/ui/badge';
 import { PopulatedTask } from './tasksColumns';
 import { PRIORITY_COLORS } from '@/lib/consts';
@@ -40,7 +40,7 @@ const TaskCard = ({ taskData }: TaskCardProps) => {
   const { title, description, dueDate, label, priority, assignee } = taskData;
 
   return (
-    <TaskSheet
+    <TaskForm
       taskData={taskData}
       trigger={
         <li
