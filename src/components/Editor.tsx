@@ -234,13 +234,8 @@ const Editor = ({
           )}
           {variant === 'create' ? (
             <Button
-              variant='ghost'
-              className={cn(
-                'ml-auto',
-                isEmpty
-                  ? null
-                  : 'bg-primary text-primary-foreground shadow hover:bg-primary/90'
-              )}
+              variant={isEmpty ? 'ghost' : 'default'}
+              className='ml-auto'
               size='icon'
               disabled={isEmpty || disabled}
               onClick={() =>
