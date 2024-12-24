@@ -6,6 +6,7 @@ import { useQuery } from 'convex/react';
 import Header from '@/components/Header';
 import SearchbarFilter from '../../projects/[projectId]/(components)/SearchbarFilter';
 import UploadAssetModal from '../(components)/UploadAssetModal';
+import StoragesSettingsMenu from '../(components)/StoragesSettingsMenu';
 import DeleteAssetsModal from './(components)/DeleteAssetsModal';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 import { Id } from '../../../../../../convex/_generated/dataModel';
@@ -18,6 +19,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { assetsColumns } from './(components)/assetsColumns';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { INITIAL_NUM_ITEMS } from '@/lib/consts';
 
 const StoragePage = ({
   params: { teamId, storageId },
@@ -28,10 +30,15 @@ const StoragePage = ({
     teamId,
     storageId,
   });
-  const { results, isLoading } = useStablePaginatedQuery(
+  const {
+    results,
+    isLoading,
+    loadMore,
+    status: queryStatus,
+  } = useStablePaginatedQuery(
     api.assets.getAssets,
     { teamId, storageId },
-    { initialNumItems: 10 }
+    { initialNumItems: INITIAL_NUM_ITEMS }
   );
 
   return (
@@ -51,6 +58,7 @@ const StoragePage = ({
             )}
           </div>
         }
+        rightContent={<StoragesSettingsMenu data={storage} />}
       />
       <Header
         leftContent={
@@ -77,6 +85,10 @@ const StoragePage = ({
         isLoading={isLoading}
         columns={assetsColumns}
         DeleteModal={DeleteAssetsModal}
+        paginationOpts={{
+          canLoadMore: queryStatus === 'CanLoadMore',
+          loadMore: () => loadMore(INITIAL_NUM_ITEMS),
+        }}
       />
     </TableProvider>
   );
