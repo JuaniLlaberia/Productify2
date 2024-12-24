@@ -86,7 +86,7 @@ const ProjectForm = ({
       setIsOpen(false);
       onClose?.();
 
-      if (!isEditMode) router.push(`${projectId}/tasks`);
+      if (!isEditMode) router.push(`/team/${teamId}/${projectId}/tasks`);
 
       toast.success(
         `Project ${isEditMode ? 'updated' : 'created'} successfully`
