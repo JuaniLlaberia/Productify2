@@ -82,10 +82,12 @@ const ChannelSettingsMenu = ({ data }: { data?: Doc<'channels'> }) => {
             </Hint>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
-            <DropdownMenuItem onClick={handleMembersSidebar}>
-              <Users className='size-3.5 mr-2' strokeWidth={1.5} />
-              Members
-            </DropdownMenuItem>
+            {data.private && (
+              <DropdownMenuItem onClick={handleMembersSidebar}>
+                <Users className='size-3.5 mr-2' strokeWidth={1.5} />
+                Members
+              </DropdownMenuItem>
+            )}
             {hasPermissions && (
               <ChannelForm
                 channelData={data}
