@@ -29,7 +29,7 @@ const SIDEBAR_LINKS = [
   {
     label: 'Chats',
     tooltip: 'Chats',
-    link: 'chats',
+    link: 'chats/channels',
     activeKey: 'chats',
     icon: <MessagesSquare className='size-5' strokeWidth={1.5} />,
   },
