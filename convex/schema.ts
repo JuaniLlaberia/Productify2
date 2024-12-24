@@ -227,7 +227,8 @@ export default defineSchema({
   channels: Channels.table.index('by_teamId', ['teamId']),
   channelMembers: ChannelMembers.table
     .index('by_channelId_userId', ['channelId', 'userId'])
-    .index('by_teamId_userId', ['teamId', 'userId']),
+    .index('by_teamId_userId', ['teamId', 'userId'])
+    .index('by_channelId', ['channelId']),
   conversations: Conversations.table
     .index('by_teamId', ['teamId'])
     .index('by_team_users_unique', ['teamId', 'userPair']),
@@ -254,6 +255,7 @@ export default defineSchema({
   storagesMembers: StoragesMembers.table
     .index('by_storageId_userId', ['storageId', 'userId'])
     .index('by_teamId', ['teamId'])
-    .index('by_teamId_userId', ['teamId', 'userId']),
+    .index('by_teamId_userId', ['teamId', 'userId'])
+    .index('by_storageId', ['storageId']),
   assets: Assets.table.index('by_teamId_storageId', ['teamId', 'storageId']),
 });
