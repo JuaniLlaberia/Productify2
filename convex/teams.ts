@@ -49,6 +49,32 @@ export const getTeam = query({
   },
 });
 
+export const getTeamMembersNoPagination = query({
+  args: { teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    await isMember(ctx, args.teamId);
+
+    const results = await ctx.db
+      .query('members')
+      .withIndex('by_teamId', q => q.eq('teamId', args.teamId))
+      .collect();
+
+    return await Promise.all(
+      results.map(async member => {
+        const userData = await ctx.db.get(member.userId);
+
+        return {
+          ...userData,
+          role: member.role,
+          memberId: member._id,
+          teamId: member.teamId,
+        };
+      })
+    );
+  },
+});
+
+//TEMPORAL
 export const getTeamMembers = query({
   args: { teamId: v.id('teams'), paginationOpts: paginationOptsValidator },
   handler: async (ctx, args) => {
@@ -78,6 +104,8 @@ export const getTeamMembers = query({
     };
   },
 });
+
+//
 
 export const createTeam = mutation({
   args: { name: v.string() },
