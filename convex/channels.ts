@@ -1,10 +1,12 @@
 import { ConvexError, v } from 'convex/values';
 import { omit } from 'convex-helpers';
+import { paginationOptsValidator } from 'convex/server';
 
 import { mutation, query } from './_generated/server';
 import { isAdmin, isMember } from './auth';
 import { Channels } from './schema';
-import { paginationOptsValidator } from 'convex/server';
+
+//Channels functions
 
 export const getAllChannels = query({
   args: { teamId: v.id('teams'), paginationOpts: paginationOptsValidator },
@@ -152,38 +154,93 @@ export const deleteChannel = mutation({
   },
 });
 
-export const createChannelMember = mutation({
+//Channels members functions
+
+export const getChannelMembers = query({
+  args: { channelId: v.id('channels'), teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    const { channelId, teamId } = args;
+    await isMember(ctx, teamId);
+
+    const members = await ctx.db
+      .query('channelMembers')
+      .withIndex('by_channelId', q => q.eq('channelId', channelId))
+      .collect();
+
+    const membersWithData = await Promise.all(
+      members.map(async member => {
+        const userData = await ctx.db.get(member.userId);
+
+        if (!userData) return null;
+
+        return {
+          ...userData,
+          memberId: member._id,
+          teamId: member.teamId,
+        };
+      })
+    );
+
+    return membersWithData.filter(
+      (member): member is NonNullable<typeof member> => member !== null
+    );
+  },
+});
+
+export const createChannelMembers = mutation({
   args: {
     channelId: v.id('channels'),
-    userId: v.id('users'),
+    userIds: v.array(v.id('users')),
     teamId: v.id('teams'),
   },
   handler: async (ctx, args) => {
+    const { teamId, channelId, userIds } = args;
     const user = await isAdmin(ctx, args.teamId);
     if (!user?.role)
       throw new ConvexError(
         'User does not have permissions to perform this action.'
       );
 
-    await ctx.db.insert('channelMembers', {
-      ...args,
-    });
+    const existingMembers = await ctx.db
+      .query('channelMembers')
+      .withIndex('by_channelId', q => q.eq('channelId', channelId))
+      .collect();
+
+    const newUserIds = userIds.filter(
+      userId => !existingMembers.some(member => member.userId === userId)
+    );
+
+    if (newUserIds.length === 0) {
+      throw new ConvexError('All selected users are already channel members');
+    }
+
+    await Promise.all(
+      newUserIds.map(user =>
+        ctx.db.insert('channelMembers', {
+          teamId,
+          channelId,
+          userId: user,
+        })
+      )
+    );
   },
 });
 
-export const removeProjectMember = mutation({
+export const removeChannelMember = mutation({
   args: {
     channelMember: v.id('channelMembers'),
     teamId: v.id('teams'),
   },
   handler: async (ctx, args) => {
-    const user = await isAdmin(ctx, args.teamId);
+    const { teamId, channelMember } = args;
+
+    const user = await isAdmin(ctx, teamId);
     if (!user?.role)
       throw new ConvexError(
         'User does not have permissions to perform this action.'
       );
 
-    await ctx.db.delete(args.channelMember);
+    await ctx.db.delete(channelMember);
   },
 });
 
