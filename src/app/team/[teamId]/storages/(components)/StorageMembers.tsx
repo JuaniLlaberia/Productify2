@@ -67,26 +67,25 @@ const StorageMembers = ({ storageId, onClose }: StorageMembersProps) => {
         }
       />
 
-      {members ? (
-        <div className='p-2.5'>
-          <div className='flex items-center justify-end'>
-            <AddMembersModal
-              existingMembers={existingMembers}
-              onSubmit={handleAddMember}
-              trigger={
-                <Button size='sm'>
-                  <UserPlus className='size-4 mr-1.5' />
-                  Add members
-                </Button>
-              }
-              description='Select members to add to this storage.'
-            />
-          </div>
-          <MembersTable members={members} memberDeleteFn={handleDeleteMember} />
+      <div className='p-2.5'>
+        <div className='flex items-center justify-between'>
+          <p className='text-muted-foreground text-sm'>
+            Total members: {members.length}
+          </p>
+          <AddMembersModal
+            existingMembers={existingMembers}
+            onSubmit={handleAddMember}
+            trigger={
+              <Button size='sm'>
+                <UserPlus className='size-4 mr-1.5' />
+                Add members
+              </Button>
+            }
+            description='Select members to add to this storage.'
+          />
         </div>
-      ) : (
-        <MembersLoader />
-      )}
+        <MembersTable members={members} memberDeleteFn={handleDeleteMember} />
+      </div>
     </div>
   );
 };

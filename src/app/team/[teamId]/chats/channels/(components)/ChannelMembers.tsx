@@ -69,7 +69,10 @@ const ChannelMembers = ({ channelId, onClose }: ChannelMembersProps) => {
         }
       />
       <div className='p-2.5'>
-        <div className='flex items-center justify-end'>
+        <div className='flex items-center justify-between'>
+          <p className='text-muted-foreground text-sm'>
+            Total members: {members.length}
+          </p>
           <AddMembersModal
             existingMembers={existingMembers}
             onSubmit={handleAddMember}
