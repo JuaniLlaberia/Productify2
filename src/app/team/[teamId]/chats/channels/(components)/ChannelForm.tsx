@@ -143,10 +143,15 @@ const ChannelForm = ({ channelData, trigger, onClose }: ChannelFormProps) => {
                 </p>
               </div>
               <Controller
+                disabled={isEditMode}
                 control={control}
                 name='private'
                 render={({ field: { onChange, value } }) => (
-                  <Switch onCheckedChange={onChange} checked={value} />
+                  <Switch
+                    onCheckedChange={onChange}
+                    checked={value}
+                    disabled={isEditMode}
+                  />
                 )}
               />
             </div>
