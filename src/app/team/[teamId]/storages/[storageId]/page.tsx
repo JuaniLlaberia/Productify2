@@ -58,7 +58,7 @@ const StoragePage = ({
             )}
           </div>
         }
-        rightContent={<StoragesSettingsMenu data={storage} />}
+        rightContent={<StoragesSettingsMenu data={storage!} />}
       />
       <Header
         leftContent={
