@@ -12,6 +12,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { api } from '../../../../../../../../convex/_generated/api';
@@ -77,35 +78,30 @@ const ReportsActions = ({ data }: { data: Doc<'reports'> }) => {
         <ReportsForm
           reportData={data}
           trigger={
-            <DropdownMenuItem
-              className='text-xs'
-              onSelect={e => e.preventDefault()}
-            >
-              <Edit className='size-3 mr-2' strokeWidth={1.5} />
+            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+              <Edit className='size-3.5 mr-2' strokeWidth={1.5} />
               Edit report
             </DropdownMenuItem>
           }
           onClose={() => setIsDropdownOpen(false)}
         />
         {/* Transform to task button */}
-        <DropdownMenuItem className='text-xs' onClick={handleTransformToTask}>
-          <SendToBack className='size-3 mr-2' strokeWidth={1.5} />
+        <DropdownMenuItem onClick={handleTransformToTask}>
+          <SendToBack className='size-3.5 mr-2' strokeWidth={1.5} />
           Transform to task
         </DropdownMenuItem>
         {/* Duplicate button */}
-        <DropdownMenuItem className='text-xs' onClick={handleDuplicateTask}>
-          <Copy className='size-3 mr-2' strokeWidth={1.5} />
+        <DropdownMenuItem onClick={handleDuplicateTask}>
+          <Copy className='size-3.5 mr-2' strokeWidth={1.5} />
           Duplicate
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DeleteReportsModal
           teamId={data.teamId}
           ids={[data._id]}
           trigger={
-            <DropdownMenuItem
-              className='text-xs'
-              onSelect={e => e.preventDefault()}
-            >
-              <Trash2 className='size-3 mr-2' strokeWidth={1.5} />
+            <DropdownMenuItem onSelect={e => e.preventDefault()}>
+              <Trash2 className='size-3.5 mr-2' strokeWidth={1.5} />
               Delete report
             </DropdownMenuItem>
           }

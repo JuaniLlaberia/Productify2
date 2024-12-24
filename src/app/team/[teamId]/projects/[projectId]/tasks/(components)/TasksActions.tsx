@@ -1,24 +1,18 @@
 'use client';
 
-import {
-  Copy,
-  Edit,
-  MoreHorizontal,
-  PanelLeftClose,
-  Trash2,
-} from 'lucide-react';
+import { Copy, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
 import TaskForm from './TaskForm';
-import TaskSheet from './TaskSheet';
 import DeleteTasksModal from './DeleteTasksModal';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { PopulatedTask } from './tasksColumns';
@@ -65,16 +59,6 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
           e.stopPropagation();
         }}
       >
-        <TaskSheet
-          taskData={data}
-          trigger={
-            <DropdownMenuItem onSelect={e => e.preventDefault()}>
-              <PanelLeftClose className='size-3.5 mr-2' strokeWidth={1.5} />
-              Open task
-            </DropdownMenuItem>
-          }
-          onClose={() => setIsDropdownOpen(false)}
-        />
         <TaskForm
           taskData={data}
           trigger={
@@ -89,6 +73,7 @@ const TasksActions = ({ data }: { data: PopulatedTask }) => {
           <Copy className='size-3.5 mr-2' strokeWidth={1.5} />
           Duplicate
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
         <DeleteTasksModal
           teamId={data.teamId}
           ids={[data._id]}
