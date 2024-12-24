@@ -137,9 +137,9 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
               name='memberId'
               control={control}
               render={({ field }) => (
-                <>
+                <div className='min-h-32'>
                   {filteredMembers.length > 0 ? (
-                    <ul className='space-y-2'>
+                    <ul className='space-y-2 overflow-y-auto max-h-72 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
                       {filteredMembers.map(member => (
                         <li
                           key={member?._id}
@@ -191,7 +191,7 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
                       {errors.memberId.message}
                     </p>
                   )}
-                </>
+                </div>
               )}
             />
           </fieldset>
