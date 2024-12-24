@@ -6,6 +6,8 @@ import { mutation, query } from './_generated/server';
 import { isAdmin, isMember } from './auth';
 import { Storages } from './schema';
 
+//Storages functions
+
 export const getStorageById = query({
   args: { teamId: v.id('teams'), storageId: v.id('storages') },
   handler: async (ctx, args) => {
@@ -145,6 +147,96 @@ export const deleteStorage = mutation({
     await ctx.db.delete(storageId);
 
     //IMPLEMENT DELETING EVERYTHING RELATED TO IT
+  },
+});
+
+//Storages members functions
+
+export const getStorageMembers = query({
+  args: { storageId: v.id('storages'), teamId: v.id('teams') },
+  handler: async (ctx, args) => {
+    const { storageId, teamId } = args;
+    await isMember(ctx, teamId);
+
+    const members = await ctx.db
+      .query('storagesMembers')
+      .withIndex('by_storageId', q => q.eq('storageId', storageId))
+      .collect();
+
+    const membersWithData = await Promise.all(
+      members.map(async member => {
+        const userData = await ctx.db.get(member.userId);
+
+        if (!userData) return null;
+
+        return {
+          ...userData,
+          memberId: member._id,
+          teamId: member.teamId,
+        };
+      })
+    );
+
+    return membersWithData.filter(
+      (member): member is NonNullable<typeof member> => member !== null
+    );
+  },
+});
+
+export const createStorageMembers = mutation({
+  args: {
+    storageId: v.id('storages'),
+    userIds: v.array(v.id('users')),
+    teamId: v.id('teams'),
+  },
+  handler: async (ctx, args) => {
+    const { teamId, storageId, userIds } = args;
+    const user = await isAdmin(ctx, args.teamId);
+    if (!user?.role)
+      throw new ConvexError(
+        'User does not have permissions to perform this action.'
+      );
+
+    const existingMembers = await ctx.db
+      .query('storagesMembers')
+      .withIndex('by_storageId', q => q.eq('storageId', storageId))
+      .collect();
+
+    const newUserIds = userIds.filter(
+      userId => !existingMembers.some(member => member.userId === userId)
+    );
+
+    if (newUserIds.length === 0) {
+      throw new ConvexError('All selected users are already channel members');
+    }
+
+    await Promise.all(
+      newUserIds.map(user =>
+        ctx.db.insert('storagesMembers', {
+          teamId,
+          storageId,
+          userId: user,
+        })
+      )
+    );
+  },
+});
+
+export const removeStorageMember = mutation({
+  args: {
+    storageMember: v.id('storagesMembers'),
+    teamId: v.id('teams'),
+  },
+  handler: async (ctx, args) => {
+    const { storageMember, teamId } = args;
+
+    const user = await isAdmin(ctx, teamId);
+    if (!user?.role)
+      throw new ConvexError(
+        'User does not have permissions to perform this action.'
+      );
+
+    await ctx.db.delete(storageMember);
   },
 });
 
