@@ -8,7 +8,7 @@ import { RolesEnum } from '@/lib/enums';
 import { Doc, Id } from '../../../../../../../convex/_generated/dataModel';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
-type MemberDataType = Doc<'users'> & {
+export type MemberDataType = Doc<'users'> & {
   role: RolesEnum;
   memberId: Id<'members'>;
   teamId: Id<'teams'>;
