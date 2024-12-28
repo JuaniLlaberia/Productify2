@@ -1,77 +1,105 @@
 import { ConvexError, v } from 'convex/values';
+import { omit } from 'convex-helpers';
 
 import { mutation, MutationCtx, query, QueryCtx } from './_generated/server';
-import { isAuth, isMember } from './auth';
+import { isAdmin, isMember } from './auth';
 import { Doc, Id } from './_generated/dataModel';
+import { Documents } from './schema';
 
+//Function to check if a document belongs to auth user or not
 const documentBelongsToMember = async (
   ctx: QueryCtx | MutationCtx,
-  documentId: Id<'documents'>
+  documentId: Id<'documents'>,
+  userId: Id<'users'>
 ) => {
-  const user = await isAuth(ctx);
-  if (!user) throw new ConvexError('Must be logged in.');
-
   const document = await ctx.db
     .query('documents')
     .withIndex('by_id', q => q.eq('_id', documentId))
     .first();
   if (!document) throw new ConvexError('Document does not exist.');
-  if (document?.createdBy !== user._id)
-    throw new ConvexError('This document does not belong to this user.');
+
+  if (document?.createdBy !== userId) return false;
   else return true;
 };
 
-export const getTeamDocuments = query({
+export const getDocumentChildren = query({
   args: {
     teamId: v.id('teams'),
-    parentDocument: v.optional(v.id('documents')),
+    cabinetId: v.id('cabinets'),
+    parentDocumentId: v.optional(v.id('documents')),
   },
   handler: async (ctx, args) => {
-    await isMember(ctx, args.teamId);
+    const { teamId, cabinetId, parentDocumentId } = args;
+    const member = await isMember(ctx, teamId);
 
-    const documents = await ctx.db
+    const cabinet = await ctx.db.get(cabinetId);
+    if (cabinet?.private) {
+      const cabinetMember = await ctx.db
+        .query('cabinetMembers')
+        .withIndex('by_teamId_userId', q =>
+          q.eq('teamId', teamId).eq('userId', member._id)
+        )
+        .filter(q => q.eq(q.field('cabinetId'), cabinet._id))
+        .first();
+
+      if (!cabinetMember)
+        throw new ConvexError('You are not allow to acccess this data');
+    }
+
+    return await ctx.db
       .query('documents')
       .withIndex('by_teamId_parentId', q =>
-        q.eq('teamId', args.teamId).eq('parentDocument', args.parentDocument)
+        q.eq('teamId', teamId).eq('parentDocument', parentDocumentId)
       )
-      .filter(q => q.eq(q.field('isArchived'), false))
+      .filter(q => q.eq(q.field('isArchived'), false)) // Remove docs that are archived
+      .filter(q => q.eq(q.field('private'), false)) // Remove docs that are private
       .order('desc')
       .collect();
-
-    return documents;
   },
 });
 
 export const getDocument = query({
   args: { teamId: v.id('teams'), documentId: v.id('documents') },
   handler: async (ctx, args) => {
-    await isMember(ctx, args.teamId);
+    const member = await isMember(ctx, args.teamId);
 
     const document = await ctx.db
       .query('documents')
       .withIndex('by_id', q => q.eq('_id', args.documentId))
       .first();
 
+    if (document?.private && member._id !== document.createdBy) return null;
+
     return document;
   },
 });
 
+//Create document => Private by default you can make it public
 export const createDocument = mutation({
   args: {
     title: v.string(),
     teamId: v.id('teams'),
+    cabinetId: v.id('cabinets'),
+    private: v.boolean(),
     parentDocument: v.optional(v.id('documents')),
   },
   handler: async (ctx, args) => {
-    const { title, teamId, parentDocument } = args;
+    const {
+      title,
+      teamId,
+      parentDocument,
+      private: docPrivacy,
+      cabinetId,
+    } = args;
     const member = await isMember(ctx, teamId);
 
     const documentId = await ctx.db.insert('documents', {
       title: title || 'Untitled',
       isArchived: false,
-      isPublished: false,
       createdBy: member._id,
+      private: docPrivacy,
       teamId,
+      cabinetId,
       parentDocument,
     });
 
@@ -79,16 +107,57 @@ export const createDocument = mutation({
   },
 });
 
+export const updateDocument = mutation({
+  args: {
+    teamId: v.id('teams'),
+    cabinetId: v.id('cabinets'),
+    documentId: v.id('documents'),
+    documentData: v.object(
+      omit(Documents.withoutSystemFields, ['teamId', 'cabinetId', 'createdBy'])
+    ),
+  },
+  handler: async (ctx, args) => {
+    const { teamId, documentData, documentId, cabinetId } = args;
+
+    const user = await isAdmin(ctx, teamId);
+    if (!user?.role)
+      throw new ConvexError(
+        'User does not have permissions to perform this action.'
+      );
+
+    const cabinetMember = await ctx.db
+      .query('cabinetMembers')
+      .withIndex('by_cabinetId_userId', q =>
+        q.eq('cabinetId', cabinetId).eq('userId', user._id)
+      )
+      .first();
+    if (!cabinetMember)
+      throw new ConvexError('You do not belong to this cabinet');
+
+    await ctx.db.patch(documentId, {
+      ...documentData,
+    });
+  },
+});
+
+//Delete document and all of its children if document belongs to you or if you are an admin/owner
 export const deleteDocument = mutation({
   args: {
     documentId: v.id('documents'),
     teamId: v.id('teams'),
   },
   handler: async (ctx, args) => {
-    const [member] = await Promise.all([
-      isMember(ctx, args.teamId),
-      documentBelongsToMember(ctx, args.documentId),
-    ]);
+    const { teamId, documentId } = args;
+
+    const member = await isMember(ctx, teamId);
+    const belongsToUser = await documentBelongsToMember(
+      ctx,
+      documentId,
+      member._id
+    );
+
+    if (!belongsToUser && member.role === 'member')
+      throw new ConvexError('You can not perform this action.');
 
     const recursiveDelete = async (documentId: Id<'documents'>) => {
       const children = await ctx.db
@@ -113,10 +182,16 @@ export const deleteDocument = mutation({
 export const archiveDocument = mutation({
   args: { documentId: v.id('documents'), teamId: v.id('teams') },
   handler: async (ctx, args) => {
-    const [member] = await Promise.all([
-      isMember(ctx, args.teamId),
-      documentBelongsToMember(ctx, args.documentId),
-    ]);
+    const { documentId, teamId } = args;
+    const member = await isMember(ctx, teamId);
+    const belongsToUser = await documentBelongsToMember(
+      ctx,
+      documentId,
+      member._id
+    );
+
+    if (!belongsToUser)
+      throw new Error('You are not allow to perform this action');
 
     const recursiveArchive = async (documentId: Id<'documents'>) => {
       const children = await ctx.db
@@ -141,10 +216,16 @@ export const archiveDocument = mutation({
 export const restoreDocument = mutation({
   args: { documentId: v.id('documents'), teamId: v.id('teams') },
   handler: async (ctx, args) => {
-    const [member] = await Promise.all([
-      isMember(ctx, args.teamId),
-      documentBelongsToMember(ctx, args.documentId),
-    ]);
+    const { documentId, teamId } = args;
+    const member = await isMember(ctx, teamId);
+    const belongsToUser = await documentBelongsToMember(
+      ctx,
+      documentId,
+      member._id
+    );
+
+    if (!belongsToUser)
+      throw new Error('You are not allow to perform this action');
 
     const existingDocument = await ctx.db.get(args.documentId);
     if (!existingDocument) throw new ConvexError('Document does not exist');
@@ -177,6 +258,3 @@ export const restoreDocument = mutation({
     recursiveRestore(args.documentId);
   },
 });
-
-//Missing writing to a document
-//Missing cover image functionalities
