@@ -162,16 +162,30 @@ export const Reports = Table('reports', {
   createdBy: v.id('users'),
 });
 
+export const Cabinets = Table('cabinets', {
+  name: v.string(),
+  icon: v.string(),
+  teamId: v.id('teams'),
+  private: v.boolean(),
+});
+
+export const CabinetMembers = Table('cabinetMembers', {
+  userId: v.id('users'),
+  cabinetId: v.id('cabinets'),
+  teamId: v.id('teams'),
+});
+
 export const Documents = Table('documents', {
   title: v.optional(v.string()),
   content: v.optional(v.string()),
   isArchived: v.boolean(),
   icon: v.optional(v.string()),
   converImage: v.optional(v.string()),
-  isPublished: v.boolean(),
+  private: v.boolean(),
   parentDocument: v.optional(v.id('documents')),
   createdBy: v.id('users'),
   teamId: v.id('teams'),
+  cabinetId: v.id('cabinets'),
 });
 
 export const Storages = Table('storages', {
@@ -246,10 +260,16 @@ export default defineSchema({
     .index('by_messageId', ['messageId'])
     .index('by_userId', ['userId']),
   reports: Reports.table.index('by_teamId_projectId', ['teamId', 'projectId']),
+  cabinets: Cabinets.table.index('by_teamId', ['teamId']),
+  cabinetMembers: CabinetMembers.table
+    .index('by_cabinetId_userId', ['cabinetId', 'userId'])
+    .index('by_teamId_userId', ['teamId', 'userId'])
+    .index('by_cabinetId', ['cabinetId']),
   documents: Documents.table
     .index('by_userId', ['createdBy'])
     .index('by_userId_parentId', ['createdBy', 'parentDocument'])
     .index('by_teamId', ['teamId'])
+    .index('by_cabinetId', ['cabinetId'])
     .index('by_teamId_parentId', ['teamId', 'parentDocument']),
   storages: Storages.table.index('by_teamId', ['teamId']),
   storagesMembers: StoragesMembers.table

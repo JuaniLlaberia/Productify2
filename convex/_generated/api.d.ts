@@ -17,6 +17,7 @@ import type {
 } from "convex/server";
 import type * as assets from "../assets.js";
 import type * as auth from "../auth.js";
+import type * as cabinets from "../cabinets.js";
 import type * as channels from "../channels.js";
 import type * as conversations from "../conversations.js";
 import type * as documents from "../documents.js";
@@ -47,6 +48,7 @@ import type * as users from "../users.js";
 declare const fullApi: ApiFromModules<{
   assets: typeof assets;
   auth: typeof auth;
+  cabinets: typeof cabinets;
   channels: typeof channels;
   conversations: typeof conversations;
   documents: typeof documents;
