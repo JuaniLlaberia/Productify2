@@ -3,8 +3,43 @@ import { ConvexError, v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 import { isAdmin, isMember } from './auth';
 import { Projects } from './schema';
+import { paginationOptsValidator } from 'convex/server';
 
 //Projects functions
+export const getAllProjects = query({
+  args: { teamId: v.id('teams'), paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    const { teamId, paginationOpts } = args;
+    const member = await isMember(ctx, args.teamId);
+
+    const paginatedProjects = await ctx.db
+      .query('projects')
+      .withIndex('by_teamId', q => q.eq('teamId', teamId))
+      .paginate(paginationOpts);
+
+    if (paginatedProjects.page.length === 0) return paginatedProjects;
+
+    const memberProjects = await ctx.db
+      .query('projectMembers')
+      .withIndex('by_teamId_userId', q =>
+        q.eq('teamId', args.teamId).eq('userId', member._id)
+      )
+      .collect();
+    const memberProjectsIds = new Set(
+      memberProjects.map(project => project.projectId)
+    );
+
+    const projects = paginatedProjects.page.map(project => ({
+      ...project,
+      isMember: project.private ? memberProjectsIds.has(project._id) : true,
+    }));
+
+    return {
+      ...paginatedProjects,
+      page: projects,
+    };
+  },
+});
 
 export const getProjects = query({
   args: { teamId: v.id('teams') },
