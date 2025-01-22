@@ -69,7 +69,7 @@ const CabinetForm = ({ cabinetData, trigger, onClose }: CabinetFormProps) => {
     const cabinetPayload = {
       name: data.name,
       icon: data.icon,
-      private: data.private,
+      private: isEditMode ? Boolean(cabinetData?.private) : data.private,
     };
 
     try {

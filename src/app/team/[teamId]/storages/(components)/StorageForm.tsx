@@ -69,7 +69,7 @@ const StorageForm = ({ storageData, trigger, onClose }: StorageFormProps) => {
         teamId,
         storageData: {
           name: data.name,
-          private: data.private,
+          private: isEditMode ? Boolean(storageData?.private) : data.private,
           icon: data.icon,
         },
       };

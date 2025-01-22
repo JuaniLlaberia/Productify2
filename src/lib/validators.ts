@@ -13,7 +13,7 @@ export const ProjectSchema = z.object({
     .string()
     .min(1, { message: 'Must be at least 1 character.' })
     .max(25, 'Must be less than 25 characters.'),
-  private: z.boolean(),
+  private: z.boolean().optional(),
   icon: z.string().optional(),
 });
 
@@ -22,7 +22,7 @@ export const ChannelSchema = z.object({
     .string()
     .min(1, { message: 'Must be at least 1 character.' })
     .max(25, 'Must be less than 25 characters.'),
-  private: z.boolean(),
+  private: z.boolean().optional(),
   icon: z.string(),
 });
 
@@ -31,7 +31,7 @@ export const CabinetSchema = z.object({
     .string()
     .min(1, { message: 'Must be at least 1 character.' })
     .max(25, 'Must be less than 25 characters.'),
-  private: z.boolean(),
+  private: z.boolean().optional(),
   icon: z.string(),
 });
 
@@ -100,6 +100,6 @@ export const StorageSchema = z.object({
     .string()
     .min(1, { message: 'Must be at least 1 character.' })
     .max(25, 'Must be less than 25 characters.'),
-  private: z.boolean(),
+  private: z.boolean().optional(),
   icon: z.string().optional(),
 });

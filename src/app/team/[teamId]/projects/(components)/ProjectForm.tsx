@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation } from 'convex/react';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { AlertCircle, Loader2, Plus } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,18 +30,13 @@ import { EmojiPopover } from '@/components/ui/emoji-popover';
 import { Input } from '@/components/ui/input';
 
 type ProjectFormProps = {
-  teamId: Id<'teams'>;
   projectData?: Doc<'projects'>;
   trigger?: React.ReactNode;
   onClose?: () => void;
 };
 
-const ProjectForm = ({
-  teamId,
-  projectData,
-  trigger,
-  onClose,
-}: ProjectFormProps) => {
+const ProjectForm = ({ projectData, trigger, onClose }: ProjectFormProps) => {
+  const { teamId } = useParams<{ teamId: Id<'teams'> }>();
   const isEditMode = Boolean(projectData);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -74,7 +69,7 @@ const ProjectForm = ({
         teamId,
         projectData: {
           name: data.name,
-          private: data.private,
+          private: isEditMode ? Boolean(projectData?.private) : data.private,
           icon: data.icon,
         },
       };
@@ -86,7 +81,8 @@ const ProjectForm = ({
       setIsOpen(false);
       onClose?.();
 
-      if (!isEditMode) router.push(`/team/${teamId}/${projectId}/tasks`);
+      if (!isEditMode)
+        router.push(`/team/${teamId}/projects/${projectId}/tasks`);
 
       toast.success(
         `Project ${isEditMode ? 'updated' : 'created'} successfully`

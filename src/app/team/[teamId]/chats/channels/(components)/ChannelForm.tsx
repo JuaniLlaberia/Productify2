@@ -67,7 +67,7 @@ const ChannelForm = ({ channelData, trigger, onClose }: ChannelFormProps) => {
     const channelPayload = {
       name: data.name,
       icon: data.icon,
-      private: data.private,
+      private: isEditMode ? Boolean(channelData?.private) : data.private,
     };
 
     try {

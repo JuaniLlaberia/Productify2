@@ -61,7 +61,7 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
     },
   });
 
-  if (isLoading) return <Skeleton className='w-full h-32' />;
+  if (isLoading) return <Skeleton className='w-full h-8' />;
 
   const filteredMembers =
     results.filter(member =>
