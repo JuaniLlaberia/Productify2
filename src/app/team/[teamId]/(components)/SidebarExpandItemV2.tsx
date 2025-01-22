@@ -1,5 +1,3 @@
-'use client';
-
 import { usePathname } from 'next/navigation';
 import { type ReactElement, ReactNode, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
@@ -29,14 +27,21 @@ const SidebarExpandItemV2 = ({
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState<boolean>(pathname.includes(id));
 
+  const handleExpandClick = (e: React.MouseEvent) => {
+    // Only toggle if clicking the main area or chevron, not the options
+    if (!(e.target as HTMLElement).closest('.options-area')) {
+      setIsOpen(prev => !prev);
+    }
+  };
+
   return (
     <li>
-      <button
+      <div
         className={cn(
-          'flex items-center justify-between w-full group',
+          'flex items-center justify-between w-full group cursor-pointer',
           !isOpen && 'mb-1.5'
         )}
-        onClick={() => setIsOpen(prev => !prev)}
+        onClick={handleExpandClick}
       >
         <p className='flex items-center text-nowrap line-clamp-1'>
           <span
@@ -49,24 +54,31 @@ const SidebarExpandItemV2 = ({
           </span>
           <span className='text-sm'>{title}</span>
         </p>
-        <div className='space-x-2'>
+        <div
+          className='flex items-center gap-2 options-area'
+          onClick={e => e.stopPropagation()}
+        >
           <div className='space-x-2 opacity-100 md:opacity-0 md:[&:has([data-state="open"])]:opacity-100 group-hover:opacity-100'>
             {trigger && trigger}
             {options && options}
+            {expandIcon && (
+              <Button
+                size='icon-sm'
+                variant='ghost'
+                onClick={handleExpandClick}
+              >
+                <ChevronDown
+                  className={cn(
+                    'size-4 transition-transform',
+                    !isOpen && '-rotate-90'
+                  )}
+                />
+              </Button>
+            )}
           </div>
-          {expandIcon && (
-            <Button size='icon-sm' variant='ghost'>
-              <ChevronDown
-                className={cn(
-                  'size-4 transition-transform',
-                  !isOpen && '-rotate-90'
-                )}
-              />
-            </Button>
-          )}
         </div>
-      </button>
-      {isOpen && <ul className=' flex flex-col mt-1 min-h-2'>{links}</ul>}
+      </div>
+      {isOpen && <ul className='flex flex-col mt-1 min-h-2'>{links}</ul>}
     </li>
   );
 };
