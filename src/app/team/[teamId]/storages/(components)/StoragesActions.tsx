@@ -65,21 +65,25 @@ const StoragesActions = ({ data }: { data: Doc<'storages'> }) => {
             onClose={() => setIsDropdownOpen(false)}
           />
         )}
-        <DropdownMenuSeparator />
-        <LeaveStorageModal
-          teamId={data.teamId}
-          storageId={data._id}
-          trigger={
-            <DropdownMenuItem
-              className='text-sm'
-              onSelect={e => e.preventDefault()}
-            >
-              <LogOut className='size-3.5 mr-2' strokeWidth={1.5} />
-              Leave storage
-            </DropdownMenuItem>
-          }
-          onSuccess={() => setIsDropdownOpen(false)}
-        />
+        {data.private && (
+          <>
+            <DropdownMenuSeparator />
+            <LeaveStorageModal
+              teamId={data.teamId}
+              storageId={data._id}
+              trigger={
+                <DropdownMenuItem
+                  className='text-sm'
+                  onSelect={e => e.preventDefault()}
+                >
+                  <LogOut className='size-3.5 mr-2' strokeWidth={1.5} />
+                  Leave storage
+                </DropdownMenuItem>
+              }
+              onSuccess={() => setIsDropdownOpen(false)}
+            />
+          </>
+        )}
         {hasPermissions && (
           <>
             <DropdownMenuSeparator />

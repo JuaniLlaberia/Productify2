@@ -92,21 +92,25 @@ const ChannelActions = ({ data }: { data: Doc<'channels'> }) => {
             onClose={() => setIsDropdownOpen(false)}
           />
         )}
-        <DropdownMenuSeparator />
-        <LeaveChannelModal
-          teamId={data.teamId}
-          channelId={data._id}
-          trigger={
-            <DropdownMenuItem
-              className='text-sm'
-              onSelect={e => e.preventDefault()}
-            >
-              <LogOut className='size-3.5 mr-2' strokeWidth={1.5} />
-              Leave channel
-            </DropdownMenuItem>
-          }
-          onSuccess={() => setIsDropdownOpen(false)}
-        />
+        {data.private && (
+          <>
+            <DropdownMenuSeparator />
+            <LeaveChannelModal
+              teamId={data.teamId}
+              channelId={data._id}
+              trigger={
+                <DropdownMenuItem
+                  className='text-sm'
+                  onSelect={e => e.preventDefault()}
+                >
+                  <LogOut className='size-3.5 mr-2' strokeWidth={1.5} />
+                  Leave channel
+                </DropdownMenuItem>
+              }
+              onSuccess={() => setIsDropdownOpen(false)}
+            />
+          </>
+        )}
         {hasPermissions && (
           <>
             <DropdownMenuSeparator />
