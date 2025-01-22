@@ -6,8 +6,7 @@ import { Cabinets } from './schema';
 import { isAdmin, isMember } from './auth';
 
 // Cabinets functions
-
-export const getCabinetsWithRootDocs = query({
+export const getCabinets = query({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
     const { teamId } = args;
@@ -28,28 +27,9 @@ export const getCabinetsWithRootDocs = query({
       memberCabinets.map(cabinet => cabinet.cabinetId)
     );
 
-    const cabinetsWithDocs = await Promise.all(
-      cabinets
-        .filter(
-          cabinet => !cabinet.private || memberCabinetsIds.has(cabinet._id)
-        )
-        .map(async cabinet => {
-          const rootDocs = await ctx.db
-            .query('documents')
-            .withIndex('by_cabinetId', q => q.eq('cabinetId', cabinet._id))
-            .filter(
-              q =>
-                q.eq(q.field('parentDocument'), undefined) &&
-                q.eq(q.field('isArchived'), false) &&
-                q.eq(q.field('private'), false)
-            )
-            .collect();
-
-          return { ...cabinet, rootDocs };
-        })
+    return cabinets.filter(
+      cabinet => !cabinet.private || memberCabinetsIds.has(cabinet._id)
     );
-
-    return cabinetsWithDocs;
   },
 });
 
@@ -121,7 +101,7 @@ export const deleteCabinet = mutation({
   },
 });
 
-//Channels members functions
+//Cabinets members functions
 
 export const getCabinetMembers = query({
   args: { cabinetId: v.id('cabinets'), teamId: v.id('teams') },

@@ -22,6 +22,37 @@ const documentBelongsToMember = async (
   else return true;
 };
 
+export const getDocuments = query({
+  args: {
+    teamId: v.id('teams'),
+    cabinetId: v.id('cabinets'),
+    parentDocument: v.optional(v.id('documents')),
+  },
+  handler: async (ctx, args) => {
+    const user = await isMember(ctx, args.teamId);
+
+    const documents = await ctx.db
+      .query('documents')
+      .withIndex('by_cabinetId', q => q.eq('cabinetId', args.cabinetId))
+      .filter(q =>
+        q.and(
+          q.eq(q.field('parentDocument'), args.parentDocument),
+          q.eq(q.field('isArchived'), false),
+          q.or(
+            q.eq(q.field('private'), false),
+            q.and(
+              q.eq(q.field('private'), true),
+              q.eq(q.field('createdBy'), user._id)
+            )
+          )
+        )
+      )
+      .collect();
+
+    return documents;
+  },
+});
+
 export const getDocumentChildren = query({
   args: {
     teamId: v.id('teams'),
@@ -77,30 +108,19 @@ export const getDocument = query({
 //Create document => Private by default you can make it public
 export const createDocument = mutation({
   args: {
-    title: v.string(),
+    documentData: v.object(
+      omit(Documents.withoutSystemFields, ['teamId', 'createdBy'])
+    ),
     teamId: v.id('teams'),
-    cabinetId: v.id('cabinets'),
-    private: v.boolean(),
-    parentDocument: v.optional(v.id('documents')),
   },
   handler: async (ctx, args) => {
-    const {
-      title,
-      teamId,
-      parentDocument,
-      private: docPrivacy,
-      cabinetId,
-    } = args;
+    const { teamId, documentData } = args;
     const member = await isMember(ctx, teamId);
 
     const documentId = await ctx.db.insert('documents', {
-      title: title || 'Untitled',
-      isArchived: false,
       createdBy: member._id,
-      private: docPrivacy,
       teamId,
-      cabinetId,
-      parentDocument,
+      ...documentData,
     });
 
     return documentId;
