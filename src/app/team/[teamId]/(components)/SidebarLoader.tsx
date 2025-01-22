@@ -18,9 +18,6 @@ const SidebarLoader = () => {
       <li>
         <Skeleton className='w-full h-6' />
       </li>
-      <li>
-        <Skeleton className='w-full h-6' />
-      </li>
     </ul>
   );
 };

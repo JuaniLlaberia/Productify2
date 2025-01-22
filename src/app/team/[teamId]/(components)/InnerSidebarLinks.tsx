@@ -8,6 +8,7 @@ type InnerSidebarLinkProps = {
   icon: string | ReactElement;
   link: string;
   isActive: boolean;
+  className?: string;
   options?: ReactElement;
 };
 
@@ -16,6 +17,7 @@ const InnerSidebarLink = ({
   icon,
   link,
   isActive,
+  className,
   options,
 }: InnerSidebarLinkProps) => {
   return (
@@ -24,7 +26,8 @@ const InnerSidebarLink = ({
         href={link}
         className={cn(
           'flex items-center justify-between px-2 py-1.5 rounded-lg text-sm hover:bg-primary/5 dark:hover:bg-muted/60 group',
-          isActive && 'bg-primary/5 dark:bg-muted/60'
+          isActive && 'bg-primary/5 dark:bg-muted/60',
+          className
         )}
       >
         <span className='flex items-center gap-2'>
