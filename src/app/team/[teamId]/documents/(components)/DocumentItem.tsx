@@ -1,7 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  Ellipsis,
+  Expand,
+  FilePlus,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import { useMutation } from 'convex/react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -13,6 +22,14 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '../../../../../../convex/_generated/api';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 
 type DocumentItemProps = {
   id?: Id<'documents'>;
@@ -43,6 +60,8 @@ const DocumentItem = ({
   const { teamId } = useParams<{
     teamId: Id<'teams'>;
   }>();
+
+  const { copyToClipboard } = useCopyToClipboard({ options: {} });
 
   const handleExpand = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -122,14 +141,9 @@ const DocumentItem = ({
         <p>{label}</p>
       </Link>
       {!!id && (
-        <div className='flex items-center gap-x-2'>
+        <div className='flex items-center gap-x-2 opacity-100 md:opacity-0 md:[&:has([data-state="open"])]:opacity-100 group-hover:opacity-100'>
           <Hint label='Add document'>
-            <Button
-              onClick={onCreate}
-              size='icon-sm'
-              variant='ghost'
-              className='opacity-0 group-hover:opacity-100'
-            >
+            <Button onClick={onCreate} size='icon-sm' variant='ghost'>
               <Plus className='size-4 text-muted-foreground' />
             </Button>
           </Hint>
@@ -138,7 +152,6 @@ const DocumentItem = ({
               onClick={e => onDelete(e, id)}
               size='icon-sm'
               variant='ghost'
-              className='opacity-0 group-hover:opacity-100'
             >
               <Trash2
                 className='size-4 text-muted-foreground'
@@ -146,6 +159,50 @@ const DocumentItem = ({
               />
             </Button>
           </Hint>
+          <DropdownMenu>
+            <Hint label='Options'>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  onClick={e => onDelete(e, id)}
+                  size='icon-sm'
+                  variant='ghost'
+                >
+                  <Ellipsis
+                    className='size-4 text-muted-foreground'
+                    strokeWidth={1.5}
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+            </Hint>
+            <DropdownMenuContent>
+              <DropdownMenuItem className='text-sm' asChild>
+                <Link href={`/team/${teamId}/documents/${id}`}>
+                  <Expand className='size-3.5 mr-2' strokeWidth={1.5} /> Open
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <button onClick={onCreate} className='w-full'>
+                  <FilePlus className='size-3.5 mr-2' strokeWidth={1.5} />
+                  Add document
+                </button>
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  copyToClipboard(`/team/${teamId}/documents/${id}`)
+                }
+              >
+                <Copy className='size-3.5 mr-2' strokeWidth={1.5} />
+                Copy URL to clipboard
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <button onClick={e => onDelete(e, id)} className='w-full'>
+                  <Trash2 className='size-3.5 mr-2' strokeWidth={1.5} />
+                  Delete document
+                </button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       )}
     </div>
