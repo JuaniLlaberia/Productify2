@@ -26,6 +26,15 @@ export const ChannelSchema = z.object({
   icon: z.string(),
 });
 
+export const CabinetSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: 'Must be at least 1 character.' })
+    .max(25, 'Must be less than 25 characters.'),
+  private: z.boolean(),
+  icon: z.string(),
+});
+
 export const LabelSchema = z.object({
   title: z
     .string()
