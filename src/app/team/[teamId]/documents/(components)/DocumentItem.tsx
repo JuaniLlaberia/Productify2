@@ -1,32 +1,35 @@
 'use client';
 
+import Link from 'next/link';
 import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { useMutation } from 'convex/react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import type { ReactElement, MouseEvent } from 'react';
 
+import Hint from '@/components/ui/hint';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '../../../../../../convex/_generated/api';
+import { Button } from '@/components/ui/button';
 
 type DocumentItemProps = {
   id?: Id<'documents'>;
+  cabinetId: Id<'cabinets'>;
   documentIcon?: string;
   active?: boolean;
   expanded?: boolean;
   level?: number;
-  onExpand?: () => void;
   label: string;
-  onClick: () => void;
-  icon: ReactElement;
+  icon: string | ReactElement;
+  onExpand?: () => void;
 };
 
 const DocumentItem = ({
   id,
+  cabinetId,
   label,
-  onClick,
   icon,
   active,
   documentIcon,
@@ -52,15 +55,20 @@ const DocumentItem = ({
     if (!id) return;
 
     const promise = createDocument({
-      title: 'Untitled',
-      parentDocument: id,
-      teamId: teamId as Id<'teams'>,
+      teamId,
+      documentData: {
+        title: 'Untitled',
+        parentDocument: id,
+        private: true,
+        isArchived: false,
+        cabinetId,
+      },
     }).then(docId => {
       if (!expanded) {
         onExpand?.();
       }
 
-      router.push(`documents/${docId}`);
+      router.push(`/team/${teamId}/documents/${docId}`);
     });
 
     toast.promise(promise, {
@@ -82,7 +90,7 @@ const DocumentItem = ({
       documentId,
       teamId,
     }).then(() => {
-      router.push(`documents`);
+      router.push(`/team/${teamId}/documents`);
     });
 
     toast.promise(promise, {
@@ -99,38 +107,48 @@ const DocumentItem = ({
   );
 
   return (
-    <button
-      onClick={onClick}
+    <div
       style={{ paddingLeft: level ? `${level * 12 + 12}px` : '12px' }}
       className={cn(
-        'group w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-200',
-        active ? 'bg-gray-200 text-primary' : null
+        'group w-full flex items-center gap-2 px-2 py-1.5 mb-0.5 rounded-lg text-sm hover:bg-primary/5 dark:hover:bg-muted/60',
+        active ? 'bg-primary/5 dark:bg-muted/60' : null
       )}
     >
-      {!!id && (
-        <div role='button' className='h-full rounded-sm' onClick={handleExpand}>
-          {ChevronIcon}
-        </div>
-      )}
+      <div role='button' className='h-full rounded-sm' onClick={handleExpand}>
+        {ChevronIcon}
+      </div>
       {documentIcon ? <div>{documentIcon}</div> : icon}
-      <p>{label}</p>
+      <Link href={`/team/${teamId}/documents/${id}`} className='flex-1'>
+        <p>{label}</p>
+      </Link>
       {!!id && (
-        <div className='ml-auto flex items-center gap-x-2'>
-          <button
-            onClick={onCreate}
-            className='opacity-0 group-hover:opacity-100 h-full rounded-sm ml-auto hover:bg-white'
-          >
-            <Plus className='size-4 text-muted-foreground' />
-          </button>
-          <button
-            onClick={e => onDelete(e, id)}
-            className='opacity-0 group-hover:opacity-100 h-full rounded-sm ml-auto hover:bg-white'
-          >
-            <Trash2 className='size-4 text-muted-foreground' />
-          </button>
+        <div className='flex items-center gap-x-2'>
+          <Hint label='Add document'>
+            <Button
+              onClick={onCreate}
+              size='icon-sm'
+              variant='ghost'
+              className='opacity-0 group-hover:opacity-100'
+            >
+              <Plus className='size-4 text-muted-foreground' />
+            </Button>
+          </Hint>
+          <Hint label='Delete document'>
+            <Button
+              onClick={e => onDelete(e, id)}
+              size='icon-sm'
+              variant='ghost'
+              className='opacity-0 group-hover:opacity-100'
+            >
+              <Trash2
+                className='size-4 text-muted-foreground'
+                strokeWidth={1.5}
+              />
+            </Button>
+          </Hint>
         </div>
       )}
-    </button>
+    </div>
   );
 };
 

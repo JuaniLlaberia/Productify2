@@ -1,54 +1,55 @@
 'use client';
 
-import { useMutation } from 'convex/react';
-import { useParams } from 'next/navigation';
-import { toast } from 'sonner';
-import { Plus, PlusCircle } from 'lucide-react';
+import { useParams, usePathname } from 'next/navigation';
+import { FolderPlus, Folders, Plus } from 'lucide-react';
 
-import DocumentsList from './DocumentsList';
-import DocumentItem from './DocumentItem';
+import InnerSidebarLink from '../../(components)/InnerSidebarLinks';
+import CabinetForm from './CabinetForm';
+import CabinetsList from './CabinetsList';
 import { Id } from '../../../../../../convex/_generated/dataModel';
-import { api } from '../../../../../../convex/_generated/api';
 
 const DocumentsLinks = () => {
   const { teamId } = useParams<{
     teamId: Id<'teams'>;
   }>();
-  const createDocument = useMutation(api.documents.createDocument);
-
-  const handleDocCreate = async () => {
-    const promise = createDocument({
-      title: 'Untitled',
-      teamId,
-    });
-
-    toast.promise(promise, {
-      loading: 'Creating new document',
-      success: 'Document created successfully',
-      error: 'Failed to create document',
-    });
-  };
+  const pathname = usePathname();
 
   return (
     <>
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mb-2'>
         <span className='py-0.5'>General</span>
       </h3>
-      <DocumentItem
-        label='New document'
-        icon={<PlusCircle className='size-4' strokeWidth={1.5} />}
-        onClick={handleDocCreate}
-      />
+      <ul>
+        <CabinetForm
+          trigger={
+            <button className='flex w-full items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-muted'>
+              <FolderPlus className='size-4 mr-1.5' strokeWidth={1.5} />
+              New cabinet
+            </button>
+          }
+        />
+        <InnerSidebarLink
+          label='All cabinets'
+          icon={<Folders className='size-4 mr-1.5' strokeWidth={1.5} />}
+          link={`/team/${teamId}/documents/cabinets`}
+          isActive={pathname.includes('/cabinets')}
+        />
+      </ul>
+
       <h3 className='flex items-center justify-between text-xs uppercase font-semibold text-muted-foreground mt-4 mb-2 group'>
-        <span className='py-0.5'>Team documents</span>
-        <span
-          onClick={handleDocCreate}
-          className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'
-        >
-          <Plus className='size-4' />
-        </span>
+        <span className='py-0.5'>Cabinets</span>
+        <CabinetForm
+          trigger={
+            <span
+              onClick={() => {}}
+              className='hover:bg-muted/40 hidden group-hover:flex p-0.5 rounded transition-colors cursor-pointer'
+            >
+              <Plus className='size-4' />
+            </span>
+          }
+        />
       </h3>
-      <DocumentsList teamId={teamId} />
+      <CabinetsList />
     </>
   );
 };

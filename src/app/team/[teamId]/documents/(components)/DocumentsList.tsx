@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from 'convex/react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import { FileText } from 'lucide-react';
 
@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 
 type DocumentsLinksProps = {
   teamId: Id<'teams'>;
+  cabinetId: Id<'cabinets'>;
   parentDocument?: Id<'documents'>;
   data?: Doc<'documents'>[];
   level?: number;
@@ -20,11 +21,11 @@ type DocumentsLinksProps = {
 
 const DocumentsList = ({
   teamId,
+  cabinetId,
   parentDocument,
   level = 0,
 }: DocumentsLinksProps) => {
   const params = useParams();
-  const router = useRouter();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const onExpand = (documentId: string) => {
@@ -34,14 +35,11 @@ const DocumentsList = ({
     }));
   };
 
-  const documents = useQuery(api.documents.getTeamDocuments, {
+  const documents = useQuery(api.documents.getDocuments, {
     teamId,
+    cabinetId,
     parentDocument,
   });
-
-  const onRedirect = (documentId: string) => {
-    router.push(`${documentId}`);
-  };
 
   if (!documents)
     return (
@@ -61,18 +59,18 @@ const DocumentsList = ({
           paddingLeft: level ? `${level * 12 + 25}px` : undefined,
         }}
         className={cn(
-          'hidden text-sm text-muted-foreground',
+          'hidden text-sm text-muted-foreground mt-1.5 mb-2 mx-1',
           expanded ? 'last:block' : null,
           level === 0 ? 'hidden' : null
         )}
       >
-        No pages inside
+        No documents inside
       </p>
       {documents.map(doc => (
         <div key={doc._id} className='mb-0.5'>
           <DocumentItem
             id={doc._id}
-            onClick={() => onRedirect(doc._id)}
+            cabinetId={cabinetId}
             label={doc.title as string}
             icon={
               <FileText
@@ -90,6 +88,7 @@ const DocumentsList = ({
           {expanded[doc._id] && (
             <DocumentsList
               parentDocument={doc._id}
+              cabinetId={cabinetId}
               teamId={teamId}
               level={level + 1}
             />
