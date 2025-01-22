@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { SignOutButton } from '@clerk/nextjs';
 import { useQuery } from 'convex/react';
-import { Bell, CircleHelp, LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 
 import ThemeButton from './ThemeButton';
 import Hint from '@/components/ui/hint';
@@ -18,8 +18,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useParams } from 'next/navigation';
+import { Id } from '../../../../../convex/_generated/dataModel';
 
 const UserMenu = () => {
+  const { teamId } = useParams<{ teamId: Id<'teams'> }>();
+
   const user = useQuery(api.users.getUser);
   if (!user) return <Skeleton className='size-10' />;
 
@@ -56,23 +60,13 @@ const UserMenu = () => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href='/settings'>
+          <Link href={`/team/${teamId}/settings/general`}>
             <Settings className='size-4 mr-2' strokeWidth={1.5} />
             Settings
           </Link>
         </DropdownMenuItem>
         <ThemeButton />
-        <DropdownMenuItem>
-          <Bell className='size-4 mr-2' strokeWidth={1.5} />
-          Notifications
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href='/support'>
-            <CircleHelp className='size-4 mr-2' strokeWidth={1.5} />
-            Help & Support
-          </Link>
-        </DropdownMenuItem>
         <DropdownMenuItem asChild className='w-full'>
           <SignOutButton>
             <button className='w-full'>
