@@ -19,6 +19,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Id } from '../../../../../../convex/_generated/dataModel';
 import { api } from '../../../../../../convex/_generated/api';
+import Hint from '@/components/ui/hint';
 
 type DeleteMessageModalProps = {
   teamId: Id<'teams'>;
@@ -55,14 +56,16 @@ const DeleteMessageModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button size='sm' variant='destructive'>
-            <Trash2 className='size-4 mr-1.5' strokeWidth={1.5} />
-            Delete message
-          </Button>
-        )}
-      </DialogTrigger>
+      <Hint label='Delete message'>
+        <DialogTrigger asChild>
+          {trigger || (
+            <Button size='sm' variant='destructive'>
+              <Trash2 className='size-4 mr-1.5' strokeWidth={1.5} />
+              Delete message
+            </Button>
+          )}
+        </DialogTrigger>
+      </Hint>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete message</DialogTitle>

@@ -63,17 +63,15 @@ export const MessageToolbar = ({
           </Hint>
         )}
         {isAuthor && (
-          <Hint label='Delete message'>
-            <DeleteMessageModal
-              teamId={teamId}
-              messageId={messageId}
-              trigger={
-                <Button variant='ghost' size='icon' disabled={isPending}>
-                  <Trash2 className='size-4' strokeWidth={1.5} />
-                </Button>
-              }
-            />
-          </Hint>
+          <DeleteMessageModal
+            teamId={teamId}
+            messageId={messageId}
+            trigger={
+              <Button variant='ghost' size='icon' disabled={isPending}>
+                <Trash2 className='size-4' strokeWidth={1.5} />
+              </Button>
+            }
+          />
         )}
       </div>
     </div>
