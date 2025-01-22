@@ -30,7 +30,6 @@ import type * as projects from "../projects.js";
 import type * as reactions from "../reactions.js";
 import type * as reports from "../reports.js";
 import type * as storages from "../storages.js";
-import type * as subtasks from "../subtasks.js";
 import type * as tasks from "../tasks.js";
 import type * as teams from "../teams.js";
 import type * as templates from "../templates.js";
@@ -61,7 +60,6 @@ declare const fullApi: ApiFromModules<{
   reactions: typeof reactions;
   reports: typeof reports;
   storages: typeof storages;
-  subtasks: typeof subtasks;
   tasks: typeof tasks;
   teams: typeof teams;
   templates: typeof templates;

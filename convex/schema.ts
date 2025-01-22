@@ -78,14 +78,6 @@ export const Tasks = Table('taks', {
   assignee: v.optional(v.id('users')),
 });
 
-export const SubTasks = Table('subtasks', {
-  title: v.optional(v.string()),
-  parentId: v.id('tasks'),
-  projectId: v.id('projects'),
-  teamId: v.id('teams'),
-  completed: v.boolean(),
-});
-
 export const Labels = Table('labels', {
   title: v.string(),
   color: v.string(),
@@ -232,7 +224,6 @@ export default defineSchema({
   tasks: Tasks.table
     .index('by_teamId_projectId', ['teamId', 'projectId'])
     .index('by_teamId_assignee', ['teamId', 'assignee']),
-  subTasks: SubTasks.table.index('by_parentId', ['parentId']),
   labels: Labels.table.index('by_teamId_projectId', ['teamId', 'projectId']),
   templates: Templates.table.index('by_teamId_projectId', [
     'teamId',
