@@ -1,11 +1,47 @@
 import { ConvexError, v } from 'convex/values';
 import { omit } from 'convex-helpers';
+import { paginationOptsValidator } from 'convex/server';
 
 import { mutation, query } from './_generated/server';
 import { Cabinets } from './schema';
 import { isAdmin, isMember } from './auth';
 
 // Cabinets functions
+export const getAllCabinets = query({
+  args: { teamId: v.id('teams'), paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    const { teamId, paginationOpts } = args;
+    const member = await isMember(ctx, args.teamId);
+
+    const paginatedCabinets = await ctx.db
+      .query('cabinets')
+      .withIndex('by_teamId', q => q.eq('teamId', teamId))
+      .paginate(paginationOpts);
+
+    if (paginatedCabinets.page.length === 0) return paginatedCabinets;
+
+    const memberCabinets = await ctx.db
+      .query('cabinetMembers')
+      .withIndex('by_teamId_userId', q =>
+        q.eq('teamId', args.teamId).eq('userId', member._id)
+      )
+      .collect();
+    const memberCabinetsIds = new Set(
+      memberCabinets.map(cabinet => cabinet.cabinetId)
+    );
+
+    const cabinets = paginatedCabinets.page.map(cabinet => ({
+      ...cabinet,
+      isMember: cabinet.private ? memberCabinetsIds.has(cabinet._id) : true,
+    }));
+
+    return {
+      ...paginatedCabinets,
+      page: cabinets,
+    };
+  },
+});
+
 export const getCabinets = query({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
