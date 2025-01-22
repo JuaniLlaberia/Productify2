@@ -176,7 +176,7 @@ export const CabinetMembers = Table('cabinetMembers', {
 });
 
 export const Documents = Table('documents', {
-  title: v.optional(v.string()),
+  title: v.string(),
   content: v.optional(v.string()),
   isArchived: v.boolean(),
   icon: v.optional(v.string()),
