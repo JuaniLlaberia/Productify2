@@ -12,7 +12,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { useMutation } from 'convex/react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import type { ReactElement, MouseEvent } from 'react';
 
@@ -55,6 +55,7 @@ const DocumentItem = ({
   expanded,
 }: DocumentItemProps) => {
   const router = useRouter();
+  const pathname = usePathname();
   const createDocument = useMutation(api.documents.createDocument);
   const deleteDocument = useMutation(api.documents.deleteDocument);
   const { teamId } = useParams<{
@@ -109,7 +110,8 @@ const DocumentItem = ({
       documentId,
       teamId,
     }).then(() => {
-      router.push(`/team/${teamId}/documents`);
+      if (pathname.includes(documentId))
+        router.push(`/team/${teamId}/documents`);
     });
 
     toast.promise(promise, {
