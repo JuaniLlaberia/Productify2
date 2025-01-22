@@ -145,14 +145,18 @@ export const updateDocument = mutation({
         'User does not have permissions to perform this action.'
       );
 
-    const cabinetMember = await ctx.db
-      .query('cabinetMembers')
-      .withIndex('by_cabinetId_userId', q =>
-        q.eq('cabinetId', cabinetId).eq('userId', user._id)
-      )
-      .first();
-    if (!cabinetMember)
-      throw new ConvexError('You do not belong to this cabinet');
+    const cabinet = await ctx.db.get(cabinetId);
+
+    if (cabinet?.private) {
+      const cabinetMember = await ctx.db
+        .query('cabinetMembers')
+        .withIndex('by_cabinetId_userId', q =>
+          q.eq('cabinetId', cabinetId).eq('userId', user._id)
+        )
+        .first();
+      if (!cabinetMember)
+        throw new ConvexError('You do not belong to this cabinet');
+    }
 
     await ctx.db.patch(documentId, {
       ...documentData,
