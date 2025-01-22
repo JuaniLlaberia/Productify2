@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { Edit, Expand, LogOut, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Edit, LogOut, MoreHorizontal, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 import CabinetForm from './CabinetForm';
@@ -45,11 +44,6 @@ const CabinetActions = ({ data }: { data: Doc<'cabinets'> }) => {
           e.stopPropagation();
         }}
       >
-        <DropdownMenuItem className='text-sm' asChild>
-          <Link href={`/team/${data.teamId}/chats/channels/${data._id}`}>
-            <Expand className='size-3.5 mr-2' strokeWidth={1.5} /> Open
-          </Link>
-        </DropdownMenuItem>
         {hasPermissions && (
           <CabinetForm
             cabinetData={data}

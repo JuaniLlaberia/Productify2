@@ -58,7 +58,10 @@ const CabinetsList = () => {
               <Button
                 size='icon-sm'
                 variant='ghost'
-                onClick={() => handleCreateDoc(_id)}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleCreateDoc(_id);
+                }}
               >
                 <Plus className='size-4' strokeWidth={1.5} />
               </Button>
