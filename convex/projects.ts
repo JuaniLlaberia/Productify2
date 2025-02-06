@@ -1,7 +1,7 @@
 import { ConvexError, v } from 'convex/values';
 
 import { mutation, query } from './_generated/server';
-import { isAdmin, isMember } from './auth';
+import { isAdmin, isMember } from './helpers';
 import { Projects } from './schema';
 import { paginationOptsValidator } from 'convex/server';
 

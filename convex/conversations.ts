@@ -1,6 +1,6 @@
 import { ConvexError, v } from 'convex/values';
 import { mutation, query } from './_generated/server';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 
 export const getConversations = query({
   args: { teamId: v.id('teams') },

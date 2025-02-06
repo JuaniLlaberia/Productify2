@@ -3,7 +3,7 @@ import { paginationOptsValidator } from 'convex/server';
 import { omit } from 'convex-helpers';
 
 import { mutation, query } from './_generated/server';
-import { isAdmin, isMember } from './auth';
+import { isAdmin, isMember } from './helpers';
 import { Storages } from './schema';
 
 //Storages functions

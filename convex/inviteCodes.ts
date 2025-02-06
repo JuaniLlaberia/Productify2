@@ -6,7 +6,7 @@ import {
   MutationCtx,
   query,
 } from './_generated/server';
-import { isAuth, isMember } from './auth';
+import { isAuth, isMember } from './helpers';
 
 export const getTeamCode = query({
   args: { teamId: v.id('teams') },

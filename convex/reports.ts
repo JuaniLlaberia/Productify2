@@ -3,7 +3,7 @@ import { ConvexError, v } from 'convex/values';
 
 import { mutation, query } from './_generated/server';
 import { Reports } from './schema';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 import { paginationOptsValidator } from 'convex/server';
 
 export const getProjectReports = query({

@@ -1,7 +1,7 @@
 import { ConvexError, v } from 'convex/values';
 
 import { mutation } from './_generated/server';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 
 export const toggle = mutation({
   args: {

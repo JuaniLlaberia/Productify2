@@ -3,7 +3,7 @@ import { omit } from 'convex-helpers';
 import { paginationOptsValidator } from 'convex/server';
 
 import { mutation, MutationCtx, query, QueryCtx } from './_generated/server';
-import { isAuth, isMember } from './auth';
+import { isAuth, isMember } from './helpers';
 import { Messages } from './schema';
 import { Doc, Id } from './_generated/dataModel';
 
@@ -25,7 +25,7 @@ const populateThreads = async (ctx: QueryCtx, messageId: Id<'messages'>) => {
   const lastMessageUser = await populateUser(ctx, lastMessage!.userId);
   return {
     count: messages.length,
-    image: lastMessageUser?.profileImage,
+    image: lastMessageUser?.image,
     timestampt: lastMessage?._creationTime,
   };
 };

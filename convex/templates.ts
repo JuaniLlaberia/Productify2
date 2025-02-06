@@ -3,7 +3,7 @@ import { v } from 'convex/values';
 
 import { mutation, query } from './_generated/server';
 import { Templates } from './schema';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 import { paginationOptsValidator } from 'convex/server';
 
 export const getProjectTemplates = query({
