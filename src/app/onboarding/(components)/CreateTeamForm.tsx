@@ -3,18 +3,16 @@
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from 'convex/react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { useUser } from '@clerk/nextjs';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import { useMutation } from 'convex/react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { newTeamSchema } from '@/lib/validators';
 import { api } from '../../../../convex/_generated/api';
-import { completeClerkOnboarding } from '../_actions';
 
 const CreateTeamForm = () => {
   const {
@@ -25,16 +23,12 @@ const CreateTeamForm = () => {
   } = useForm({ resolver: zodResolver(newTeamSchema) });
   const createTeam = useMutation(api.teams.createTeam);
   const router = useRouter();
-  const { user } = useUser();
 
   const submitHandler = handleSubmit(async data => {
     try {
-      const res = await completeClerkOnboarding();
       const teamId = await createTeam({ name: data.name });
 
-      if (res.message && teamId) {
-        await user?.reload();
-
+      if (teamId) {
         router.push(`/team/${teamId}/projects`);
         toast.success('Team created successfully');
       }
