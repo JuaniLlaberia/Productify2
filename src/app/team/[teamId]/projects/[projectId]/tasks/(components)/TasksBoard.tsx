@@ -35,7 +35,7 @@ type TasksColumns = {
 
 type TasksBoardProps = {
   tasks: PopulatedTask[];
-  columns: TasksColumns[];
+  columns: readonly TasksColumns[];
   isLoading?: boolean;
 };
 
@@ -217,7 +217,12 @@ const TasksBoard = ({
       </ul>
 
       <DragOverlay>
-        {activeTask && <TaskCard taskData={activeTask} isDragging />}
+        {activeTask && (
+          <TaskCard
+            taskData={activeTask}
+            isDragging
+          />
+        )}
       </DragOverlay>
     </DndContext>
   );

@@ -1,7 +1,7 @@
 import { ConvexError, v } from 'convex/values';
 
 import { mutation } from './_generated/server';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 
 export const toggle = mutation({
   args: {
@@ -11,7 +11,8 @@ export const toggle = mutation({
   },
   handler: async (ctx, args) => {
     const { teamId, messageId, value } = args;
-    const { _id: userId } = await isMember(ctx, teamId);
+    const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const message = await ctx.db.get(messageId);
     if (!message) throw new ConvexError('Message not found');
@@ -21,7 +22,7 @@ export const toggle = mutation({
       .filter(q =>
         q.and(
           q.eq(q.field('messageId'), messageId),
-          q.eq(q.field('userId'), userId),
+          q.eq(q.field('userId'), member._id),
           q.eq(q.field('value'), value)
         )
       )
@@ -32,7 +33,7 @@ export const toggle = mutation({
     } else {
       await ctx.db.insert('reactions', {
         teamId,
-        userId,
+        userId: member._id,
         value,
         messageId: messageId,
       });

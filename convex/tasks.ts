@@ -1,10 +1,10 @@
 import { omit } from 'convex-helpers';
-import { v } from 'convex/values';
+import { ConvexError, v } from 'convex/values';
 import { paginationOptsValidator } from 'convex/server';
 
 import { mutation, query } from './_generated/server';
 import { Tasks } from './schema';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 
 export const getProjectTasks = query({
   args: {
@@ -70,6 +70,7 @@ export const getUserTasksInTeam = query({
       paginationOpts,
     } = args;
     const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     let query = ctx.db
       .query('tasks')

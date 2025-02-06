@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Heart,
   MessageCircle,
@@ -6,10 +8,10 @@ import {
   Users,
   Workflow,
 } from 'lucide-react';
-import { SignOutButton } from '@clerk/nextjs';
 
-import { Card } from '@/components/ui/card';
 import CreateTeamForm from './CreateTeamForm';
+import { Card } from '@/components/ui/card';
+import { useAuthActions } from '@convex-dev/auth/react';
 
 const PRODUCTIFY_FEATURES = [
   {
@@ -39,8 +41,10 @@ const PRODUCTIFY_FEATURES = [
 ];
 
 const NewTeamComponent = () => {
+  const { signOut } = useAuthActions();
+
   return (
-    <section className='flex items-center justify-center h-screen'>
+    <section className='flex items-center justify-center h-screen p-4 lg:p-8'>
       <div className='flex gap-10'>
         <div className='w-full'>
           <h5 className='text-2xl font-bold'>Producify</h5>
@@ -51,7 +55,10 @@ const NewTeamComponent = () => {
           </p>
           <ul className='flex flex-col gap-3 mt-10 pl-5'>
             {PRODUCTIFY_FEATURES.map(feature => (
-              <li className='flex gap-3' key={feature.label}>
+              <li
+                className='flex gap-3'
+                key={feature.label}
+              >
                 {feature.icon}
                 <p className='text-themeTextGray'>{feature.label}</p>
               </li>
@@ -68,11 +75,12 @@ const NewTeamComponent = () => {
             <CreateTeamForm />
             <p className='text-sm mt-3 text-muted-foreground'>
               Need to change account?{' '}
-              <SignOutButton>
-                <button className='text-primary font-medium hover:underline'>
-                  Sign out here
-                </button>
-              </SignOutButton>
+              <button
+                onClick={signOut}
+                className='text-primary font-medium hover:underline'
+              >
+                Sign out here
+              </button>
             </p>
           </Card>
         </div>

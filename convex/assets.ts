@@ -1,10 +1,10 @@
 import { omit } from 'convex-helpers';
-import { v } from 'convex/values';
+import { ConvexError, v } from 'convex/values';
 import { paginationOptsValidator } from 'convex/server';
 
 import { mutation, query } from './_generated/server';
 import { Assets } from './schema';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 
 export const getAssets = query({
   args: {
@@ -48,6 +48,7 @@ export const createAssets = mutation({
   handler: async (ctx, args) => {
     const { teamId, assets } = args;
     const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     await Promise.all(
       assets.map(async asset => {

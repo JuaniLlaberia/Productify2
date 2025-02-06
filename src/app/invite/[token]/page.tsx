@@ -19,7 +19,7 @@ const JoinTeamPage = ({ params: { token } }: { params: { token: string } }) => {
       const teamId = await joinTeam({ token });
       console.log('Fn finished and returned this ID', teamId);
 
-      router.push(`/team/${teamId}`);
+      router.push(`/team/${teamId}/projects`);
 
       toast.success('You have joined the team successfully', {
         description: 'Redirecting to your team page',
@@ -52,7 +52,10 @@ const JoinTeamPage = ({ params: { token } }: { params: { token: string } }) => {
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
         >
-          <Loader2 className='size-14' strokeWidth={1.5} />
+          <Loader2
+            className='size-14'
+            strokeWidth={1.5}
+          />
         </motion.div>
         <h1 className='text-2xl font-semibold text-gray-800 dark:text-gray-100'>
           Joining team

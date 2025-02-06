@@ -125,8 +125,14 @@ const AddMembersModal = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild onClick={handleOpenDialog}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    >
+      <DialogTrigger
+        asChild
+        onClick={handleOpenDialog}
+      >
         {trigger || (
           <Button size='sm'>
             <Plus className='mr-1.5 size-4' /> Add members
@@ -134,7 +140,10 @@ const AddMembersModal = ({
         )}
       </DialogTrigger>
       <DialogContent>
-        <form onSubmit={handleFormSubmit} className='space-y-4'>
+        <form
+          onSubmit={handleFormSubmit}
+          className='space-y-4'
+        >
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
@@ -180,7 +189,7 @@ const AddMembersModal = ({
                             >
                               <Avatar>
                                 <AvatarImage
-                                  src={member.profileImage}
+                                  src={member.image}
                                   alt={member.fullName}
                                 />
                                 <AvatarFallback>
@@ -244,7 +253,10 @@ const AddMembersModal = ({
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button size='sm' variant='ghost'>
+              <Button
+                size='sm'
+                variant='ghost'
+              >
                 Cancel
               </Button>
             </DialogClose>

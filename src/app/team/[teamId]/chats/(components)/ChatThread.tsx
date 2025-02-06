@@ -42,8 +42,15 @@ const ChatThread = ({ onClose, messageId }: ChatThreadProps) => {
       <div className='h-full flex flex-col space-y-2'>
         <div className='h-12 flex justify-between items-center p-4 border-b'>
           <p>Thread</p>
-          <Button onClick={onClose} variant='ghost' size='icon'>
-            <X className='size-4' strokeWidth={1.5} />
+          <Button
+            onClick={onClose}
+            variant='ghost'
+            size='icon'
+          >
+            <X
+              className='size-4'
+              strokeWidth={1.5}
+            />
           </Button>
         </div>
         <div className='flex flex-col-reverse h-full'>
@@ -75,8 +82,15 @@ const ChatThread = ({ onClose, messageId }: ChatThreadProps) => {
     <div className='h-full flex flex-col space-y-2'>
       <div className='h-12 flex justify-between items-center p-4 border-b'>
         <p className='text-sm'>Thread</p>
-        <Button onClick={onClose} variant='ghost' size='icon'>
-          <X className='size-4' strokeWidth={1.5} />
+        <Button
+          onClick={onClose}
+          variant='ghost'
+          size='icon'
+        >
+          <X
+            className='size-4'
+            strokeWidth={1.5}
+          />
         </Button>
       </div>
       <div className='px-4 w-full flex-1 flex flex-col-reverse overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-muted scrollbar-track-transparent'>
@@ -105,7 +119,7 @@ const ChatThread = ({ onClose, messageId }: ChatThreadProps) => {
                     id={message._id}
                     teamId={teamId}
                     isAuthor={message.user._id === user?._id}
-                    authorImage={message.user.profileImage}
+                    authorImage={message.user.image}
                     authorName={message.user.fullName}
                     reactions={message.reactions}
                     body={message.message}
@@ -155,9 +169,9 @@ const ChatThread = ({ onClose, messageId }: ChatThreadProps) => {
             hideThreadButton
             id={message._id}
             teamId={teamId}
-            isAuthor={message.user._id === user?._id}
-            authorImage={message.user.profileImage}
-            authorName={message.user.fullName}
+            isAuthor={message.user?._id === user?._id}
+            authorImage={message.user?.image}
+            authorName={message.user?.fullName}
             reactions={message.reactions}
             body={message.message}
             image={message.image}
@@ -177,7 +191,10 @@ const ChatThread = ({ onClose, messageId }: ChatThreadProps) => {
           </div>
         )}
       </div>
-      <ChannelInput placeholder='Reply...' parentMessageId={messageId} />
+      <ChannelInput
+        placeholder='Reply...'
+        parentMessageId={messageId}
+      />
     </div>
   );
 };

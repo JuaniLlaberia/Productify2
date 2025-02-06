@@ -6,7 +6,7 @@ import {
   MutationCtx,
   query,
 } from './_generated/server';
-import { isAuth, isMember } from './auth';
+import { isAuth, isMember } from './helpers';
 
 export const getTeamCode = query({
   args: { teamId: v.id('teams') },
@@ -32,6 +32,8 @@ export const updateTeamCode = mutation({
   handler: async (ctx, args) => {
     const { teamId, teamCodeId, isActive } = args;
     const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
+
     if (member.role === 'member')
       throw new ConvexError('You are not allow to perform this action');
 

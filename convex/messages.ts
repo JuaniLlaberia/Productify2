@@ -3,7 +3,7 @@ import { omit } from 'convex-helpers';
 import { paginationOptsValidator } from 'convex/server';
 
 import { mutation, MutationCtx, query, QueryCtx } from './_generated/server';
-import { isAuth, isMember } from './auth';
+import { isAuth, isMember } from './helpers';
 import { Messages } from './schema';
 import { Doc, Id } from './_generated/dataModel';
 
@@ -25,7 +25,7 @@ const populateThreads = async (ctx: QueryCtx, messageId: Id<'messages'>) => {
   const lastMessageUser = await populateUser(ctx, lastMessage!.userId);
   return {
     count: messages.length,
-    image: lastMessageUser?.profileImage,
+    image: lastMessageUser?.image,
     timestampt: lastMessage?._creationTime,
   };
 };
@@ -171,6 +171,7 @@ export const getThreads = query({
   handler: async (ctx, args) => {
     const { teamId, threadsOnly, paginationOpts } = args;
     const user = await isMember(ctx, teamId);
+    if (!user) throw new ConvexError('You are not a member of this team');
 
     const results = await ctx.db
       .query('messages')
@@ -293,6 +294,7 @@ export const createMessage = mutation({
   handler: async (ctx, args) => {
     const { conversationId, channelId, parentMessageId, teamId } = args;
     const user = await isMember(ctx, teamId);
+    if (!user) throw new ConvexError('You are not a member of this team');
 
     let _conversationId = conversationId;
     //Replying in a thread in 1:1 channel (direct messages replies)

@@ -107,13 +107,19 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
       <DialogTrigger asChild>
         {trigger || (
           <Button size='sm'>
-            <Plus className='size-4 mr-1.5' strokeWidth={2} />
+            <Plus
+              className='size-4 mr-1.5'
+              strokeWidth={2}
+            />
             New conversation
           </Button>
         )}
       </DialogTrigger>
       <DialogContent>
-        <form onSubmit={onSubmit} className='space-y-5'>
+        <form
+          onSubmit={onSubmit}
+          className='space-y-5'
+        >
           <DialogHeader>
             <DialogTitle>Select member</DialogTitle>
             <DialogDescription>
@@ -157,7 +163,7 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
                           <div className='flex items-center space-x-3 flex-grow'>
                             <Avatar>
                               <AvatarImage
-                                src={member?.profileImage}
+                                src={member?.image}
                                 alt='Profile photo'
                               />
                               <AvatarFallback>
@@ -197,7 +203,11 @@ const ConversationForm = ({ trigger, onClose }: ConversationFormProps) => {
           </fieldset>
           <DialogFooter className='flex justify-end gap-2'>
             <DialogClose asChild>
-              <Button type='button' size='sm' variant='ghost'>
+              <Button
+                type='button'
+                size='sm'
+                variant='ghost'
+              >
                 Cancel
               </Button>
             </DialogClose>

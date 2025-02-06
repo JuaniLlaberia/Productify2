@@ -1,7 +1,7 @@
 import { ConvexError, v } from 'convex/values';
 
 import { mutation, query } from './_generated/server';
-import { isAdmin, isMember } from './auth';
+import { isAdmin, isMember } from './helpers';
 import { Projects } from './schema';
 import { paginationOptsValidator } from 'convex/server';
 
@@ -11,6 +11,7 @@ export const getAllProjects = query({
   handler: async (ctx, args) => {
     const { teamId, paginationOpts } = args;
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const paginatedProjects = await ctx.db
       .query('projects')
@@ -46,6 +47,7 @@ export const getProjects = query({
   handler: async (ctx, args) => {
     // Verify team membership
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     // Get all public projects for the team
     const allTeamPublicProjects = await ctx.db
@@ -268,6 +270,7 @@ export const leaveProject = mutation({
   handler: async (ctx, args) => {
     const { teamId, projectId } = args;
     const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const projectMemberId = (
       await ctx.db

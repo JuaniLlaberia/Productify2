@@ -87,9 +87,15 @@ export const assetsColumns: ColumnDef<PopulatedAssets>[] = [
           <p>
             <span className='flex items-center justify-start px-2 gap-2 hover:underline hover:cursor-pointer'>
               {isImage ? (
-                <ImageIcon className='size-4' strokeWidth={1.5} />
+                <ImageIcon
+                  className='size-4'
+                  strokeWidth={1.5}
+                />
               ) : (
-                <FileText className='size-4' strokeWidth={1.5} />
+                <FileText
+                  className='size-4'
+                  strokeWidth={1.5}
+                />
               )}
             </span>
             {name}
@@ -104,9 +110,15 @@ export const assetsColumns: ColumnDef<PopulatedAssets>[] = [
         >
           <span>
             {isImage ? (
-              <ImageIcon className='size-4' strokeWidth={1.5} />
+              <ImageIcon
+                className='size-4'
+                strokeWidth={1.5}
+              />
             ) : (
-              <FileText className='size-4' strokeWidth={1.5} />
+              <FileText
+                className='size-4'
+                strokeWidth={1.5}
+              />
             )}
           </span>
           {name}
@@ -229,7 +241,10 @@ export const assetsColumns: ColumnDef<PopulatedAssets>[] = [
             <AvatarFallback className='size-5'>
               {assignee.fullName.at(0)}
             </AvatarFallback>
-            <AvatarImage src={assignee.profileImage} alt='Profile photo' />
+            <AvatarImage
+              src={assignee.image}
+              alt='Profile photo'
+            />
           </Avatar>
           <p>{assignee.fullName}</p>
         </div>

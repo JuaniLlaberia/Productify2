@@ -1,9 +1,9 @@
 import { omit } from 'convex-helpers';
-import { v } from 'convex/values';
+import { ConvexError, v } from 'convex/values';
 
 import { mutation, query } from './_generated/server';
 import { Labels } from './schema';
-import { isMember } from './auth';
+import { isMember } from './helpers';
 import { paginationOptsValidator } from 'convex/server';
 
 export const getLabels = query({
@@ -30,6 +30,7 @@ export const createLabel = mutation({
   args: omit(Labels.withoutSystemFields, ['createdBy']),
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     await ctx.db.insert('labels', {
       ...args,

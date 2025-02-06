@@ -1,6 +1,7 @@
 import { defineSchema } from 'convex/server';
 import { v } from 'convex/values';
 import { Table } from 'convex-helpers/server';
+import { authTables } from '@convex-dev/auth/server';
 
 const prioritySchema = v.union(
   v.literal('low'),
@@ -20,11 +21,10 @@ const taskStatusSchema = v.union(
 export const Users = Table('users', {
   fullName: v.string(),
   email: v.string(),
-  profileImage: v.optional(v.string()),
+  emailVerificationTime: v.optional(v.number()),
+  image: v.optional(v.string()),
   location: v.optional(v.string()),
   description: v.optional(v.string()),
-  clerkIdentifier: v.string(),
-  onBoardingCompleted: v.boolean(),
 });
 
 export const Teams = Table('teams', {
@@ -154,32 +154,6 @@ export const Reports = Table('reports', {
   createdBy: v.id('users'),
 });
 
-export const Cabinets = Table('cabinets', {
-  name: v.string(),
-  icon: v.string(),
-  teamId: v.id('teams'),
-  private: v.boolean(),
-});
-
-export const CabinetMembers = Table('cabinetMembers', {
-  userId: v.id('users'),
-  cabinetId: v.id('cabinets'),
-  teamId: v.id('teams'),
-});
-
-export const Documents = Table('documents', {
-  title: v.string(),
-  content: v.optional(v.string()),
-  isArchived: v.boolean(),
-  icon: v.optional(v.string()),
-  converImage: v.optional(v.string()),
-  private: v.boolean(),
-  parentDocument: v.optional(v.id('documents')),
-  createdBy: v.id('users'),
-  teamId: v.id('teams'),
-  cabinetId: v.id('cabinets'),
-});
-
 export const Storages = Table('storages', {
   name: v.string(),
   icon: v.string(),
@@ -205,9 +179,8 @@ export const Assets = Table('assets', {
 });
 
 export default defineSchema({
-  users: Users.table
-    .index('by_clerkId', ['clerkIdentifier'])
-    .index('by_email', ['email']),
+  ...authTables,
+  users: Users.table.index('email', ['email']),
   teams: Teams.table.index('by_joinCode', ['joinCode']),
   inviteCodes: InviteCodes.table
     .index('by_teamId', ['teamId'])
@@ -251,17 +224,6 @@ export default defineSchema({
     .index('by_messageId', ['messageId'])
     .index('by_userId', ['userId']),
   reports: Reports.table.index('by_teamId_projectId', ['teamId', 'projectId']),
-  cabinets: Cabinets.table.index('by_teamId', ['teamId']),
-  cabinetMembers: CabinetMembers.table
-    .index('by_cabinetId_userId', ['cabinetId', 'userId'])
-    .index('by_teamId_userId', ['teamId', 'userId'])
-    .index('by_cabinetId', ['cabinetId']),
-  documents: Documents.table
-    .index('by_userId', ['createdBy'])
-    .index('by_userId_parentId', ['createdBy', 'parentDocument'])
-    .index('by_teamId', ['teamId'])
-    .index('by_cabinetId', ['cabinetId'])
-    .index('by_teamId_parentId', ['teamId', 'parentDocument']),
   storages: Storages.table.index('by_teamId', ['teamId']),
   storagesMembers: StoragesMembers.table
     .index('by_storageId_userId', ['storageId', 'userId'])

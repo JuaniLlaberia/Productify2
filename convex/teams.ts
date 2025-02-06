@@ -1,7 +1,7 @@
 import { ConvexError, v } from 'convex/values';
 
 import { mutation, query } from './_generated/server';
-import { isAdmin, isAuth, isMember } from './auth';
+import { isAdmin, isAuth, isMember } from './helpers';
 import { Members, Teams } from './schema';
 import { internal } from './_generated/api';
 import { paginationOptsValidator } from 'convex/server';
@@ -9,6 +9,7 @@ import { paginationOptsValidator } from 'convex/server';
 export const getUserTeams = query({
   handler: async ctx => {
     const user = await isAuth(ctx);
+    console.log(user);
     if (!user) throw new ConvexError('Must be logged in.');
 
     const teams = await ctx.db
@@ -127,8 +128,6 @@ export const createTeam = mutation({
         userId: user._id,
         role: 'owner',
       }),
-      //Update user onBoardingCompleted to TRUE
-      ctx.db.patch(user._id, { onBoardingCompleted: true }),
       //Create default channel
       ctx.db.insert('channels', {
         name: 'General',
@@ -147,6 +146,8 @@ export const getMemberRole = query({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) return null;
+
     const memberData = await ctx.db.get(member.memberId);
 
     return memberData?.role;
@@ -193,6 +194,7 @@ export const leaveTeam = mutation({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     await ctx.db.delete(member.memberId);
   },
