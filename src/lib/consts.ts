@@ -63,3 +63,26 @@ export const ROLE_COLORS = {
   [RolesEnum.ADMIN]: 'yellow',
   [RolesEnum.MEMBER]: 'blue',
 };
+
+export const COLUMNS = [
+  {
+    id: StatusEnum.BACKLOG,
+    title: 'Backlog',
+  },
+  {
+    id: StatusEnum.TODO,
+    title: 'To Do',
+  },
+  {
+    id: StatusEnum.IN_PROGRESS,
+    title: 'In Progress',
+  },
+  {
+    id: StatusEnum.COMPLETED,
+    title: 'Completed',
+  },
+  {
+    id: StatusEnum.CANCELED,
+    title: 'Canceled',
+  },
+] as const;

@@ -13,43 +13,30 @@ import { DataTable } from '@/components/ui/data-table';
 import { tasksColumns } from './(components)/tasksColumns';
 import { TableProvider } from '@/components/TableContext';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
-import { FILTERS, INITIAL_NUM_ITEMS } from '@/lib/consts';
+import { COLUMNS, FILTERS, INITIAL_NUM_ITEMS } from '@/lib/consts';
 
 const VIEWS = [
   {
     id: 'board',
     label: 'Board',
-    icon: <Columns3 className='size-4' strokeWidth={1.5} />,
+    icon: (
+      <Columns3
+        className='size-4'
+        strokeWidth={1.5}
+      />
+    ),
     value: 'board',
   },
   {
     id: 'table',
     label: 'Table',
-    icon: <Sheet className='size-4' strokeWidth={1.5} />,
+    icon: (
+      <Sheet
+        className='size-4'
+        strokeWidth={1.5}
+      />
+    ),
     value: 'table',
-  },
-];
-
-export const COLUMNS = [
-  {
-    id: StatusEnum.BACKLOG,
-    title: 'Backlog',
-  },
-  {
-    id: StatusEnum.TODO,
-    title: 'To Do',
-  },
-  {
-    id: StatusEnum.IN_PROGRESS,
-    title: 'In Progress',
-  },
-  {
-    id: StatusEnum.COMPLETED,
-    title: 'Completed',
-  },
-  {
-    id: StatusEnum.CANCELED,
-    title: 'Canceled',
   },
 ];
 
@@ -100,7 +87,7 @@ const ProjectTasksPage = ({
           {view === 'board' ? (
             <TasksBoard
               tasks={results}
-              columns={COLUMNS}
+              columns={[...COLUMNS]}
               isLoading={isLoading}
             />
           ) : (
