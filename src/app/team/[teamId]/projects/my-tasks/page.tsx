@@ -12,21 +12,30 @@ import { Id } from '../../../../../../convex/_generated/dataModel';
 import { tasksColumns } from '../[projectId]/tasks/(components)/tasksColumns';
 import { DataTable } from '@/components/ui/data-table';
 import { TableProvider } from '@/components/TableContext';
-import { COLUMNS } from '../[projectId]/tasks/page';
-import { FILTERS, INITIAL_NUM_ITEMS } from '@/lib/consts';
+import { COLUMNS, FILTERS, INITIAL_NUM_ITEMS } from '@/lib/consts';
 import { useStablePaginatedQuery } from '@/hooks/useStablePaginatedQuery';
 
 const VIEWS = [
   {
     id: 'board',
     label: 'Board',
-    icon: <Columns3 className='size-4' strokeWidth={1.5} />,
+    icon: (
+      <Columns3
+        className='size-4'
+        strokeWidth={1.5}
+      />
+    ),
     value: 'board',
   },
   {
     id: 'table',
     label: 'Table',
-    icon: <Sheet className='size-4' strokeWidth={1.5} />,
+    icon: (
+      <Sheet
+        className='size-4'
+        strokeWidth={1.5}
+      />
+    ),
     value: 'table',
   },
 ];
@@ -68,7 +77,10 @@ const MyTasksPage = ({
           leftContent={
             <>
               <div>
-                <SquareCheckBig className='size-4' strokeWidth={1.5} />
+                <SquareCheckBig
+                  className='size-4'
+                  strokeWidth={1.5}
+                />
               </div>
               <h1 className='text-sm font-medium'>My Tasks</h1>
             </>
