@@ -34,7 +34,7 @@ const LeaveTeamModal = () => {
 
     try {
       await leaveTeam({ teamId });
-      router.push('/');
+      router.push('/team/select');
     } catch {
       toast.error('Failed to leave this team', {
         description: 'Please try again in a few minutes.',
@@ -54,7 +54,10 @@ const LeaveTeamModal = () => {
       <Dialog>
         <DialogTrigger>
           <Button variant='destructive'>
-            <LogOut className='size-4 mr-1.5' strokeWidth={1.5} />
+            <LogOut
+              className='size-4 mr-1.5'
+              strokeWidth={1.5}
+            />
             Leave team
           </Button>
         </DialogTrigger>
@@ -66,7 +69,10 @@ const LeaveTeamModal = () => {
             </DialogDescription>
           </DialogHeader>
           <Alert variant='informative'>
-            <AlertCircle className='size-4' strokeWidth={1.5} />
+            <AlertCircle
+              className='size-4'
+              strokeWidth={1.5}
+            />
             <AlertTitle>Information</AlertTitle>
             <AlertDescription>
               You will lose access to the team. You can re-join if invited back.
@@ -74,7 +80,11 @@ const LeaveTeamModal = () => {
           </Alert>
           <DialogFooter>
             <DialogClose asChild>
-              <Button size='sm' variant='outline' disabled={isLoading}>
+              <Button
+                size='sm'
+                variant='outline'
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
             </DialogClose>

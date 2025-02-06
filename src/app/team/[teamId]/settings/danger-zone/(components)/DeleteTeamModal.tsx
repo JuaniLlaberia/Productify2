@@ -39,7 +39,7 @@ const DeleteTeamModal = ({ teamName }: { teamName: string }) => {
   const handleDeleteTeam = handleSubmit(async () => {
     try {
       await deleteTeam({ teamId });
-      router.push('/');
+      router.push('/team/select');
     } catch {
       toast.error('Failed to delete this team', {
         description: 'Please try again in a few minutes.',
@@ -59,7 +59,10 @@ const DeleteTeamModal = ({ teamName }: { teamName: string }) => {
       <Dialog>
         <DialogTrigger>
           <Button variant='destructive'>
-            <Trash2 className='size-4 mr-1.5' strokeWidth={1.5} />
+            <Trash2
+              className='size-4 mr-1.5'
+              strokeWidth={1.5}
+            />
             Delete team
           </Button>
         </DialogTrigger>
@@ -71,7 +74,10 @@ const DeleteTeamModal = ({ teamName }: { teamName: string }) => {
               deleted.
             </DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleDeleteTeam} className='flex flex-col gap-4'>
+          <form
+            onSubmit={handleDeleteTeam}
+            className='flex flex-col gap-4'
+          >
             <div>
               <label
                 htmlFor='name'
@@ -106,7 +112,11 @@ const DeleteTeamModal = ({ teamName }: { teamName: string }) => {
             </Alert>
             <div className='flex justify-between mt-2'>
               <DialogClose asChild>
-                <Button disabled={isSubmitting} variant='outline' size='sm'>
+                <Button
+                  disabled={isSubmitting}
+                  variant='outline'
+                  size='sm'
+                >
                   Cancel
                 </Button>
               </DialogClose>

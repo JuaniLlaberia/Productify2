@@ -35,7 +35,7 @@ const CreateTeamForm = () => {
       if (res.message && teamId) {
         await user?.reload();
 
-        router.push(`/team/${teamId}`);
+        router.push(`/team/${teamId}/projects`);
         toast.success('Team created successfully');
       }
     } catch {
@@ -44,7 +44,10 @@ const CreateTeamForm = () => {
   });
 
   return (
-    <form className='space-y-6' onSubmit={submitHandler}>
+    <form
+      className='space-y-6'
+      onSubmit={submitHandler}
+    >
       <div>
         <Label htmlFor='name'>Team name</Label>
         <Input
@@ -64,7 +67,10 @@ const CreateTeamForm = () => {
           <AlertDescription>Team name is a required field</AlertDescription>
         </div>
       </Alert>
-      <Button className='w-full' disabled={isSubmitting}>
+      <Button
+        className='w-full'
+        disabled={isSubmitting}
+      >
         {isSubmitting ? (
           <Loader2 className='animate-spin size-4 mr-1.5' />
         ) : (
