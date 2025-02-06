@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  FileText,
   Folder,
   MessagesSquare,
   PanelRightClose,
@@ -24,35 +23,48 @@ const SIDEBAR_LINKS = [
     tooltip: 'Projects',
     link: 'projects/my-tasks',
     activeKey: 'projects',
-    icon: <Folder className='size-5' strokeWidth={1.5} />,
+    icon: (
+      <Folder
+        className='size-5'
+        strokeWidth={1.5}
+      />
+    ),
   },
   {
     label: 'Chats',
     tooltip: 'Chats',
     link: 'chats/channels',
     activeKey: 'chats',
-    icon: <MessagesSquare className='size-5' strokeWidth={1.5} />,
-  },
-  {
-    label: 'Docs',
-    tooltip: 'Documents',
-    link: 'documents',
-    activeKey: 'documents',
-    icon: <FileText className='size-5' strokeWidth={1.5} />,
+    icon: (
+      <MessagesSquare
+        className='size-5'
+        strokeWidth={1.5}
+      />
+    ),
   },
   {
     label: 'Storages',
     tooltip: 'Storages & Assets',
     link: 'storages',
     activeKey: 'storages',
-    icon: <Server className='size-5' strokeWidth={1.5} />,
+    icon: (
+      <Server
+        className='size-5'
+        strokeWidth={1.5}
+      />
+    ),
   },
   {
     label: 'Settings',
     tooltip: 'Settings',
     link: 'settings/general',
     activeKey: 'settings',
-    icon: <Settings className='size-5' strokeWidth={1.5} />,
+    icon: (
+      <Settings
+        className='size-5'
+        strokeWidth={1.5}
+      />
+    ),
   },
 ];
 
@@ -63,7 +75,10 @@ const Sidebar = ({ teamId }: { teamId: string }) => {
     <aside className='h-screen w-[80px] flex flex-col items-center p-2 pt-5 py-3 bg-muted/50 dark:bg-muted/25 border-r border-border'>
       <div className='space-y-1'>
         <TeamsDropdown />
-        <Hint label={`${isOpen ? 'Close' : 'Open'} menu`} side='right'>
+        <Hint
+          label={`${isOpen ? 'Close' : 'Open'} menu`}
+          side='right'
+        >
           <Button
             className='flex flex-col items-center size-10 rounded-lg'
             variant='ghost'
@@ -71,9 +86,15 @@ const Sidebar = ({ teamId }: { teamId: string }) => {
             onClick={toggleSidebar}
           >
             {isOpen ? (
-              <PanelRightOpen className='size-5' strokeWidth={1.5} />
+              <PanelRightOpen
+                className='size-5'
+                strokeWidth={1.5}
+              />
             ) : (
-              <PanelRightClose className='size-5' strokeWidth={1.5} />
+              <PanelRightClose
+                className='size-5'
+                strokeWidth={1.5}
+              />
             )}
           </Button>
         </Hint>

@@ -4,7 +4,6 @@ import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
 import ProjectsLinks from '../projects/(components)/ProjectsLinks';
-import DocumentsLinks from '../documents/(components)/DocumentsLinks';
 import StoragesLinks from '../storages/(components)/StoragesLinks';
 import ChatLinks from '../chats/(components)/ChatLinks';
 import SettingsLinks from '../settings/(components)/SettingsLinks';
@@ -17,7 +16,6 @@ const SIDEBAR_CONTENT: {
 } = {
   projects: { title: 'Projects', content: <ProjectsLinks /> },
   chats: { title: 'Chats', content: <ChatLinks /> },
-  documents: { title: 'Documents', content: <DocumentsLinks /> },
   storages: { title: 'Storages', content: <StoragesLinks /> },
   settings: { title: 'Settings', content: <SettingsLinks /> },
 };
@@ -48,7 +46,10 @@ const InnerSidebar = () => {
         <h2 className='text-lg font-semibold'>{title}</h2>
         <div className='py-2 mt-4'>{content}</div>
       </ResizablePanel>
-      <ResizableHandle withHandle className={!isOpen ? 'hidden' : ''} />
+      <ResizableHandle
+        withHandle
+        className={!isOpen ? 'hidden' : ''}
+      />
     </>
   );
 };
