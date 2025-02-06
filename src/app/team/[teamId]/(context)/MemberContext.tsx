@@ -24,7 +24,7 @@ export const MemberProvider = ({ children }: { children: ReactNode }) => {
       });
       return router.push('/team/select');
     }
-  }, [teamId]);
+  }, [teamId, isMember, router, isLoading]);
 
   if (isLoading)
     return (
