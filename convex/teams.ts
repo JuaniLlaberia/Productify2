@@ -147,6 +147,8 @@ export const getMemberRole = query({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) return null;
+
     const memberData = await ctx.db.get(member.memberId);
 
     return memberData?.role;
@@ -193,6 +195,7 @@ export const leaveTeam = mutation({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     await ctx.db.delete(member.memberId);
   },

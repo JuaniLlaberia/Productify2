@@ -1,5 +1,5 @@
 import { omit } from 'convex-helpers';
-import { v } from 'convex/values';
+import { ConvexError, v } from 'convex/values';
 
 import { mutation, query } from './_generated/server';
 import { Reports } from './schema';
@@ -44,6 +44,7 @@ export const createReport = mutation({
   args: omit(Reports.withoutSystemFields, ['createdBy']),
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     await ctx.db.insert('reports', {
       ...args,

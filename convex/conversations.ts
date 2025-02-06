@@ -7,6 +7,7 @@ export const getConversations = query({
   handler: async (ctx, args) => {
     const { teamId } = args;
     const user = await isMember(ctx, teamId);
+    if (!user) throw new ConvexError('You are not a member of this team');
 
     const conversations = await ctx.db
       .query('conversations')
@@ -76,6 +77,7 @@ export const createConversation = mutation({
   handler: async (ctx, args) => {
     const { teamId, otherUserId } = args;
     const user = await isMember(ctx, teamId);
+    if (!user) throw new ConvexError('You are not a member of this team');
 
     const userPair = [user._id, otherUserId].sort().join('|');
 

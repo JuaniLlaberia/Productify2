@@ -23,6 +23,7 @@ export const getAllStorages = query({
   handler: async (ctx, args) => {
     const { teamId, paginationOpts } = args;
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const paginatedStorages = await ctx.db
       .query('storages')
@@ -57,6 +58,7 @@ export const getUserStorages = query({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const allTeamPublicStorages = await ctx.db
       .query('storages')
@@ -248,6 +250,7 @@ export const leaveStorage = mutation({
   handler: async (ctx, args) => {
     const { teamId, storageId } = args;
     const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const storage = await ctx.db.get(storageId);
     const storageMemberId = (

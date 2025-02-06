@@ -13,6 +13,7 @@ export const getAllChannels = query({
   handler: async (ctx, args) => {
     const { teamId, paginationOpts } = args;
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const paginatedChannels = await ctx.db
       .query('channels')
@@ -47,6 +48,7 @@ export const getChannels = query({
   args: { teamId: v.id('teams') },
   handler: async (ctx, args) => {
     const member = await isMember(ctx, args.teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     //Get public channels
     const allTeamPublicChannels = await ctx.db
@@ -252,6 +254,7 @@ export const leaveChannel = mutation({
   handler: async (ctx, args) => {
     const { teamId, channelId } = args;
     const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
 
     const channel = await ctx.db.get(channelId);
     const channelMemberId = (

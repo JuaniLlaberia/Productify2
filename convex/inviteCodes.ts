@@ -32,6 +32,8 @@ export const updateTeamCode = mutation({
   handler: async (ctx, args) => {
     const { teamId, teamCodeId, isActive } = args;
     const member = await isMember(ctx, teamId);
+    if (!member) throw new ConvexError('You are not a member of this team');
+
     if (member.role === 'member')
       throw new ConvexError('You are not allow to perform this action');
 

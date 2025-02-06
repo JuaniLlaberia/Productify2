@@ -171,6 +171,7 @@ export const getThreads = query({
   handler: async (ctx, args) => {
     const { teamId, threadsOnly, paginationOpts } = args;
     const user = await isMember(ctx, teamId);
+    if (!user) throw new ConvexError('You are not a member of this team');
 
     const results = await ctx.db
       .query('messages')
@@ -293,6 +294,7 @@ export const createMessage = mutation({
   handler: async (ctx, args) => {
     const { conversationId, channelId, parentMessageId, teamId } = args;
     const user = await isMember(ctx, teamId);
+    if (!user) throw new ConvexError('You are not a member of this team');
 
     let _conversationId = conversationId;
     //Replying in a thread in 1:1 channel (direct messages replies)

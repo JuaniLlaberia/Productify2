@@ -54,6 +54,6 @@ export const isMember = async (
     )
     .first();
 
-  if (!member) throw new ConvexError('User is not a member of this team.');
+  if (!member) return null;
   return { ...user, role: member.role, memberId: member._id };
 };
