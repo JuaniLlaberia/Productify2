@@ -182,7 +182,10 @@ export const templatesColumns: ColumnDef<PopulatedTemplates>[] = [
             <AvatarFallback className='size-5'>
               {assignee.fullName.at(0)}
             </AvatarFallback>
-            <AvatarImage src={assignee.profileImage} alt='Profile photo' />
+            <AvatarImage
+              src={assignee.image}
+              alt='Profile photo'
+            />
           </Avatar>
           <p>{assignee.fullName}</p>
         </div>

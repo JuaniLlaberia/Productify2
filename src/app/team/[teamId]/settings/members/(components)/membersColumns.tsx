@@ -44,12 +44,15 @@ export const membersColumns: ColumnDef<MemberDataType>[] = [
     cell: ({ row }) => {
       const values = row.original;
       const fullName = values.fullName;
-      const image = values.profileImage;
+      const image = values.image;
 
       return (
         <div className='flex items-center gap-1.5 px-1.5'>
           <Avatar className='size-7 shrink-0'>
-            <AvatarImage src={image} alt='Profile photo' />
+            <AvatarImage
+              src={image}
+              alt='Profile photo'
+            />
           </Avatar>
           <p className='px-2'>{fullName}</p>
         </div>
@@ -90,7 +93,12 @@ export const membersColumns: ColumnDef<MemberDataType>[] = [
       const role = values.role;
       const memberId = values.memberId;
 
-      return <MemberRoleInput role={role} memberId={memberId} />;
+      return (
+        <MemberRoleInput
+          role={role}
+          memberId={memberId}
+        />
+      );
     },
   },
   // Location

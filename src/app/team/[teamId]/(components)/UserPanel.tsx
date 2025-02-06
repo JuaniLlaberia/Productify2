@@ -21,8 +21,15 @@ const UserPanel = ({ onClose }: UserPanelProps) => {
       <section className='h-full flex flex-col'>
         <div className='h-12 flex justify-between items-center p-4 border-b'>
           <Skeleton className='w-32 h-full' />
-          <Button onClick={onClose} variant='ghost' size='icon'>
-            <X className='size-4' strokeWidth={1.5} />
+          <Button
+            onClick={onClose}
+            variant='ghost'
+            size='icon'
+          >
+            <X
+              className='size-4'
+              strokeWidth={1.5}
+            />
           </Button>
         </div>
         <div className='w-full max-w-md mx-auto p-4'>
@@ -48,21 +55,31 @@ const UserPanel = ({ onClose }: UserPanelProps) => {
       </section>
     );
 
-  const { fullName, profileImage, email, description, location } = user;
+  const { fullName, image, email, description, location } = user;
 
   return (
     <section className='h-full flex flex-col'>
       <div className='h-12 flex justify-between items-center p-4 border-b'>
         <p className='text-sm'>{fullName}</p>
-        <Button onClick={onClose} variant='ghost' size='icon'>
-          <X className='size-4' strokeWidth={1.5} />
+        <Button
+          onClick={onClose}
+          variant='ghost'
+          size='icon'
+        >
+          <X
+            className='size-4'
+            strokeWidth={1.5}
+          />
         </Button>
       </div>
       <div className='p-4 space-y-3'>
         <div className='flex flex-row items-center gap-4 pb-2'>
           <Avatar className='size-20'>
             <AvatarFallback>{fullName.at(0)?.toUpperCase()}</AvatarFallback>
-            <AvatarImage src={profileImage} alt='Profile photo' />
+            <AvatarImage
+              src={image}
+              alt='Profile photo'
+            />
           </Avatar>
           <div className='flex flex-col gap-1'>
             <h2 className='text-xl'>{fullName}</h2>
@@ -85,7 +102,10 @@ const UserPanel = ({ onClose }: UserPanelProps) => {
           </h3>
           <div className='flex items-center mb-3'>
             <Mail className='size-4 mr-2 text-muted-foreground' />
-            <a href={`mailto:${email}`} className='text-sm hover:underline'>
+            <a
+              href={`mailto:${email}`}
+              className='text-sm hover:underline'
+            >
               {email}
             </a>
           </div>

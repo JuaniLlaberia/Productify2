@@ -50,7 +50,7 @@ const ThreadsList = () => {
               id={message._id}
               teamId={teamId}
               isAuthor={true}
-              authorImage={message.user.profileImage}
+              authorImage={message.user.image}
               authorName={message.user.fullName}
               reactions={message.reactions}
               body={message.message}

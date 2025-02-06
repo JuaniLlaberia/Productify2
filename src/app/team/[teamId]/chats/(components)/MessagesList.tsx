@@ -98,7 +98,7 @@ const MessagesList = ({
                   id={message._id}
                   teamId={teamId}
                   isAuthor={message.user._id === user?._id}
-                  authorImage={message.user.profileImage}
+                  authorImage={message.user.image}
                   authorName={message.user.fullName}
                   reactions={message.reactions}
                   body={message.message}
@@ -144,7 +144,10 @@ const MessagesList = ({
         </div>
       )}
       {channelName && channelCreationTime && (
-        <ChatHero name={channelName} creationTime={channelCreationTime} />
+        <ChatHero
+          name={channelName}
+          creationTime={channelCreationTime}
+        />
       )}
     </div>
   );

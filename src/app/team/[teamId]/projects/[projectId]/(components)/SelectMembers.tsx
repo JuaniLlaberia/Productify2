@@ -70,15 +70,21 @@ const SelectMembers = ({
         setValue({
           id: defaultMember._id,
           name: defaultMember.fullName,
-          img: defaultMember.profileImage,
+          img: defaultMember.image,
         });
       }
     }
   }, [defaultValue, members]);
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <Hint side={borderHidden ? 'left' : 'top'} label='Set assignee'>
+    <Popover
+      open={isOpen}
+      onOpenChange={setIsOpen}
+    >
+      <Hint
+        side={borderHidden ? 'left' : 'top'}
+        label='Set assignee'
+      >
         <PopoverTrigger asChild>
           <Button
             variant='outline'
@@ -95,7 +101,10 @@ const SelectMembers = ({
                   <AvatarFallback className='size-6'>
                     {value?.name?.at(0)}
                   </AvatarFallback>
-                  <AvatarImage src={value?.img} alt='Profile photo' />
+                  <AvatarImage
+                    src={value?.img}
+                    alt='Profile photo'
+                  />
                 </Avatar>
                 <p className='ml-2'>{value?.name}</p>
               </>
@@ -133,7 +142,7 @@ const SelectMembers = ({
                       setValue({
                         id: member?._id,
                         name: member?.fullName,
-                        img: member?.profileImage,
+                        img: member?.image,
                       });
                       setField('assignee', member?._id);
                       setIsOpen(false);
@@ -143,7 +152,7 @@ const SelectMembers = ({
                       <AvatarFallback className='size-7'>
                         {member.fullName?.charAt(0)}
                       </AvatarFallback>
-                      <AvatarImage src={member?.profileImage} />
+                      <AvatarImage src={member?.image} />
                     </Avatar>
                     <p className='ml-2'>{member?.fullName}</p>
                     {value?.id === member?._id && (
