@@ -1,21 +1,30 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, ReactNode, useContext, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { Id } from '../../../../../convex/_generated/dataModel';
 import { useMemberRole } from '@/features/auth/api/useMemberRole';
-import { toast } from 'sonner';
 
-type MemberContextType = {};
-
-const MemberContext = createContext<MemberContextType>({});
+const MemberContext = createContext(undefined);
 
 export const MemberProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const { teamId } = useParams<{ teamId: Id<'teams'> }>();
   const { isLoading, isMember } = useMemberRole(teamId);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (!isMember) {
+      toast.error('You are not a member of this team.', {
+        description: 'You are being redirected',
+      });
+      return router.push('/team/select');
+    }
+  }, [teamId]);
 
   if (isLoading)
     return (
@@ -35,14 +44,11 @@ export const MemberProvider = ({ children }: { children: ReactNode }) => {
       </div>
     );
 
-  if (!isMember) {
-    toast.error('You are not a member of this team.', {
-      description: 'You are being redirected',
-    });
-    return router.push('/team/select');
-  }
-
-  return <MemberContext.Provider value={{}}>{children}</MemberContext.Provider>;
+  return (
+    <MemberContext.Provider value={undefined}>
+      {children}
+    </MemberContext.Provider>
+  );
 };
 
 export const useMemberContext = () => {
