@@ -54,7 +54,7 @@ const Hero = () => {
         </SignedOut>
         <SignedIn>
           <Link
-            href='/projects'
+            href='/team/select'
             className='group inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors h-8 rounded-md px-4 bg-background-1 border border-border-1 text-text-1 hover:bg-background-2'
           >
             My projects
