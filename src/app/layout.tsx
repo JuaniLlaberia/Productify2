@@ -1,5 +1,5 @@
 import NextTopLoader from 'nextjs-toploader';
-import { ClerkProvider } from '@clerk/nextjs';
+import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
 import { ThemeProvider } from 'next-themes';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
@@ -20,9 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-    >
+    <ConvexAuthNextjsServerProvider>
       <html lang='en'>
         <body className={GeistSans.className}>
           <NextTopLoader showSpinner={false} />
@@ -39,6 +37,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </ConvexAuthNextjsServerProvider>
   );
 }

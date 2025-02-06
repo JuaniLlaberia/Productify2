@@ -1,6 +1,7 @@
 import { defineSchema } from 'convex/server';
 import { v } from 'convex/values';
 import { Table } from 'convex-helpers/server';
+import { authTables } from '@convex-dev/auth/server';
 
 const prioritySchema = v.union(
   v.literal('low'),
@@ -20,11 +21,10 @@ const taskStatusSchema = v.union(
 export const Users = Table('users', {
   fullName: v.string(),
   email: v.string(),
-  profileImage: v.optional(v.string()),
+  emailVerificationTime: v.optional(v.number()),
+  image: v.optional(v.string()),
   location: v.optional(v.string()),
   description: v.optional(v.string()),
-  clerkIdentifier: v.string(),
-  onBoardingCompleted: v.boolean(),
 });
 
 export const Teams = Table('teams', {
@@ -179,9 +179,8 @@ export const Assets = Table('assets', {
 });
 
 export default defineSchema({
-  users: Users.table
-    .index('by_clerkId', ['clerkIdentifier'])
-    .index('by_email', ['email']),
+  ...authTables,
+  users: Users.table.index('email', ['email']),
   teams: Teams.table.index('by_joinCode', ['joinCode']),
   inviteCodes: InviteCodes.table
     .index('by_teamId', ['teamId'])
